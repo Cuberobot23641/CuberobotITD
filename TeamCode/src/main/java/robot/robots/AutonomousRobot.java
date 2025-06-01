@@ -121,13 +121,14 @@ public class AutonomousRobot {
 
         prepareGrabSpecimen = new RobotFunction(
                 List.of(
-                        () -> deposit.openDepositClaw()
-//                        () -> {
-//                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-//                            deposit.retractLinkage();
-//                        }
+                        () -> deposit.openDepositClaw(),
+                        () -> {
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                            deposit.retractLinkage();
+                        },
+                        () -> lift.setTargetPos(LIFT_SPEC_GRAB)
                 ),
-                List.of(0.2)
+                List.of(0.2, 0.3, 0.1)
         );
 
         // this assumes that you have already grabbed
