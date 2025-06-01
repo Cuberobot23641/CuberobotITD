@@ -2,6 +2,7 @@ package opmode.autonomous;
 
 import static com.pedropathing.util.Constants.setConstants;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
@@ -11,6 +12,14 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
+import java.util.Locale;
+
 import pedroPathing.constants.LConstants;
 import pedroPathing.constants.FConstants;
 
@@ -18,6 +27,7 @@ import robot.robots.AutonomousRobot;
 
 @Autonomous(name = "Pedro 6+1")
 public class OldPathing extends OpMode {
+    GoBildaPinpointDriver odo;
     public AutonomousRobot robot;
     private Follower follower;
 
@@ -345,6 +355,11 @@ public class OldPathing extends OpMode {
         robot.loop();
         follower.update();
         autonomousPathUpdate();
+        Pose pos = odo.getPosition();
+        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(), pos.getY(), pos.getHeading());
+        telemetry.addData("Position", data);
+        telemetry.addData("pedro pose", follower.getPose().getHeading());
+        telemetry.update();
     }
 
     /** This method is called once at the init of the OpMode. **/
@@ -354,6 +369,10 @@ public class OldPathing extends OpMode {
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         pathTimer = new Timer();
+        odo.setOffsets(-84.0, -168.0);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.resetPosAndIMU();
     }
 
     @Override
