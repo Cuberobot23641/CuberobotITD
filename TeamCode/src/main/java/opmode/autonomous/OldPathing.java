@@ -4,6 +4,7 @@ import static com.pedropathing.util.Constants.setConstants;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.localization.PoseUpdater;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
@@ -12,6 +13,8 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -365,19 +368,29 @@ public class OldPathing extends OpMode {
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
-        robot = new AutonomousRobot(hardwareMap);
         pathTimer = new Timer();
-        odo = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-        odo.setOffsets(-84.0, -168.0);
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-        odo.resetPosAndIMU();
+//        odo = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+//        odo.recalibrateIMU();
+
+//        odo.setOffsets(-84.0, -168.0);
+//        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+//        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+//        odo.resetPosAndIMU();
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
+        PoseUpdater updater = new PoseUpdater(hardwareMap, FConstants.class, LConstants.class);
+        try {
+            updater.resetIMU();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void init_loop() {}
+    public void init_loop() {
+        telemetry.addData("status", odo.getDeviceStatus());
+        telemetry.update();
+    }
 
     /** This method is called once at the start of the OpMode.
      * It runs all the setup actions, including building paths and starting the path system **/

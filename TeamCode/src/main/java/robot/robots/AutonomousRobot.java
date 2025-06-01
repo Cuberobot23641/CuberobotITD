@@ -44,8 +44,8 @@ public class AutonomousRobot {
         deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
         deposit.retractLinkage();
 
-        lift.setTargetPos(LIFT_TRANSFER);
-        extension.setTargetPos(EXTENSION_MIN);
+        //lift.setTargetPos(LIFT_TRANSFER);
+        // extension.setTargetPos(EXTENSION_MIN);
 
         grabSample = new RobotFunction(
                 List.of(

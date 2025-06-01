@@ -1,6 +1,8 @@
 package opmode.autonomous;
 
 import static com.pedropathing.util.Constants.setConstants;
+import static java.lang.Thread.sleep;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
@@ -363,11 +365,17 @@ public class SpecBlueV1 extends OpMode {
     @Override
     public void init() {
         pathTimer = new Timer();
-        robot = new AutonomousRobot(hardwareMap);
         // setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         detector = new SigmaPythonDetector(hardwareMap, "blue sample");
+
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        robot = new AutonomousRobot(hardwareMap);
     }
 
     @Override
