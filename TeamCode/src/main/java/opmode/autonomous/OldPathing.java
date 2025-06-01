@@ -366,14 +366,14 @@ public class OldPathing extends OpMode {
     @Override
     public void init() {
         robot = new AutonomousRobot(hardwareMap);
-        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
-        follower.setStartingPose(startPose);
         pathTimer = new Timer();
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         odo.setOffsets(-84.0, -168.0);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        follower.setStartingPose(startPose);
     }
 
     @Override
