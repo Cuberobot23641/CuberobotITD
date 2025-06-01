@@ -132,6 +132,10 @@ public class SigmaPythonDetector {
         return new double[] {distX, distY, angle};
     }
 
+    public double[] getDistances2() {
+        return new double[] {distX2, distY2, angle2};
+    }
+
     public boolean isFresh() {
         return staleness < 100;
     }
