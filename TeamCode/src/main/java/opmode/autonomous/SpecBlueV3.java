@@ -259,80 +259,92 @@ public class SpecBlueV3 extends OpMode {
                 }
                 break;
             case 16:
-                double[] distances3 = detector.getDistances();
-                // shouldnt be necessary
-                if (distances3[0] != 0 && distances3[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
-                    double[] positions = detector.getPositions();
-                    robot.setPositions(positions);
-                    robot.fastGrab.start();
-                    setPathState(17);
-                }
-                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                if (!follower.isBusy() && robot.scoreSpecimen.isFinished() && follower.getVelocityMagnitude() < 0.1) {
+                    robot.prepareGrabSpecimen.start();
                     setPathState(17);
                 }
                 break;
             case 17:
-                if (robot.fastGrab.isFinished() && robot.prepareGrabSpecimen.isFinished()) {
-                    robot.retractExtension.start();
-                    robot.setExtensionInches(0);
-                    robot.setTurretAngle(0);
-                    robot.setWristAngle(0);
-                    follower.followPath(grabSpec2, true);
+                double[] distances4 = detector.getDistances();
+                // shouldnt be necessary
+                if (distances4[0] != 0 && distances4[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                    double[] positions = detector.getPositions();
+                    robot.setPositions(positions);
+                    robot.fastGrab.start();
+                    setPathState(18);
+                }
+                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
                     setPathState(18);
                 }
                 break;
             case 18:
-                if (robot.retractExtension.isFinished() && !follower.isBusy()) {
-                    robot.grabSpecimen.start();
-                    setPathState(19);
-                }
-                break;
-            case 19:
-                if (robot.grabSpecimen.isFinished()) {
-                    robot.scoreSpecimen.start();
-                    // false:
-                    follower.followPath(scoreSpec2, true);
-                    setPathState(20);
-                }
-                break;
-            case 20:
-                double[] distances4 = detector.getDistances();
-                // shouldnt be necessary
-                if (distances4[0] != 0 && distance4[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
-                    double[] positions = detector.getPositions();
-                    robot.setPositions(positions);
-                    robot.fastGrab.start();
-                    setPathState(21);
-                }
-                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
-                    setPathState(21);
-                }
-                break;
-            case 21:
                 if (robot.fastGrab.isFinished() && robot.prepareGrabSpecimen.isFinished()) {
                     robot.retractExtension.start();
                     robot.setExtensionInches(0);
                     robot.setTurretAngle(0);
                     robot.setWristAngle(0);
                     follower.followPath(grabSpec2, true);
-                    setPathState(22);
+                    setPathState(19);
                 }
                 break;
-            case 22:
+            case 19:
                 if (robot.retractExtension.isFinished() && !follower.isBusy()) {
                     robot.grabSpecimen.start();
-                    setPathState(23);
+                    setPathState(20);
                 }
                 break;
-            case 23:
+            case 20:
                 if (robot.grabSpecimen.isFinished()) {
                     robot.scoreSpecimen.start();
                     // false:
                     follower.followPath(scoreSpec2, true);
+                    setPathState(21);
+                }
+                break;
+            case 21:
+                if (!follower.isBusy() && robot.scoreSpecimen.isFinished() && follower.getVelocityMagnitude() < 0.1) {
+                    robot.prepareGrabSpecimen.start();
+                    setPathState(22);
+                }
+                break;
+            case 22:
+                double[] distances5 = detector.getDistances();
+                // shouldnt be necessary
+                if (distances5[0] != 0 && distances5[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                    double[] positions = detector.getPositions();
+                    robot.setPositions(positions);
+                    robot.fastGrab.start();
+                    setPathState(23);
+                }
+                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                    setPathState(23);
+                }
+                break;
+            case 23:
+                if (robot.fastGrab.isFinished() && robot.prepareGrabSpecimen.isFinished()) {
+                    robot.retractExtension.start();
+                    robot.setExtensionInches(0);
+                    robot.setTurretAngle(0);
+                    robot.setWristAngle(0);
+                    follower.followPath(grabSpec2, true);
                     setPathState(24);
                 }
                 break;
             case 24:
+                if (robot.retractExtension.isFinished() && !follower.isBusy()) {
+                    robot.grabSpecimen.start();
+                    setPathState(25);
+                }
+                break;
+            case 25:
+                if (robot.grabSpecimen.isFinished()) {
+                    robot.scoreSpecimen.start();
+                    // false:
+                    follower.followPath(scoreSpec2, true);
+                    setPathState(26);
+                }
+                break;
+            case 26:
                 if (robot.fastRetract.isFinished()) {
                     setPathState(-1);
                 }
