@@ -35,7 +35,7 @@ public class AutonomousRobot {
         extension = new Extension(this.hardwareMap, true);
 
         // init positions
-        intake.setTurretAngle(INTAKE_TURRET_DROP_OFF);
+        intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
         intake.setWristPos(INTAKE_WRIST_DROP_OFF);
         intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
         intake.openIntakeClaw();
@@ -128,7 +128,8 @@ public class AutonomousRobot {
                         },
                         () -> lift.setTargetPos(LIFT_SPEC_GRAB)
                 ),
-                List.of(0.2, 0.3, 0.1)
+                // was 0.2, making small optimization
+                List.of(0.1, 0.3, 0.1)
         );
 
         // this assumes that you have already grabbed

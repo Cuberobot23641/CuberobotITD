@@ -24,8 +24,8 @@ import robot.robots.AutonomousRobot;
 import util.PositionCalculator;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 grab fling start")
-public class SpecBlueV7 extends OpMode {
+@Autonomous(name = "7+0 optimized")
+public class SpecBlueV8 extends OpMode {
     public AutonomousRobot robot;
     private Follower follower;
     private int pathState;
@@ -43,7 +43,6 @@ public class SpecBlueV7 extends OpMode {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addParametricCallback(0.1, () -> robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF))
                 .build();
 
         grabSample12 = follower.pathBuilder()
@@ -56,7 +55,8 @@ public class SpecBlueV7 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTValueConstraint(0.995)
-                .setPathEndTimeoutConstraint(200)
+                // optimizing on time
+                //.setPathEndTimeoutConstraint(200)
                 .addParametricCallback(0.5, () -> {
                     robot.setPositions(positions1);
                     robot.extendExtension.start();
@@ -72,7 +72,7 @@ public class SpecBlueV7 extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
-                .setPathEndTimeoutConstraint(200)
+                //.setPathEndTimeoutConstraint(200)
                 .setPathEndTValueConstraint(0.995)
                 .build();
 
@@ -224,7 +224,8 @@ public class SpecBlueV7 extends OpMode {
                 break;
             case 2:
                 if (robot.prepareGrabSpecimen.getIndex() > 0) {
-                    follower.setMaxPower(0.8);
+                    // was 0.8, but we wanna be fast
+                    follower.setMaxPower(1);
                     follower.followPath(grabSample12, true);
                     setPathState(3);
                 }
@@ -291,8 +292,8 @@ public class SpecBlueV7 extends OpMode {
                 break;
             case 69:
                 double[] distances1 = detector.getDistances();
-                // shouldnt be necessary
-                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                // set to 0.1 to be fast
+                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.1) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
@@ -335,7 +336,7 @@ public class SpecBlueV7 extends OpMode {
             case 420:
                 double[] distances2 = detector.getDistances();
                 // shouldnt be necessary
-                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.1) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
