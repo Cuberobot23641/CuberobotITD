@@ -363,7 +363,7 @@ public class SpecBlueV7 extends OpMode {
             case 18:
                 if (robot.grabSpecimen.isFinished()) {
                     robot.scoreSpecimen.start();
-                    follower.followPath(scoreSpec3, false);
+                    follower.followPath(scoreSpec3, true);
                     setPathState(19);
                 }
                 break;
@@ -388,7 +388,7 @@ public class SpecBlueV7 extends OpMode {
             case 22:
                 if (robot.grabSpecimen.isFinished()) {
                     robot.scoreSpecimen.start();
-                    follower.followPath(scoreSpec4, false);
+                    follower.followPath(scoreSpec4, true);
                     setPathState(23);
                 }
                 break;
@@ -413,7 +413,7 @@ public class SpecBlueV7 extends OpMode {
             case 26:
                 if (robot.grabSpecimen.isFinished()) {
                     robot.scoreSpecimen.start();
-                    follower.followPath(scoreSpec5, false);
+                    follower.followPath(scoreSpec5, true);
                     setPathState(27);
                 }
                 break;
@@ -438,7 +438,7 @@ public class SpecBlueV7 extends OpMode {
             case 30:
                 if (robot.grabSpecimen.isFinished()) {
                     robot.scoreSpecimen.start();
-                    follower.followPath(scoreSpec4, false);
+                    follower.followPath(scoreSpec4, true);
                     setPathState(31);
                 }
                 break;
