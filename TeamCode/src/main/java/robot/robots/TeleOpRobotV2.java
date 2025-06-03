@@ -68,21 +68,20 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         sampleMode2Timer = new Timer();
         sampleMode3Timer = new Timer();
 
+
+        allHubs = this.hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+    }
+
+    public void initSubsystems() {
         intake = new Intake(this.hardwareMap);
         deposit = new Deposit(this.hardwareMap);
         // TODO: for real runs we will put this as false
         lift = new Lift(this.hardwareMap, true);
         extension = new Extension(this.hardwareMap, true);
-//        setConstants(LConstants.class, FConstants.class);
-//        follower = new Follower(hardwareMap);
-
-//        fl = this.hardwareMap.get(DcMotorEx.class, "front_left_drive");
-//        bl = this.hardwareMap.get(DcMotorEx.class, "back_left_drive");
-//        fr = this.hardwareMap.get(DcMotorEx.class, "front_right_drive");
-//        br = this.hardwareMap.get(DcMotorEx.class, "back_right_drive");
-
-        // init positions
-        intake.setTurretAngle(INTAKE_TURRET_DEFAULT);
+        intake.setTurretPos(INTAKE_TURRET_DEFAULT);
         intake.setWristPos(INTAKE_WRIST_DEFAULT);
         intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
         intake.openIntakeClaw();
@@ -93,11 +92,6 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         lift.setTargetPos(LIFT_SPEC_GRAB);
         extension.setTargetPos(EXTENSION_MIN);
-
-        allHubs = this.hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
     }
 
     public void start() {
@@ -120,9 +114,6 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         extension.loop();
         lift.loop();
-        drivetrain.setMovementVectors(gp1.left_stick_y*speed,
-                gp1.left_stick_x*strafeSpeed,
-                gp1.right_stick_x*turnSpeed);
         //follower.update();
 //        follower.setTeleOpMovementVectors(-gp1.left_stick_y*speed,
 //                -gp1.left_stick_x*strafeSpeed,
@@ -379,28 +370,21 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     public void startSampleModeCycle3() {
         setSampleModeState3(1);
     }
-
-    // TODO: ask andrew to configure his own driving speeds
-    // TODO: automatic spec scoring? press one button to relocalize, another to start, and another to stop
-
-
     public void updateControls() {
         pgp1.copy(cgp1);
         cgp1.copy(gp1);
         pgp2.copy(cgp2);
         cgp2.copy(gp2);
 
-        /* if (gp1.rightstick > 0.01) {
-            set drive to normal
+        if (gp1.right_stick_x > 0.01) {
+            drivetrain.setMovementVectors(gp1.left_stick_y*speed,
+                    gp1.left_stick_x*strafeSpeed,
+                    gp1.right_stick_x*turnSpeed);
         } else {
-            calculate heading error, deal with angles correctly hopefully
-            set drive and strafe to normal though
+            drivetrain.setHeadingLockMovementVectors(gp1.left_stick_y*speed,
+                    gp1.left_stick_x*strafeSpeed,
+                    gp1.right_stick_x*turnSpeed);
         }
-
-        set currentHeadingTarget to imu.getHeading()
-        maybe headinglock hold when you click left stick
-        */
-
 
         if (gp2.a && !pgp2.a){
             isHanging = !isHanging;

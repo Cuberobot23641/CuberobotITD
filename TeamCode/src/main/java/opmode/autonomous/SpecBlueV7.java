@@ -352,6 +352,8 @@ public class SpecBlueV7 extends OpMode {
                     robot.retractExtension.start();
                     // maybe this will save power?
                     detector.off();
+                    // YOOOOOOO
+                    // follower.setDrivePIDF();
                     follower.followPath(grabSpec3, true);
                     setPathState(17);
                 }
