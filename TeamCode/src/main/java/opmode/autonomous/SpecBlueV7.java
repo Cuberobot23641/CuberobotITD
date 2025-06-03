@@ -30,6 +30,8 @@ public class SpecBlueV7 extends OpMode {
     private Follower follower;
     private int pathState;
     private Timer pathTimer;
+    private Timer totalTimer;
+    private double totalElapsed = 0;
     private SigmaPythonDetector detector;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
@@ -450,6 +452,7 @@ public class SpecBlueV7 extends OpMode {
                 break;
             case 32:
                 if (robot.prepareGrabSpecimen.getIndex() > 0) {
+                    totalElapsed = totalTimer.getElapsedTimeSeconds();
                     setPathState(-1);
                 }
                 break;
@@ -467,11 +470,14 @@ public class SpecBlueV7 extends OpMode {
         detector.update();
         follower.update();
         autonomousPathUpdate();
+        telemetry.addData("total elapsed time", totalTimer.getElapsedTimeSeconds());
+        telemetry.addData("final elapsed time", totalElapsed);
     }
 
     @Override
     public void init() {
         pathTimer = new Timer();
+        totalTimer = new Timer();
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
@@ -492,6 +498,7 @@ public class SpecBlueV7 extends OpMode {
 
     @Override
     public void start() {
+        totalTimer.resetTimer();
         detector.on();
         buildPaths();
         setPathState(0);
