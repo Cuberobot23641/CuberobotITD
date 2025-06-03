@@ -41,7 +41,8 @@ public class FConstants {
 
         FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01,0,0.0001,0.6,0.0);
         FollowerConstants.useSecondaryDrivePID = true;
-        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.02,0,0.0004,0.6,0); // Not being used, @see useSecondaryDrivePID
+        // why this high bruh change it back and reyune. its really messing stuff up
+        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.01,0,0.0002,0.6,0); // Not being used, @see useSecondaryDrivePID
 
         FollowerConstants.zeroPowerAccelerationMultiplier = 4;
         FollowerConstants.centripetalScaling = 0.0005;

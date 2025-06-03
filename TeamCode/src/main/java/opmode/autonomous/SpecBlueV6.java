@@ -23,8 +23,8 @@ import pedroPathing.constants.FConstants;
 import robot.robots.AutonomousRobot;
 import util.PositionCalculator;
 
-@Autonomous(name = "grab fling start")
-public class SpecBlueV4 extends OpMode {
+@Autonomous(name = "aspirity ahh auto")
+public class SpecBlueV6 extends OpMode {
     public AutonomousRobot robot;
     private Follower follower;
     private int pathState;
@@ -32,45 +32,55 @@ public class SpecBlueV4 extends OpMode {
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
     private final Pose scorePreloadPose = new Pose(36, 66, Math.toRadians(0));
-    private PathChain scorePreload, grabSample12, grabSample3;
     private double[] positions1;
     private double[] positions2;
     private double[] positions3;
+    private PathChain scorePreload, grabSample1, moveSample1, grabSample2, moveSample2, grabSample3, grabSpec1;
     public void buildPaths() {
-        // TODO: set custom zpams
+        // TODO: MAKE PATHS LOL
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0.1, () -> robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF))
                 .build();
 
-        grabSample12 = follower.pathBuilder()
+        grabSample1 = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierLine(
                                 new Point(36.000, 66.000, Point.CARTESIAN),
-                                new Point(20.000, 19.000, Point.CARTESIAN)
+                                new Point(20.000, 23.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTValueConstraint(0.995)
-                .setPathEndTimeoutConstraint(200)
                 .addParametricCallback(0.5, () -> {
                     robot.setPositions(positions1);
                     robot.extendExtension.start();
                 })
                 .build();
 
+        grabSample2 = follower.pathBuilder()
+                .addPath(
+                        // Line 2
+                        new BezierLine(
+                                new Point(20.000, 23.000, Point.CARTESIAN),
+                                new Point(20.000, 13.000, Point.CARTESIAN)
+                        )
+                )
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTValueConstraint(0.995)
+                .build();
+
         grabSample3 = follower.pathBuilder()
                 .addPath(
                         // Line 3
                         new BezierLine(
-                                new Point(20.000, 19.00, Point.CARTESIAN),
-                                new Point(30.000, 18.000, Point.CARTESIAN)
+                                new Point(20.000, 13.00, Point.CARTESIAN),
+                                new Point(25.000, 10.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
-                .setPathEndTimeoutConstraint(200)
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-20))
                 .setPathEndTValueConstraint(0.995)
                 .build();
     }
@@ -90,7 +100,7 @@ public class SpecBlueV4 extends OpMode {
             case 2:
                 if (robot.prepareGrabSpecimen.getIndex() > 0) {
                     follower.setMaxPower(0.8);
-                    follower.followPath(grabSample12, true);
+                    follower.followPath(grabSample1, true);
                     setPathState(3);
                 }
                 break;
@@ -103,37 +113,50 @@ public class SpecBlueV4 extends OpMode {
             case 4:
                 if (robot.grabSample.isFinished()) {
                     robot.fastRetract.start();
+                    follower.followPath(grabSample2, true);
                     setPathState(5);
                 }
                 break;
             case 5:
                 if (robot.fastRetract.isFinished()) {
                     robot.setPositions(positions2);
-                    robot.fastGrab.start();
+                    robot.extendExtension.start();
                     setPathState(6);
                 }
                 break;
             case 6:
-                if (robot.fastGrab.isFinished()) {
-                    robot.fastRetract.start();
-                    follower.followPath(grabSample3, true);
+                if (!follower.isBusy() && robot.extendExtension.isFinished()) {
+                    robot.grabSample.start();
                     setPathState(7);
                 }
                 break;
             case 7:
-                if (robot.fastRetract.isFinished() && !follower.isBusy()) {
-                    robot.setPositions(positions3);
-                    robot.fastGrab.start();
+                if (robot.grabSample.isFinished()) {
+                    robot.fastRetract.start();
+                    follower.followPath(grabSample3, true);
                     setPathState(8);
                 }
                 break;
             case 8:
-                if (robot.fastGrab.isFinished()) {
-                    robot.fastRetract.start();
+                if (robot.fastRetract.isFinished()) {
+                    robot.setPositions(positions3);
+                    robot.extendExtension.start();
                     setPathState(9);
                 }
                 break;
             case 9:
+                if (!follower.isBusy() && robot.extendExtension.isFinished()) {
+                    robot.grabSample.start();
+                    setPathState(10);
+                }
+                break;
+            case 10:
+                if (robot.grabSample.isFinished()) {
+                    robot.fastRetract.start();
+                    setPathState(11);
+                }
+                break;
+            case 11:
                 if (robot.fastRetract.isFinished()) {
                     setPathState(-1);
                 }
@@ -160,9 +183,9 @@ public class SpecBlueV4 extends OpMode {
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-5, 20, 0);
-        positions2 = PositionCalculator.getPositions(5, 20, 0);
-        positions3 = PositionCalculator.getPositions(0, 15, -45);
+        positions1 = PositionCalculator.getPositions(0, 21, 0);
+        positions2 = PositionCalculator.getPositions(0, 21, 0);
+        positions3 = PositionCalculator.getPositions(-0.53, 16.37, 0);
         // detector = new LimelightDetector(hardwareMap, "blue sample");
         try {
             sleep(3000);

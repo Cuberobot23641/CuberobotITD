@@ -16,7 +16,7 @@ import util.Drivetrain;
 import java.util.List;
 import static robot.RobotConstants.*;
 
-public class TeleOpRobot {
+public class TeleOpRobotV2 {
     List<LynxModule> allHubs;
     private double currentHeadingTarget = 0;
     private HardwareMap hardwareMap;
@@ -47,7 +47,7 @@ public class TeleOpRobot {
     public double strafeSpeed = .8;
     public double turnSpeed = .25;
 
-    public TeleOpRobot(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
+public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         this.hardwareMap = hardwareMap;
         drivetrain = new Drivetrain(this.hardwareMap);
 

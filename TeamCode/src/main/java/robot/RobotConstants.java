@@ -5,7 +5,7 @@ public final class RobotConstants {
 
     // lift
     public static final int LIFT_SPEC_GRAB = 0;
-    public static final int LIFT_SPEC_SCORE = 1260; //980 SHOULD BE 1020
+    public static final int LIFT_SPEC_SCORE = 1020; //980 SHOULD BE 1020
     public static final int LIFT_SAMPLE_HIGH = 2200;
     public static final int LIFT_SAMPLE_LOW = 1000;
     public static final int LIFT_TRANSFER = 0;
@@ -21,7 +21,7 @@ public final class RobotConstants {
     public static final double DEPOSIT_CLAW_CLOSED = 0.37;
     public static final double DEPOSIT_ELBOW_TRANSFER = 0.84;//0.91;
     public static final double DEPOSIT_ELBOW_SPEC_GRAB = 0.1;
-    public static final double DEPOSIT_ELBOW_SPEC_SCORE = 0.8;//0.79; // 0.74 SHOULD BE 0.75
+    public static final double DEPOSIT_ELBOW_SPEC_SCORE = 0.74;//0.79; // 0.74 SHOULD BE 0.75
     public static final double DEPOSIT_ELBOW_SAMPLE_SCORE = 0.4;
     public static final double DEPOSIT_LINKAGE_EXTEND = 0.15;
     public static final double DEPOSIT_LINKAGE_RETRACT = 0.15;

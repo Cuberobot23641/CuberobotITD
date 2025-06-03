@@ -27,14 +27,19 @@ public class LimelightMoveTest extends OpMode {
 
         if (gamepad1.a && !pgp1.a) {
             robot.intake.openIntakeClaw();
-            double[] distances = detector.getDistances();
-            if (Math.abs(distances[0]) < 8 && Math.abs(distances[1]) < 30) {
-                double[] positions = detector.getPositions();
-                robot.setExtensionInches(positions[0]);
-                robot.setTurretAngle(positions[1]);
-                robot.setWristAngle(positions[2]);
-                robot.clickbaitGrab.start();
-            }
+//            double[] distances = detector.getDistances();
+//            if (Math.abs(distances[0]) != 0 && Math.abs(distances[1]) != 0) {
+//                double[] positions = detector.getPositions();
+//                robot.setExtensionInches(positions[0]);
+//                robot.setTurretAngle(positions[1]);
+//                robot.setWristAngle(positions[2]);
+//                robot.clickbaitGrab.start();
+//            }
+            double[] positions = detector.getPositions();
+            robot.setExtensionInches(positions[0]);
+            robot.setTurretAngle(positions[1]);
+            robot.setWristAngle(positions[2]);
+            robot.clickbaitGrab.start();
         }
 
         if (gamepad1.b && !pgp1.b) {
@@ -76,6 +81,5 @@ public class LimelightMoveTest extends OpMode {
     @Override
     public void start() {
         detector.on();
-        robot.lift.setTargetPos(1200);
     }
 }
