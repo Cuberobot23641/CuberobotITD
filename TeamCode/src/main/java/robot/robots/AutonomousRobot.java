@@ -83,7 +83,7 @@ public class AutonomousRobot {
                         () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> intake.openIntakeClaw()
                 ),
-                List.of(0.15, 0.15, 0.2)
+                List.of(0.15, 0.1, 0.15)
         );
 
         extendExtension = new RobotFunction(
@@ -121,15 +121,16 @@ public class AutonomousRobot {
 
         prepareGrabSpecimen = new RobotFunction(
                 List.of(
-                        () -> deposit.openDepositClaw(),
-                        () -> {
-                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-                            deposit.retractLinkage();
-                        },
-                        () -> lift.setTargetPos(LIFT_SPEC_GRAB)
+                        () -> deposit.openDepositClaw()
+//                        () -> {
+//                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+//                            deposit.retractLinkage();
+//                        },
+//                        () -> lift.setTargetPos(LIFT_SPEC_GRAB)
                 ),
                 // was 0.2, making small optimization
-                List.of(0.1, 0.3, 0.1)
+                //0.3, 0.1
+                List.of(0.1)
         );
 
         // this assumes that you have already grabbed
@@ -181,7 +182,7 @@ public class AutonomousRobot {
                         () -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
                         () -> intake.closeIntakeClaw()
                 ),
-                List.of(0.5, 0.2, 0.3)
+                List.of(0.5, 0.15, 0.25)
         );
 
         transferUp = new RobotFunction(

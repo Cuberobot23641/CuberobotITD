@@ -46,9 +46,9 @@ public class OldPathing extends OpMode {
     private final Pose score3Pose = new Pose(35, 66, Math.toRadians(180));
     private final Pose score4Pose = new Pose(35, 64.5, Math.toRadians(180));
     private final Pose score5Pose = new Pose(35, 63, Math.toRadians(180));
-    private final Pose score6Pose = new Pose(36, 62, Math.toRadians(180));
+    private final Pose score6Pose = new Pose(43, 62, Math.toRadians(180));
 
-    private final Pose sample1Pose = new Pose(15, 40, Math.toRadians(225));
+    private final Pose sample1Pose = new Pose(15, 43, Math.toRadians(225));
     private final Pose sampleScorePose = new Pose(12, 134, Math.toRadians(315));
     private PathChain scorePreload, grabSpec1, scoreSpec1, push, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6, grabSample1, scoreSample1, pushFinal;
     public void buildPaths() {
@@ -88,9 +88,9 @@ public class OldPathing extends OpMode {
                 .addPath(
                         // Line 4
                         new BezierCurve(
-                                new Point(40.000, 76.000, Point.CARTESIAN),
-                                new Point(20, 40, Point.CARTESIAN),
-                                new Point(59.733, 41.778, Point.CARTESIAN),
+                                new Point(43.000, 76.000, Point.CARTESIAN),
+                                new Point(20, 43, Point.CARTESIAN),
+                                new Point(59.733, 43.778, Point.CARTESIAN),
                                 new Point(48.000, 25.000, Point.CARTESIAN)
                         )
                 )
@@ -105,28 +105,28 @@ public class OldPathing extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setZeroPowerAccelerationMultiplier(4)
-                .setPathEndVelocityConstraint(40) // in/s?
+                .setPathEndVelocityConstraint(43) // in/s?
                 .addPath(
                         // Line 6
                         new BezierCurve(
                                 new Point(20, 25.000, Point.CARTESIAN),
-                                new Point(41, 24.889, Point.CARTESIAN),
-                                new Point(40.000, 14.000, Point.CARTESIAN)
+                                new Point(43, 24.889, Point.CARTESIAN),
+                                new Point(43.000, 14.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setZeroPowerAccelerationMultiplier(6)
-                .setPathEndVelocityConstraint(40) // in/s?
+                .setPathEndVelocityConstraint(43) // in/s?
                 .addPath(
                         // Line 7
                         new BezierLine(
-                                new Point(41.000, 15.000, Point.CARTESIAN),
+                                new Point(43.000, 15.000, Point.CARTESIAN),
                                 new Point(26.000, 14.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setZeroPowerAccelerationMultiplier(4)
-                .setPathEndVelocityConstraint(40) // in/s?
+                .setPathEndVelocityConstraint(43) // in/s?
                 .addPath(
                         // Line 8
                         new BezierCurve(
@@ -137,7 +137,7 @@ public class OldPathing extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setZeroPowerAccelerationMultiplier(6)
-                .setPathEndVelocityConstraint(40) // in/s?
+                .setPathEndVelocityConstraint(43) // in/s?
                 .addPath(
                         // Line 9
                         new BezierLine(

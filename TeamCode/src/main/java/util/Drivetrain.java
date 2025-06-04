@@ -16,7 +16,7 @@ public class Drivetrain {
     private Follower follower;
     private double targetHeading = 0;
     public Drivetrain(HardwareMap hardwareMap) {
-        this.headingController = new PIDFController(2, 0, 0.05, 0); // same as pedro
+        this.headingController = new PIDFController(1, 0, 0.01, 0); // same as pedro
         this.hardwareMap = hardwareMap;
         fl = this.hardwareMap.get(DcMotorEx.class, "front_left_drive");
         bl = this.hardwareMap.get(DcMotorEx.class, "back_left_drive");
@@ -73,7 +73,7 @@ public class Drivetrain {
         double y = -forward; // Remember, Y stick value is reversed
         double x = strafe * 1.1; // Counteract imperfect strafing
 
-        double rx = headingController.calculate(angleWrap(follower.getPose().getHeading()), angleWrap(targetHeading));
+        double rx = -headingController.calculate(angleWrap(follower.getPose().getHeading()), angleWrap(targetHeading));
 
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio,
@@ -96,6 +96,13 @@ public class Drivetrain {
     }
 
     // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
+    public double getTargetHeading() {
+        return angleWrap(targetHeading);
+    }
+
+    public double getCurrentHeading() {
+        return angleWrap(follower.getPose().getHeading());
+    }
     private double angleWrap(double radians) {
 
         while (radians > Math.PI) {

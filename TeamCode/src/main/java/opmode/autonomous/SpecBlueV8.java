@@ -30,10 +30,12 @@ public class SpecBlueV8 extends OpMode {
     private Follower follower;
     private int pathState;
     private Timer pathTimer;
+    private Timer totalTimer;
+    private double totalElapsed = 0;
     private SigmaPythonDetector detector;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(36, 66, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(42, 66, Math.toRadians(0));
     private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6;
     private double[] positions1;
     private double[] positions2;
@@ -43,23 +45,28 @@ public class SpecBlueV8 extends OpMode {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         grabSample12 = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierLine(
-                                new Point(36.000, 66.000, Point.CARTESIAN),
+                                new Point(42.000, 66.000, Point.CARTESIAN),
                                 new Point(20.000, 19.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTValueConstraint(0.995)
                 // optimizing on time
-                //.setPathEndTimeoutConstraint(200)
+                // .setPathEndTimeoutConstraint(100)
                 .addParametricCallback(0.5, () -> {
                     robot.setPositions(positions1);
                     robot.extendExtension.start();
+                })
+                .addParametricCallback(0.1, () -> {
+                    robot.lift.setTargetPos(0);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .build();
 
@@ -68,10 +75,10 @@ public class SpecBlueV8 extends OpMode {
                         // Line 3
                         new BezierLine(
                                 new Point(20.000, 19.00, Point.CARTESIAN),
-                                new Point(30.000, 18.000, Point.CARTESIAN)
+                                new Point(22.000, 15.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-25))
                 //.setPathEndTimeoutConstraint(200)
                 .setPathEndTValueConstraint(0.995)
                 .build();
@@ -80,55 +87,117 @@ public class SpecBlueV8 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(30.000, 18.000, Point.CARTESIAN),
+                                new Point(22.000, 15.000, Point.CARTESIAN),
                                 new Point(9.000, 32.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(-25), Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         scoreSpec1 = follower.pathBuilder()
                 .addPath(
-                        // Line 2
-                        new BezierLine(
-                                new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(36.000, 72.000, Point.CARTESIAN)
-                        )
+                // Line 2
+                    new BezierLine(
+                        new Point(9.000, 32.000, Point.CARTESIAN),
+                        new Point(43.000, 73.000, Point.CARTESIAN)
+                    )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
+//                .addPath(new BezierCurve(
+//                        new Point(9, 32, Point.CARTESIAN),
+//                        new Point(30, 72, Point.CARTESIAN)
+//                ))
+//                .setPathEndTValueConstraint(0.7)
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .addPath(new BezierCurve(
+//                        new Point(30, 72, Point.CARTESIAN),
+//                        new Point(43, 72, Point.CARTESIAN)
+//                ))
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .setPathEndTValueConstraint(0.95)
+//                .setZeroPowerAccelerationMultiplier(6)
+//                .setPathEndTimeoutConstraint(0)
 
         grabSpec2 = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(36.000, 72.000, Point.CARTESIAN),
-                                new Point(9.000, 32.000, Point.CARTESIAN)
+                                new Point(43.000, 73.000, Point.CARTESIAN),
+                                new Point(18.000, 32.000, Point.CARTESIAN)
+                        )
+                )
+                .setPathEndTValueConstraint(0.8)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(0.1, () -> {
+                    robot.lift.setTargetPos(0);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+                .addPath(
+                        new BezierCurve(
+                                new Point(18, 32, Point.CARTESIAN),
+                                new Point(9, 32, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTValueConstraint(0.7)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         scoreSpec2 = follower.pathBuilder()
+//                .addPath(new BezierCurve(
+//                        new Point(9, 32, Point.CARTESIAN),
+//                        new Point(30, 72, Point.CARTESIAN)
+//                ))
+//                .setPathEndTValueConstraint(0.7)
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .addPath(new BezierCurve(
+//                        new Point(30, 72, Point.CARTESIAN),
+//                        new Point(43, 72, Point.CARTESIAN)
+//                ))
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
+//                .setPathEndTValueConstraint(0.95)
+//                .setZeroPowerAccelerationMultiplier(6)
+//                .setPathEndTimeoutConstraint(0)
+//                .build();
                 .addPath(
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(36.000, 72.000, Point.CARTESIAN)
+                                new Point(43.000, 72.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
 
         grabSpec3 = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(36.000, 72.000, Point.CARTESIAN),
-                                new Point(9.000, 32.000, Point.CARTESIAN)
+                                new Point(43.000, 72.000, Point.CARTESIAN),
+                                new Point(18.000, 32.000, Point.CARTESIAN)
+                        )
+                )
+                .setPathEndTValueConstraint(0.8)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(0.1, () -> {
+                    robot.lift.setTargetPos(0);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+                .addPath(
+                        new BezierCurve(
+                                new Point(18, 32, Point.CARTESIAN),
+                                new Point(9, 32, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTValueConstraint(0.7)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         scoreSpec3 = follower.pathBuilder()
@@ -136,21 +205,38 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(36.000, 72.000, Point.CARTESIAN)
+                                new Point(43.000, 71.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
 
         grabSpec4 = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(36.000, 72.000, Point.CARTESIAN),
-                                new Point(9.000, 32.000, Point.CARTESIAN)
+                                new Point(43.000, 71.000, Point.CARTESIAN),
+                                new Point(18.000, 32.000, Point.CARTESIAN)
+                        )
+                )
+                .setPathEndTValueConstraint(0.8)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(0.1, () -> {
+                    robot.lift.setTargetPos(0);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+                .addPath(
+                        new BezierCurve(
+                                new Point(18, 32, Point.CARTESIAN),
+                                new Point(9, 32, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+
+                .setPathEndTValueConstraint(0.7)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         scoreSpec4 = follower.pathBuilder()
@@ -158,21 +244,37 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(36.000, 72.000, Point.CARTESIAN)
+                                new Point(43.000, 70.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
 
         grabSpec5 = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(36.000, 72.000, Point.CARTESIAN),
-                                new Point(9.000, 32.000, Point.CARTESIAN)
+                                new Point(43.000, 70.000, Point.CARTESIAN),
+                                new Point(18.000, 32.000, Point.CARTESIAN)
+                        )
+                )
+                .setPathEndTValueConstraint(0.8)
+                .addParametricCallback(0.1, () -> {
+                    robot.lift.setTargetPos(0);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addPath(
+                        new BezierCurve(
+                                new Point(18, 32, Point.CARTESIAN),
+                                new Point(9, 32, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTValueConstraint(0.7)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         scoreSpec5 = follower.pathBuilder()
@@ -180,21 +282,37 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(36.000, 72.000, Point.CARTESIAN)
+                                new Point(43.000, 69.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
 
         grabSpec6 = follower.pathBuilder()
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(36.000, 72.000, Point.CARTESIAN),
-                                new Point(9.000, 32.000, Point.CARTESIAN)
+                                new Point(43.000, 69.000, Point.CARTESIAN),
+                                new Point(18.000, 32.000, Point.CARTESIAN)
+                        )
+                )
+                .setPathEndTValueConstraint(0.8)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(0.1, () -> {
+                    robot.lift.setTargetPos(0);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+                .addPath(
+                        new BezierCurve(
+                                new Point(18, 32, Point.CARTESIAN),
+                                new Point(9, 32, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTValueConstraint(0.7)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         scoreSpec6 = follower.pathBuilder()
@@ -202,10 +320,12 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(36.000, 72.000, Point.CARTESIAN)
+                                new Point(43.000, 67.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setZeroPowerAccelerationMultiplier(6)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
     }
@@ -223,7 +343,7 @@ public class SpecBlueV8 extends OpMode {
                 }
                 break;
             case 2:
-                if (robot.prepareGrabSpecimen.getIndex() > 0) {
+                if (robot.prepareGrabSpecimen.isFinished()) {
                     // was 0.8, but we wanna be fast
                     follower.setMaxPower(1);
                     follower.followPath(grabSample12, true);
@@ -267,7 +387,7 @@ public class SpecBlueV8 extends OpMode {
                 if (robot.fastGrab.isFinished()) {
                     robot.fastRetract.start();
                     follower.setMaxPower(1);
-                    follower.followPath(grabSpec1, true);
+                    follower.followPath(grabSpec1, false);
                     setPathState(9);
                 }
                 break;
@@ -293,7 +413,7 @@ public class SpecBlueV8 extends OpMode {
             case 69:
                 double[] distances1 = detector.getDistances();
                 // set to 0.1 to be fast
-                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.1) {
+                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
@@ -330,13 +450,13 @@ public class SpecBlueV8 extends OpMode {
             case 15:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
                     robot.prepareGrabSpecimen.start();
-                    setPathState(420);
+                    setPathState(430);
                 }
                 break;
-            case 420:
+            case 430:
                 double[] distances2 = detector.getDistances();
                 // shouldnt be necessary
-                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.1) {
+                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
@@ -375,7 +495,7 @@ public class SpecBlueV8 extends OpMode {
                 }
                 break;
             case 20:
-                if (robot.prepareGrabSpecimen.getIndex() > 0) {
+                if (robot.prepareGrabSpecimen.isFinished()) {
                     follower.followPath(grabSpec4, true);
                     setPathState(21);
                 }
@@ -400,7 +520,7 @@ public class SpecBlueV8 extends OpMode {
                 }
                 break;
             case 24:
-                if (robot.prepareGrabSpecimen.getIndex() > 0) {
+                if (robot.prepareGrabSpecimen.isFinished()) {
                     follower.followPath(grabSpec5, true);
                     setPathState(25);
                 }
@@ -425,7 +545,7 @@ public class SpecBlueV8 extends OpMode {
                 }
                 break;
             case 28:
-                if (robot.prepareGrabSpecimen.getIndex() > 0) {
+                if (robot.prepareGrabSpecimen.isFinished()) {
                     follower.followPath(grabSpec6, true);
                     setPathState(29);
                 }
@@ -450,7 +570,8 @@ public class SpecBlueV8 extends OpMode {
                 }
                 break;
             case 32:
-                if (robot.prepareGrabSpecimen.getIndex() > 0) {
+                if (robot.prepareGrabSpecimen.isFinished()) {
+                    totalElapsed = totalTimer.getElapsedTimeSeconds();
                     setPathState(-1);
                 }
                 break;
@@ -468,17 +589,21 @@ public class SpecBlueV8 extends OpMode {
         detector.update();
         follower.update();
         autonomousPathUpdate();
+
+        telemetry.addData("total elapsed time", totalTimer.getElapsedTimeSeconds());
+        telemetry.addData("final elapsed time", totalElapsed);
     }
 
     @Override
     public void init() {
         pathTimer = new Timer();
+        totalTimer = new Timer();
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-5, 20, 0);
+        positions1 = PositionCalculator.getPositions(-6, 22, 0);
         positions2 = PositionCalculator.getPositions(5, 20, 0);
-        positions3 = PositionCalculator.getPositions(0, 15, -45);
+        positions3 = PositionCalculator.getPositions(0.8, 19.5, -25);
         detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         try {
             sleep(3000);
@@ -486,6 +611,7 @@ public class SpecBlueV8 extends OpMode {
             throw new RuntimeException(e);
         }
         robot = new AutonomousRobot(hardwareMap);
+        robot.lift.setTargetPos(300);
     }
 
     @Override
@@ -493,6 +619,7 @@ public class SpecBlueV8 extends OpMode {
 
     @Override
     public void start() {
+        totalTimer.resetTimer();
         detector.on();
         buildPaths();
         setPathState(0);

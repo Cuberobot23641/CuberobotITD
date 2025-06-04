@@ -128,6 +128,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     public void sampleCycle1() {
         switch (sampleState1) {
             case 1:
+                intake.setTurretPos(INTAKE_TURRET_DEFAULT);
                 extension.setTargetPos(EXTENSION_MAX);
                 // intake.setElbowIntakePos(INTAKE_ELBOW_DOWN);
                 setSampleState1(2);
@@ -234,7 +235,8 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     public void specCycle2() {
         switch (specState2) {
             case 1:
-                deposit.closeDepositClaw();
+                deposit.setClawDepositPos(DEPOSIT_CLAW_LOOSE);
+                intake.setTurretPos(0.7);
                 setSpecState2(2);
                 break;
             case 2:
@@ -245,6 +247,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 3:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.3) {
+                    deposit.closeDepositClaw();
                     deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
                     setSpecState2(4);
                 }
@@ -376,7 +379,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         pgp2.copy(cgp2);
         cgp2.copy(gp2);
 
-        if (gp1.right_stick_x > 0.01) {
+        if (Math.abs(gp1.right_stick_x) > 0) {
             drivetrain.setMovementVectors(gp1.left_stick_y*speed,
                     gp1.left_stick_x*strafeSpeed,
                     gp1.right_stick_x*turnSpeed);

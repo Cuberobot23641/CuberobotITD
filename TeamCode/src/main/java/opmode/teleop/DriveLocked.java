@@ -32,5 +32,8 @@ public class DriveLocked extends OpMode {
     public void loop() {
         robot.loop();
         robot.updateControls();
+        telemetry.addData("current heading", robot.drivetrain.getCurrentHeading());
+        telemetry.addData("target heading", robot.drivetrain.getTargetHeading());
+        telemetry.update();
     }
 }

@@ -146,7 +146,8 @@ public class SigmaPythonDetector {
 
     public void on() {
         limelight.start();
-        // limelight.setPollRateHz(11);
+        // TODO: check maybe this will be good idk
+        limelight.setPollRateHz(10);
     }
 
     public boolean isSampleThere() {
