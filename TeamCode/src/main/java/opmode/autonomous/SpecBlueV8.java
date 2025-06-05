@@ -88,10 +88,19 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierCurve(
                                 new Point(22.000, 15.000, Point.CARTESIAN),
-                                new Point(9.000, 32.000, Point.CARTESIAN)
+                                new Point(14.000, 32.000, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(-25), Math.toRadians(0))
+                .setPathEndTimeoutConstraint(0)
+                .addPath(
+                        // Line 2
+                        new BezierCurve(
+                                new Point(14.000, 32.000, Point.CARTESIAN),
+                                new Point(9.000, 32.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
