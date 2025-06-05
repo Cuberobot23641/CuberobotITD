@@ -31,7 +31,7 @@ public class SpecBlueV4 extends OpMode {
     private Timer pathTimer;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(43, 66, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(44, 66, Math.toRadians(0));
     private PathChain scorePreload, grabSample12, grabSample3;
     private double[] positions1;
     private double[] positions2;
@@ -48,7 +48,7 @@ public class SpecBlueV4 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierLine(
-                                new Point(43.000, 66.000, Point.CARTESIAN),
+                                new Point(44.000, 66.000, Point.CARTESIAN),
                                 new Point(20.000, 19.000, Point.CARTESIAN)
                         )
                 )

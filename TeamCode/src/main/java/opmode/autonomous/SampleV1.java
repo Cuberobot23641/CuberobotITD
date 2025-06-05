@@ -166,7 +166,7 @@ public class SampleV1 extends OpMode {
                 .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
                 .setPathEndTValueConstraint(0.99)
                 .setPathEndTimeoutConstraint(100)
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(8)
                 .build();
 
     }

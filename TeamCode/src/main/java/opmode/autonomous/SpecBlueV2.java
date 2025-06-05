@@ -41,7 +41,7 @@ public class SpecBlueV2 extends OpMode {
     private Timer pathTimer;
     private double[] pos2;
     private final Pose startPose = new Pose(9, 72, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(43, 72, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(44, 72, Math.toRadians(0));
     private PathChain push, scorePreload, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSample12, grabSample3;
     public void buildPaths() {
         scorePreload = follower.pathBuilder()
@@ -54,7 +54,7 @@ public class SpecBlueV2 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(43.000, 72.000, Point.CARTESIAN),
+                                new Point(44.000, 72.000, Point.CARTESIAN),
                                 new Point(9.000, 32.000, Point.CARTESIAN)
                         )
                 )
@@ -66,7 +66,7 @@ public class SpecBlueV2 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(43.000, 72.000, Point.CARTESIAN)
+                                new Point(44.000, 72.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -76,7 +76,7 @@ public class SpecBlueV2 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(43.000, 72.000, Point.CARTESIAN),
+                                new Point(44.000, 72.000, Point.CARTESIAN),
                                 new Point(9.000, 32.000, Point.CARTESIAN)
                         )
                 )
@@ -88,7 +88,7 @@ public class SpecBlueV2 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(43.000, 72.000, Point.CARTESIAN)
+                                new Point(44.000, 72.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -98,7 +98,7 @@ public class SpecBlueV2 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierLine(
-                                new Point(43.000, 72.000, Point.CARTESIAN),
+                                new Point(44.000, 72.000, Point.CARTESIAN),
                                 new Point(24.000, 18.000, Point.CARTESIAN)
                         )
                 )
@@ -174,10 +174,10 @@ public class SpecBlueV2 extends OpMode {
                     robot.prepareGrabSpecimen.start();
 //                    //robot.setPositions(detector.getPositions());
 //                    robot.fastGrab.start();
-                    setPathState(430);
+                    setPathState(440);
                 }
                 break;
-            case 430:
+            case 440:
                 double[] distances2 = detector.getDistances();
                 // shouldnt be necessary
                 if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {

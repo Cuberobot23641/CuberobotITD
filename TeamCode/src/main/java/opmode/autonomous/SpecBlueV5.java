@@ -30,7 +30,7 @@ public class SpecBlueV5 extends OpMode {
     private Timer pathTimer;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(43, 66, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(44, 66, Math.toRadians(0));
     private PathChain scorePreload, grabSample1, moveSample1, grabSample2, moveSample2, grabSample3, grabSpec1;
     public void buildPaths() {
         // TODO: set custom zpams
@@ -44,9 +44,9 @@ public class SpecBlueV5 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(43.000, 66.000, Point.CARTESIAN),
+                                new Point(44.000, 66.000, Point.CARTESIAN),
                                 new Point(27.000, 67.000, Point.CARTESIAN),
-                                new Point(29.000, 43.000, Point.CARTESIAN)
+                                new Point(29.000, 44.000, Point.CARTESIAN)
                         )
                 )
 //                .setCustomHeadingInterpolation(t -> (1-Math.exp(-t)) * ((2*Math.E) / (1+Math.E)) * Math.toRadians(-45))
@@ -63,8 +63,8 @@ public class SpecBlueV5 extends OpMode {
                 .addPath(
                         // Line 3
                         new BezierLine(
-                                new Point(29.000, 43.000, Point.CARTESIAN),
-                                new Point(29.000, 43.000, Point.CARTESIAN)
+                                new Point(29.000, 44.000, Point.CARTESIAN),
+                                new Point(29.000, 44.000, Point.CARTESIAN)
                         )
                 )
                 .addParametricCallback(0.85, () -> robot.intake.openIntakeClaw())
@@ -81,7 +81,7 @@ public class SpecBlueV5 extends OpMode {
                 .addPath(
                         // Line 4
                         new BezierLine(
-                                new Point(29.000, 43.000, Point.CARTESIAN),
+                                new Point(29.000, 44.000, Point.CARTESIAN),
                                 new Point(29.000, 31.000, Point.CARTESIAN)
                         )
                 )

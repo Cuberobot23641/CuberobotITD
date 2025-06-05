@@ -20,7 +20,7 @@ public class AutonomousRobot {
     public Extension extension;
     public Deposit deposit;
     public Intake intake;
-    public RobotFunction grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn;
+    public RobotFunction grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample;
 
     public double extensionInches;
     public double turretAngle;
@@ -55,6 +55,18 @@ public class AutonomousRobot {
                 List.of(0.2, 0.3)
         );
 
+        thirdSample = new RobotFunction(
+                List.of(
+                        () -> extension.setTargetPos(EXTENSION_MIN),
+                        () -> {
+                            intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                            intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                        }
+                ),
+                List.of(0.15, 0.1)
+        );
+
 
         retractExtension = new RobotFunction(
                 List.of(
@@ -75,16 +87,19 @@ public class AutonomousRobot {
 
         fastRetract = new RobotFunction(
                 List.of(
+                        () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> {
                             intake.setWristPos(INTAKE_WRIST_DROP_OFF);
                             intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
                             intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
                         },
-                        () -> extension.setTargetPos(EXTENSION_MIN),
+//                        () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> intake.openIntakeClaw()
                 ),
                 List.of(0.15, 0.1, 0.15)
         );
+
+
 
         extendExtension = new RobotFunction(
                 List.of(
@@ -241,6 +256,7 @@ public class AutonomousRobot {
         fastRetract.run();
         fastGrab.run();
         transferIn.run();
+        thirdSample.run();
 
         extension.loop();
         lift.loop();

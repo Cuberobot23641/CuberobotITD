@@ -46,10 +46,10 @@ public class SampleV2 extends OpMode {
                         new BezierCurve(
                                 new Point(9.000, 114.000, Point.CARTESIAN),
                                 new Point(15.008, 121.893, Point.CARTESIAN),
-                                new Point(16.000, 133.000, Point.CARTESIAN)
+                                new Point(20.000, 133.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-20))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-25))
                 .setPathEndTValueConstraint(0.995)
                 .build();
 
@@ -57,7 +57,7 @@ public class SampleV2 extends OpMode {
                 .addPath(
                         // Line 3
                         new BezierLine(
-                                new Point(16.000, 133.000, Point.CARTESIAN),
+                                new Point(20.000, 133.000, Point.CARTESIAN),
                                 new Point(16.000, 138.000, Point.CARTESIAN)
                         )
                 )
@@ -76,7 +76,7 @@ public class SampleV2 extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-90))
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(8)
                 .build();
 
         fromSubmersible1 = follower.pathBuilder()
@@ -101,7 +101,7 @@ public class SampleV2 extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(8)
                 .build();
 
         fromSubmersible2 = follower.pathBuilder()
@@ -126,7 +126,7 @@ public class SampleV2 extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(8)
                 .build();
 
         fromSubmersible3 = follower.pathBuilder()
@@ -266,6 +266,7 @@ public class SampleV2 extends OpMode {
                 break;
             case 69:
                 if (robot.fastGrab.isFinished()) {
+                    // we need to extend slides before transfer, also put intake uprobot.extension.setTargetPos(500);
                     robot.transfer.start();
                     follower.followPath(fromSubmersible1, true);
                     setPathState(17);
@@ -405,9 +406,9 @@ public class SampleV2 extends OpMode {
         follower.setStartingPose(startPose);
         detector = new SigmaPythonDetector(hardwareMap, "yellow sample");
 
-        positions1 = PositionCalculator.getPositions(1, 26, -20);
-        positions2 = PositionCalculator.getPositions(0, 24.5, -5);
-        positions3 = PositionCalculator.getPositions(-4, 23, 0);
+        positions1 = PositionCalculator.getPositions(2, 26, -25);
+        positions2 = PositionCalculator.getPositions(1, 24.5, -5);
+        positions3 = PositionCalculator.getPositions(-3, 24.5, 0);
 
         try {
             sleep(3000);

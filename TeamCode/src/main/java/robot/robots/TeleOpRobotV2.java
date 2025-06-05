@@ -241,14 +241,16 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 2:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.4) {
-                    lift.setTargetPos(LIFT_SPEC_SCORE);
+                    // TODO: TUNE
+                    lift.setTargetPos(1180);
                     setSpecState2(3);
                 }
                 break;
             case 3:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.3) {
                     deposit.closeDepositClaw();
-                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
+                    // TODO: TUNE
+                    deposit.setElbowDepositPos(0.78);
                     setSpecState2(4);
                 }
                 break;
