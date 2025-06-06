@@ -157,6 +157,9 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 2:
                 if (sample2Timer.getElapsedTimeSeconds() > 0.4) {
+                    speed = .6;
+                    strafeSpeed = .8;
+                    turnSpeed = .25;
                     extension.setTargetPos(EXTENSION_MIN);
                     intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
                     setSampleState2(3);
@@ -211,13 +214,14 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 2:
                 if (spec1Timer.getElapsedTimeSeconds() > 0.3) {
-                    deposit.retractLinkage();
+                    //deposit.retractLinkage();
                     deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+
                     setSpecState1(3);
                 }
                 break;
             case 3:
-                if (spec1Timer.getElapsedTimeSeconds() > 0.3) {
+                if (spec1Timer.getElapsedTimeSeconds() > 0.1) {
                     lift.setTargetPos(LIFT_SPEC_GRAB);
                     setSpecState1(-1);
                 }
@@ -236,12 +240,13 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         switch (specState2) {
             case 1:
                 deposit.setClawDepositPos(DEPOSIT_CLAW_LOOSE);
-                intake.setTurretPos(0.7);
+                intake.openIntakeClaw();
                 setSpecState2(2);
                 break;
             case 2:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.4) {
                     // TODO: TUNE
+                    intake.setTurretPos(0.7);
                     lift.setTargetPos(1180);
                     setSpecState2(3);
                 }
@@ -298,6 +303,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 2:
                 if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
+
                     intake.setWristPos(INTAKE_WRIST_DEFAULT);
                     intake.setElbowIntakePos(INTAKE_ELBOW_TRANSFER);
                     intake.setTurretPos(INTAKE_TURRET_TRANSFER);
@@ -435,23 +441,23 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             if (gp1.right_bumper && !pgp1.right_bumper) {
                 if (sampleCycleState == 1) {
                     // extend into sub
-                    speed = .15;
+                    speed = .2;
                     strafeSpeed = .225;
                     turnSpeed = .14;
                     startSampleCycle1();
                     sampleCycleState = 2;
                 } else if (sampleCycleState == 2) {
                     // grab and retract
-                    speed = 1;
-                    strafeSpeed = 0.8;
-                    turnSpeed = 0.25;
+//                    speed = 1;
+//                    strafeSpeed = 0.8;
+//                    turnSpeed = 0.25;
                     startSampleCycle2();
                     sampleCycleState = 3;
                 } else if (sampleCycleState == 3) {
                     // extend, release sample, retract
                     startSampleCycle3();
                     sampleCycleState = 1;
-                    speed = 1;
+                    speed = .6;
                     strafeSpeed = 0.8;
                     turnSpeed = 0.25;
                 }
@@ -460,14 +466,14 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             if (gp1.left_bumper && !pgp1.left_bumper) {
                 if (specCycleState == 1) {
                     // release, prepare to grab spec
-                    speed = 1;
+                    speed = .7;
                     strafeSpeed = 0.8;
                     turnSpeed = 0.25;
                     startSpecCycle1();
                     specCycleState = 2;
                 } else if (specCycleState == 2) {
                     // grab spec, prepare to score
-                    speed = 1;
+                    speed = .7;
                     strafeSpeed = 0.8;
                     turnSpeed = 0.25;
                     startSpecCycle2();
@@ -480,7 +486,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     // extend into sub
                     speed = .15;
                     strafeSpeed = .225;
-                    turnSpeed = .14;
+                    turnSpeed = .16;
                     startSampleModeCycle1();
                     sampleModeCycleState = 2;
                 } else if (sampleModeCycleState == 2) {
@@ -494,7 +500,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     // extend, release sample, retract
                     startSampleModeCycle3();
                     sampleModeCycleState = 1;
-                    speed = .5;
+                    speed = .4;
                     strafeSpeed = .35;
                     turnSpeed = .2;
                 }

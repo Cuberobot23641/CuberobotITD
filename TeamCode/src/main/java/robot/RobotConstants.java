@@ -32,7 +32,7 @@ public final class RobotConstants {
     public static final double INTAKE_CLAW_CLOSED = 0.58;
     public static final double INTAKE_ELBOW_DEFAULT = 0.25;
     public static final double INTAKE_ELBOW_TRANSFER = 0.85;
-    public static final double INTAKE_ELBOW_DOWN = 0.16;
+    public static final double INTAKE_ELBOW_DOWN = 0.165;
     // good for not getting in the way, use this in the middle of retract
     public static final double INTAKE_ELBOW_IN = 0.25;
     public static final double INTAKE_ELBOW_HOVER = 0.2;
