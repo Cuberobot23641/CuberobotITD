@@ -308,12 +308,12 @@ public class SpecBlueV8 extends OpMode {
                 break;
             case 4:
                 if (robot.grabSample.isFinished()) {
-                    robot.fastRetract.start();
+                    robot.firstSample.start();
                     setPathState(5);
                 }
                 break;
             case 5:
-                if (robot.fastRetract.isFinished()) {
+                if (robot.firstSample.isFinished()) {
                     robot.setPositions(positions2);
                     robot.fastGrab.start();
                     setPathState(6);

@@ -20,7 +20,7 @@ public class AutonomousRobot {
     public Extension extension;
     public Deposit deposit;
     public Intake intake;
-    public RobotFunction grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample;
+    public RobotFunction grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample, firstSample;
 
     public double extensionInches;
     public double turretAngle;
@@ -93,6 +93,20 @@ public class AutonomousRobot {
                             intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
                             intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
                         },
+//                        () -> extension.setTargetPos(EXTENSION_MIN),
+                        () -> intake.openIntakeClaw()
+                ),
+                List.of(0.15, 0.1, 0.15)
+        );
+
+        firstSample = new RobotFunction(
+                List.of(
+                        () -> {
+                            intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                            intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                        },
+                        () -> extension.setTargetPos(EXTENSION_MIN),
 //                        () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> intake.openIntakeClaw()
                 ),
@@ -257,6 +271,7 @@ public class AutonomousRobot {
         fastGrab.run();
         transferIn.run();
         thirdSample.run();
+        firstSample.run();
 
         extension.loop();
         lift.loop();
