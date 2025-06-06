@@ -46,7 +46,7 @@ public class SampleV2 extends OpMode {
                         new BezierCurve(
                                 new Point(9.000, 114.000, Point.CARTESIAN),
                                 new Point(15.008, 121.893, Point.CARTESIAN),
-                                new Point(20.000, 133.000, Point.CARTESIAN)
+                                new Point(20.000, 131.000, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-25))
@@ -57,7 +57,7 @@ public class SampleV2 extends OpMode {
                 .addPath(
                         // Line 3
                         new BezierLine(
-                                new Point(20.000, 133.000, Point.CARTESIAN),
+                                new Point(20.000, 131.000, Point.CARTESIAN),
                                 new Point(16.000, 138.000, Point.CARTESIAN)
                         )
                 )
@@ -77,10 +77,14 @@ public class SampleV2 extends OpMode {
                 )
                 // add parametric callback: set intake to drop off pos,
                 // later parametric callback: retract slides
-                .addParametricCallback(0.1, () -> robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF))
-                .addParametricCallback(0.3, () -> robot.extension.setTargetPos(0))
+                .addParametricCallback(0.15, () -> {
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.4, () -> robot.extension.setTargetPos(0))
+                .addParametricCallback(0.4, () -> robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-90))
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
 
         fromSubmersible1 = follower.pathBuilder()
@@ -104,8 +108,14 @@ public class SampleV2 extends OpMode {
                                 new Point(64.000, 96.000, Point.CARTESIAN)
                         )
                 )
+                .addParametricCallback(0.15, () -> {
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.4, () -> robot.extension.setTargetPos(0))
+                .addParametricCallback(0.4, () -> robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE))
                 .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
 
         fromSubmersible2 = follower.pathBuilder()
@@ -129,8 +139,14 @@ public class SampleV2 extends OpMode {
                                 new Point(64.000, 96.000, Point.CARTESIAN)
                         )
                 )
+                .addParametricCallback(0.15, () -> {
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.4, () -> robot.extension.setTargetPos(0))
+                .addParametricCallback(0.4, () -> robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE))
                 .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(6)
                 .build();
 
         fromSubmersible3 = follower.pathBuilder()
@@ -158,6 +174,11 @@ public class SampleV2 extends OpMode {
             case 1:
                 if (!follower.isBusy() && robot.extendLift.isFinished()) {
                     robot.scoreSample.start();
+                    setPathState(123);
+                }
+                break;
+            case 123:
+                if (pathTimer.getElapsedTimeSeconds() > 0.3) {
                     robot.grabSample.start();
                     setPathState(2);
                 }
@@ -249,7 +270,7 @@ public class SampleV2 extends OpMode {
             case 14:
                 if (robot.scoreSample.isFinished()) {
                     robot.retractLift.start();
-                    follower.followPath(toSubmersible1, true);
+                    follower.followPath(toSubmersible1, false);
                     // add parametric callback: set intake to drop off pos,
                     // later parametric callback: retract slides
                     setPathState(15);
@@ -262,7 +283,7 @@ public class SampleV2 extends OpMode {
                 break;
             case 16:
                 double[] distances1 = detector.getDistances();
-                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 1) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
@@ -277,6 +298,7 @@ public class SampleV2 extends OpMode {
                     // we need to extend slides before transfer, also put intake uprobot.extension.setTargetPos(500);
                     robot.extension.setTargetPos(500);
                     robot.intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
                     // robot.transfer.start();
                     follower.followPath(fromSubmersible1, true);
                     setPathState(70);
@@ -299,14 +321,16 @@ public class SampleV2 extends OpMode {
                 if (!follower.isBusy() && robot.extendLift.isFinished()) {
                     robot.scoreSample.start();
                     // nonononono la polici tung tung tung sahur
-                    robot.retractExtension.start();
+                    robot.extension.setTargetPos(500);
                     setPathState(420);
                 }
                 break;
             case 420:
                 if (robot.scoreSample.isFinished()) {
                     robot.retractLift.start();
-                    follower.followPath(toSubmersible2, true);
+                    follower.followPath(toSubmersible2, false);
+                    // add parametric callback: set intake to drop off pos,
+                    // later parametric callback: retract slides
                     setPathState(19);
                 }
                 break;
@@ -317,20 +341,31 @@ public class SampleV2 extends OpMode {
                 break;
             case 20:
                 double[] distances2 = detector.getDistances();
-                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 1) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
-                    setPathState(21);
+                    setPathState(691);
                 }
                 if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                    setPathState(691);
+                }
+                break;
+            case 691:
+                if (robot.fastGrab.isFinished()) {
+                    // we need to extend slides before transfer, also put intake uprobot.extension.setTargetPos(500);
+                    robot.extension.setTargetPos(500);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
+                    // robot.transfer.start();
+                    follower.followPath(fromSubmersible2, true);
                     setPathState(21);
                 }
                 break;
             case 21:
-                if (robot.fastGrab.isFinished()) {
+                if (robot.extension.getExtensionPos() >= 460) {
+                    // now we can transfer
                     robot.transfer.start();
-                    follower.followPath(fromSubmersible2, true);
                     setPathState(22);
                 }
                 break;
@@ -343,64 +378,73 @@ public class SampleV2 extends OpMode {
             case 23:
                 if (!follower.isBusy() && robot.extendLift.isFinished()) {
                     robot.scoreSample.start();
-                    robot.retractExtension.start();
+                    // nonononono la polici tung tung tung sahur
+                    robot.extension.setTargetPos(500);
+                    setPathState(422);
+                }
+                break;
+            case 422:
+                if (robot.scoreSample.isFinished()) {
+                    robot.retractLift.start();
+                    follower.followPath(toSubmersible3, false);
+                    // add parametric callback: set intake to drop off pos,
+                    // later parametric callback: retract slides
                     setPathState(24);
                 }
                 break;
             case 24:
-                if (robot.scoreSample.isFinished()) {
-                    robot.retractLift.start();
-                    follower.followPath(toSubmersible3, true);
+                if (!follower.isBusy()) {
                     setPathState(25);
                 }
                 break;
             case 25:
-                if (!follower.isBusy()) {
+                double[] distances3 = detector.getDistances();
+                if (distances3[0] != 0 && distances3[1] != 0 && pathTimer.getElapsedTimeSeconds() > 1) {
+                    double[] positions = detector.getPositions();
+                    robot.setPositions(positions);
+                    robot.fastGrab.start();
+                    setPathState(692);
+                }
+                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                    setPathState(692);
+                }
+                break;
+            case 692:
+                if (robot.fastGrab.isFinished()) {
+                    // we need to extend slides before transfer, also put intake uprobot.extension.setTargetPos(500);
+                    robot.extension.setTargetPos(500);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
+                    // robot.transfer.start();
+                    follower.followPath(fromSubmersible3, true);
                     setPathState(26);
                 }
                 break;
             case 26:
-                double[] distances3 = detector.getDistances();
-                if (distances3[0] != 0 && distances3[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
-                    double[] positions = detector.getPositions();
-                    robot.setPositions(positions);
-                    robot.fastGrab.start();
-                    setPathState(27);
-                }
-                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                if (robot.extension.getExtensionPos() >= 460) {
+                    // now we can transfer
+                    robot.transfer.start();
                     setPathState(27);
                 }
                 break;
             case 27:
-                if (robot.fastGrab.isFinished()) {
-                    robot.transfer.start();
-                    follower.followPath(fromSubmersible3, true);
+                if (robot.transfer.isFinished()) {
+                    robot.extendLift.start();
                     setPathState(28);
                 }
                 break;
             case 28:
-                if (robot.transfer.isFinished()) {
-                    robot.extendLift.start();
+                if (!follower.isBusy() && robot.extendLift.isFinished()) {
+                    robot.scoreSample.start();
+                    // nonononono la polici tung tung tung sahur
                     setPathState(29);
                 }
                 break;
             case 29:
-                if (!follower.isBusy() && robot.extendLift.isFinished()) {
-                    robot.scoreSample.start();
-                    robot.retractExtension.start();
-                    setPathState(30);
-                }
-                break;
-            case 30:
                 if (robot.scoreSample.isFinished()) {
                     setPathState(-1);
                 }
                 break;
-
-
-                // next case: going to sub from that position, the last three will be repeats
-            // drive to sub, holdend false? wait 0.5s, fastgrab, driveback while transfer and moving and flipping arm up (we are faster than the dt). release, drive back while flipping intake and retracting slides, repeat
-
         }
     }
 
@@ -424,8 +468,8 @@ public class SampleV2 extends OpMode {
         follower.setStartingPose(startPose);
         detector = new SigmaPythonDetector(hardwareMap, "yellow sample");
 
-        positions1 = PositionCalculator.getPositions(2, 26, -25);
-        positions2 = PositionCalculator.getPositions(1, 24.5, -5);
+        positions1 = PositionCalculator.getPositions(0, 24, -25);
+        positions2 = PositionCalculator.getPositions(1, 23, -5);
         positions3 = PositionCalculator.getPositions(-3, 24.5, 0);
 
         try {
@@ -437,7 +481,9 @@ public class SampleV2 extends OpMode {
     }
 
     @Override
-    public void init_loop() {}
+    public void init_loop() {
+        robot.deposit.setElbowDepositPos(0.7);
+    }
 
     @Override
     public void start() {
