@@ -44,6 +44,7 @@ public class TeleOpRobotV2 {
 
     // public Follower follower;
     public double speed = 1;
+    public int liftOffset = 0;
     public double strafeSpeed = .8;
     public double turnSpeed = .25;
 
@@ -242,7 +243,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             case 2:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.4) {
                     // TODO: TUNE
-                    lift.setTargetPos(1180);
+                    lift.setTargetPos(1180+liftOffset);
                     setSpecState2(3);
                 }
                 break;
@@ -389,6 +390,14 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             drivetrain.setHeadingLockMovementVectors(gp1.left_stick_y*speed,
                     gp1.left_stick_x*strafeSpeed,
                     gp1.right_stick_x*turnSpeed);
+        }
+
+        if (gp2.dpad_up && !pgp2.dpad_up) {
+            liftOffset += 10;
+        }
+
+        if (gp2.dpad_down && !pgp2.dpad_down) {
+            liftOffset -= 10;
         }
 
         if (gp2.a && !pgp2.a){

@@ -45,6 +45,7 @@ public class SpecBlueV8 extends OpMode {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setZeroPowerAccelerationMultiplier(8)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -551,16 +552,17 @@ public class SpecBlueV8 extends OpMode {
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-6.2, 21.5, 0);
-        positions2 = PositionCalculator.getPositions(5, 21, 0);
-        positions3 = PositionCalculator.getPositions(0.8, 20, -25);
-        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
+        positions1 = PositionCalculator.getPositions(-5.5, 20.5, 0);
+        positions2 = PositionCalculator.getPositions(5, 20.5, 0);
+        positions3 = PositionCalculator.getPositions(0.8, 20.5, -25);
+        detector = new SigmaPythonDetector(hardwareMap, "red sample");
         try {
             sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         robot = new AutonomousRobot(hardwareMap);
+        robot.lift.setTwoMotors(true);
         // robot.lift.setTargetPos(300);
     }
 

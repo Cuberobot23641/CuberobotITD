@@ -71,7 +71,7 @@ public class LimelightMoveTest extends OpMode {
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
-        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
+        detector = new SigmaPythonDetector(hardwareMap, "yellow sample");
         robot = new AutonomousRobot(hardwareMap);
         gp1 = gamepad1;
         cgp1 = new Gamepad();

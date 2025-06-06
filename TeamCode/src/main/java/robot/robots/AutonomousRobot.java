@@ -87,30 +87,38 @@ public class AutonomousRobot {
 
         fastRetract = new RobotFunction(
                 List.of(
-                        () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> {
-                            intake.setWristPos(INTAKE_WRIST_DROP_OFF);
-                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                            extension.setTargetPos(EXTENSION_MIN);
                             intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                            intake.setWristPos(INTAKE_WRIST_DROP_OFF);
                         },
+
+//                        () -> {
+//                            intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+//                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+//                        },
 //                        () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> intake.openIntakeClaw()
                 ),
-                List.of(0.15, 0.1, 0.15)
+                List.of(0.2, 0.15)
         );
 
         firstSample = new RobotFunction(
                 List.of(
                         () -> {
+                            extension.setTargetPos(EXTENSION_MIN);
                             intake.setWristPos(INTAKE_WRIST_DROP_OFF);
-                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
                             intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
                         },
-                        () -> extension.setTargetPos(EXTENSION_MIN),
+                        () -> {
+                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                        },
 //                        () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> intake.openIntakeClaw()
                 ),
-                List.of(0.15, 0.1, 0.15)
+                List.of(0.15, 0.15, 0.1)
         );
 
 
