@@ -35,6 +35,8 @@ public class Extension {
         extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+
+
     public void loop() {
         if (hanging) {
             extension.setPower(-0.34);

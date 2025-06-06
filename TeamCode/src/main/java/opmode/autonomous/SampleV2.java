@@ -75,6 +75,10 @@ public class SampleV2 extends OpMode {
                                 new Point(64.000, 96.000, Point.CARTESIAN)
                         )
                 )
+                // add parametric callback: set intake to drop off pos,
+                // later parametric callback: retract slides
+                .addParametricCallback(0.1, () -> robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF))
+                .addParametricCallback(0.3, () -> robot.extension.setTargetPos(0))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-90))
                 .setZeroPowerAccelerationMultiplier(8)
                 .build();
@@ -236,7 +240,9 @@ public class SampleV2 extends OpMode {
             case 13:
                 if (robot.extendLift.isFinished()) {
                     robot.scoreSample.start();
-                    robot.retractExtension.start();
+                    // ts is scuffed, extend extension here
+                    robot.extension.setTargetPos(500);
+                    // robot.retractExtension.start();
                     setPathState(14);
                 }
                 break;
@@ -244,6 +250,8 @@ public class SampleV2 extends OpMode {
                 if (robot.scoreSample.isFinished()) {
                     robot.retractLift.start();
                     follower.followPath(toSubmersible1, true);
+                    // add parametric callback: set intake to drop off pos,
+                    // later parametric callback: retract slides
                     setPathState(15);
                 }
                 break;
@@ -267,8 +275,17 @@ public class SampleV2 extends OpMode {
             case 69:
                 if (robot.fastGrab.isFinished()) {
                     // we need to extend slides before transfer, also put intake uprobot.extension.setTargetPos(500);
-                    robot.transfer.start();
+                    robot.extension.setTargetPos(500);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
+                    // robot.transfer.start();
                     follower.followPath(fromSubmersible1, true);
+                    setPathState(70);
+                }
+                break;
+            case 70:
+                if (robot.extension.getExtensionPos() >= 460) {
+                    // now we can transfer
+                    robot.transfer.start();
                     setPathState(17);
                 }
                 break;
@@ -281,6 +298,7 @@ public class SampleV2 extends OpMode {
             case 18:
                 if (!follower.isBusy() && robot.extendLift.isFinished()) {
                     robot.scoreSample.start();
+                    // nonononono la polici tung tung tung sahur
                     robot.retractExtension.start();
                     setPathState(420);
                 }
