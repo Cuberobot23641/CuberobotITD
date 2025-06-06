@@ -40,6 +40,7 @@ public class Lift {
     public PIDFController controller;
     public int errorThreshold = 15;
     public double kS = 0.1;
+    private boolean twoMotors = false;
 
     public Lift(HardwareMap hardwareMap, boolean resetEncoder) {
         controller = new PIDFController(0.006, 0, 0.0001, 0);
@@ -62,6 +63,11 @@ public class Lift {
         liftRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         liftExtra.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+    public void setTwoMotors(boolean x) {
+        twoMotors = x;
+    }
+
     public void loop() {
         if (!manual) {
             int currentPos = liftLeft.getCurrentPosition();
@@ -77,9 +83,14 @@ public class Lift {
 //            } else {
 //                leftMotorPower.setHomed(false);
 //            }
-            liftExtra.setPower(pwr);
-            liftRight.setPower(pwr);
-            liftLeft.setPower(pwr);
+            if (twoMotors) {
+                liftLeft.setPower(pwr);
+                liftRight.setPower(pwr);
+            } else {
+                liftExtra.setPower(pwr);
+                liftRight.setPower(pwr);
+                liftLeft.setPower(pwr);
+            }
         }
         else {
             liftLeft.setPower(power);
