@@ -12,6 +12,7 @@ import robot.subsystems.Extension;
 import robot.subsystems.Intake;
 import robot.subsystems.Lift;
 import util.Drivetrain;
+import util.RobotFunction;
 
 import java.util.List;
 import static robot.RobotConstants.*;
@@ -27,6 +28,7 @@ public class TeleOpRobotV2 {
     // public DcMotorEx fl, bl, fr, br;
     public Gamepad gp1, pgp1, cgp1, gp2, pgp2, cgp2;
     public Drivetrain drivetrain;
+    private RobotFunction separateSamples;
 
     public int sampleCycleState = 1;
     public int specCycleState = 1;
@@ -69,11 +71,20 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         sampleMode2Timer = new Timer();
         sampleMode3Timer = new Timer();
 
+        separateSamples = new RobotFunction(
+                List.of(
+                        () -> intake.closeIntakeClaw(),
+                        () -> intake.openIntakeClaw()
+                ),
+                List.of(0.15, 0.1)
+        );
+
 
         allHubs = this.hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
+
     }
 
     public void initSubsystems() {
@@ -114,6 +125,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         sampleModeCycle3();
 
         extension.loop();
+        separateSamples.run();
         lift.loop();
         //follower.update();
 //        follower.setTeleOpMovementVectors(-gp1.left_stick_y*speed,
@@ -392,6 +404,10 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     gp1.right_stick_x*turnSpeed);
         }
 
+        if (gp1.x && !pgp1.x) {
+            separateSamples.start();
+        }
+
         if (gp2.dpad_up && !pgp2.dpad_up) {
             liftOffset += 10;
         }
@@ -451,8 +467,8 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     sampleCycleState = 2;
                 } else if (sampleCycleState == 2) {
                     // grab and retract
-                    speed = 1;
-                    strafeSpeed = 0.8;
+                    speed = .7;
+                    strafeSpeed = 0.7;
                     turnSpeed = 0.25;
                     startSampleCycle2();
                     sampleCycleState = 3;
@@ -460,8 +476,8 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     // extend, release sample, retract
                     startSampleCycle3();
                     sampleCycleState = 1;
-                    speed = 1;
-                    strafeSpeed = 0.8;
+                    speed = .7;
+                    strafeSpeed = 0.7;
                     turnSpeed = 0.25;
                 }
             }
@@ -469,15 +485,15 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             if (gp1.left_bumper && !pgp1.left_bumper) {
                 if (specCycleState == 1) {
                     // release, prepare to grab spec
-                    speed = 1;
-                    strafeSpeed = 0.8;
+                    speed = .7;
+                    strafeSpeed = 0.7;
                     turnSpeed = 0.25;
                     startSpecCycle1();
                     specCycleState = 2;
                 } else if (specCycleState == 2) {
                     // grab spec, prepare to score
-                    speed = 1;
-                    strafeSpeed = 0.8;
+                    speed = .7;
+                    strafeSpeed = 0.7;
                     turnSpeed = 0.25;
                     startSpecCycle2();
                     specCycleState = 1;
@@ -494,18 +510,18 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     sampleModeCycleState = 2;
                 } else if (sampleModeCycleState == 2) {
                     // grab and retract
-                    speed = .5;
-                    strafeSpeed = .35;
-                    turnSpeed = .2;
+                    speed = 0.7;
+                    strafeSpeed = .7;
+                    turnSpeed = .25;
                     startSampleModeCycle2();
                     sampleModeCycleState = 3;
                 } else if (sampleModeCycleState == 3) {
                     // extend, release sample, retract
                     startSampleModeCycle3();
                     sampleModeCycleState = 1;
-                    speed = .5;
-                    strafeSpeed = .35;
-                    turnSpeed = .2;
+                    speed = 0.7;
+                    strafeSpeed = .7;
+                    turnSpeed = .25;
                 }
             }
         }
