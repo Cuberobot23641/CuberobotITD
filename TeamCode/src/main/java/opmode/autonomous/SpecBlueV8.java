@@ -45,7 +45,7 @@ public class SpecBlueV8 extends OpMode {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(6)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -555,7 +555,7 @@ public class SpecBlueV8 extends OpMode {
         positions1 = PositionCalculator.getPositions(-5.5, 20.5, 0);
         positions2 = PositionCalculator.getPositions(5, 20.5, 0);
         positions3 = PositionCalculator.getPositions(0.8, 20.5, -25);
-        detector = new SigmaPythonDetector(hardwareMap, "red sample");
+        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         try {
             sleep(3000);
         } catch (InterruptedException e) {

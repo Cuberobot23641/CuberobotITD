@@ -45,10 +45,10 @@ public class TeleOpRobotV2 {
     public int sampleState1, sampleState2, sampleState3, specState1, specState2, sampleModeState1, sampleModeState2, sampleModeState3;
 
     // public Follower follower;
-    public double speed = 1;
+    public double speed = .6;
     public int liftOffset = 0;
-    public double strafeSpeed = .8;
-    public double turnSpeed = .25;
+    public double strafeSpeed = .6;
+    public double turnSpeed = .2;
 
 public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         this.hardwareMap = hardwareMap;
@@ -92,6 +92,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         deposit = new Deposit(this.hardwareMap);
         // TODO: for real runs we will put this as false
         lift = new Lift(this.hardwareMap, true);
+        lift.setTwoMotors(true);
         extension = new Extension(this.hardwareMap, true);
         intake.setTurretPos(INTAKE_TURRET_DEFAULT);
         intake.setWristPos(INTAKE_WRIST_DEFAULT);
@@ -176,7 +177,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 }
                 break;
             case 3:
-                if (sample2Timer.getElapsedTimeSeconds() > 0.4) {
+                if (sample2Timer.getElapsedTimeSeconds() > 1) {
                     intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
                     intake.setWristPos(INTAKE_WRIST_DROP_OFF);
                     setSampleState2(-1);
@@ -200,7 +201,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 2:
                 if (sample3Timer.getElapsedTimeSeconds() > 0.4) {
-                    intake.setTurretPos(INTAKE_TURRET_DEFAULT);
+                    intake.setTurretPos(.7);
                     // intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
                     intake.setWristPos(INTAKE_WRIST_DEFAULT);
                     setSampleState3(-1);
@@ -404,7 +405,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     gp1.right_stick_x*turnSpeed);
         }
 
-        if (gp1.x && !pgp1.x) {
+        if (gp1.b && !pgp1.b) {
             separateSamples.start();
         }
 
@@ -460,41 +461,41 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             if (gp1.right_bumper && !pgp1.right_bumper) {
                 if (sampleCycleState == 1) {
                     // extend into sub
-                    speed = .15;
-                    strafeSpeed = .225;
-                    turnSpeed = .14;
+                    speed = .2;
+                    strafeSpeed = .2;
+                    turnSpeed = .1;
                     startSampleCycle1();
                     sampleCycleState = 2;
                 } else if (sampleCycleState == 2) {
                     // grab and retract
-                    speed = .7;
-                    strafeSpeed = 0.7;
-                    turnSpeed = 0.25;
+                    speed = .6;
+                    strafeSpeed = 0.6;
+                    turnSpeed = 0.2;
                     startSampleCycle2();
                     sampleCycleState = 3;
                 } else if (sampleCycleState == 3) {
                     // extend, release sample, retract
                     startSampleCycle3();
                     sampleCycleState = 1;
-                    speed = .7;
-                    strafeSpeed = 0.7;
-                    turnSpeed = 0.25;
+                    speed = .6;
+                    strafeSpeed = 0.6;
+                    turnSpeed = 0.2;
                 }
             }
 
             if (gp1.left_bumper && !pgp1.left_bumper) {
                 if (specCycleState == 1) {
                     // release, prepare to grab spec
-                    speed = .7;
-                    strafeSpeed = 0.7;
-                    turnSpeed = 0.25;
+                    speed = .6;
+                    strafeSpeed = 0.6;
+                    turnSpeed = 0.2;
                     startSpecCycle1();
                     specCycleState = 2;
                 } else if (specCycleState == 2) {
                     // grab spec, prepare to score
-                    speed = .7;
-                    strafeSpeed = 0.7;
-                    turnSpeed = 0.25;
+                    speed = .6;
+                    strafeSpeed = 0.6;
+                    turnSpeed = 0.2;
                     startSpecCycle2();
                     specCycleState = 1;
                 }
