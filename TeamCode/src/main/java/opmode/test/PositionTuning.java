@@ -7,11 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import robot.robots.AutonomousRobot;
-import robot.subsystems.Deposit;
-import robot.subsystems.Extension;
-import robot.subsystems.Intake;
-import robot.subsystems.Lift;
-import static robot.RobotConstants.*;
+
+import static robot.RobotConstantsAuto.*;
 
 @Config
 @TeleOp

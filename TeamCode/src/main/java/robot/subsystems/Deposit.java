@@ -1,6 +1,6 @@
 package robot.subsystems;
 
-import static robot.RobotConstants.*;
+import static robot.RobotConstantsAuto.*;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;

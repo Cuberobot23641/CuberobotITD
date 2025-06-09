@@ -1,11 +1,11 @@
 package robot;
 
-public final class RobotConstants {
-    private RobotConstants() {}
+public final class RobotConstantsTeleOp {
+    private RobotConstantsTeleOp() {}
 
     // lift
     public static final int LIFT_SPEC_GRAB = 0;
-    public static final int LIFT_SPEC_SCORE = 1400; //980 SHOULD BE 1020 // was 950
+    public static final int LIFT_SPEC_SCORE = 1250; //980 SHOULD BE 1020 // was 950
     public static final int LIFT_SAMPLE_HIGH = 2200;
     public static final int LIFT_SAMPLE_LOW = 1000;
     public static final int LIFT_TRANSFER = 0;
@@ -19,7 +19,7 @@ public final class RobotConstants {
     // deposit
     public static final double DEPOSIT_CLAW_OPEN = 0.0;
     public static final double DEPOSIT_CLAW_CLOSED = 0.32;
-    public static final double DEPOSIT_CLAW_LOOSE = 0.305;
+    public static final double DEPOSIT_CLAW_LOOSE = 0.32;
     public static final double DEPOSIT_ELBOW_TRANSFER = 0.82;//0.91;
     public static final double DEPOSIT_ELBOW_SPEC_GRAB = 0.1;
     public static final double DEPOSIT_ELBOW_SPEC_SCORE = 0.85;//0.79; //was 0.74 SHOULD BE
@@ -32,11 +32,11 @@ public final class RobotConstants {
     public static final double INTAKE_CLAW_CLOSED = 0.6;
     public static final double INTAKE_ELBOW_DEFAULT = 0.25;
     public static final double INTAKE_ELBOW_TRANSFER = 0.85;
-    public static final double INTAKE_ELBOW_DOWN = 0.15;
+    public static final double INTAKE_ELBOW_DOWN = 0.165;
     // good for not getting in the way, use this in the middle of retract
     public static final double INTAKE_ELBOW_IN = 0.25;
     public static final double INTAKE_ELBOW_HOVER = 0.21;
-    public static final double INTAKE_ELBOW_DROP_OFF = .29;//0.27;
+    public static final double INTAKE_ELBOW_DROP_OFF = 0.29;
     // public static final double INTAKE_ELBOW_IN = 0.6;
     public static final double INTAKE_WRIST_DEFAULT = 0.5;
     public static final double INTAKE_TURRET_DEFAULT = 0.52;

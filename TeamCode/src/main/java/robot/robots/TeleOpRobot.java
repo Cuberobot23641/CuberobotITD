@@ -1,10 +1,7 @@
 package robot.robots;
 
-import static com.pedropathing.util.Constants.setConstants;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import robot.subsystems.Deposit;
@@ -14,7 +11,7 @@ import robot.subsystems.Lift;
 import util.Drivetrain;
 
 import java.util.List;
-import static robot.RobotConstants.*;
+import static robot.RobotConstantsTeleOp.*;
 
 public class TeleOpRobot {
     List<LynxModule> allHubs;

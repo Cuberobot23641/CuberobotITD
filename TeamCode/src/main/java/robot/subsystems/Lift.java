@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import util.PIDFController;
-import static robot.RobotConstants.*;
 
 public class Lift {
     public DcMotorEx liftLeft = null;

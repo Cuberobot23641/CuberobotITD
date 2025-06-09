@@ -1,14 +1,11 @@
 package opmode.autonomous;
 
-import static com.pedropathing.util.Constants.setConstants;
 import static java.lang.Thread.sleep;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.BezierPoint;
-import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
@@ -16,14 +13,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-import robot.robots.AutonomousRobot;
 import robot.robots.SampleRobot;
 import util.PositionCalculator;
 import vision.SigmaPythonDetector;
 
-import static robot.RobotConstants.*;
-
-import java.util.List;
+import static robot.RobotConstantsAuto.*;
 
 @Autonomous(name = "0+8 sample auto v2")
 public class SampleV2 extends OpMode {

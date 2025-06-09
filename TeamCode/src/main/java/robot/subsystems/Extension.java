@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import util.PIDFController;
-import static robot.RobotConstants.*;
+import static robot.RobotConstantsAuto.*;
 
 public class Extension {
     public DcMotorEx extension = null;

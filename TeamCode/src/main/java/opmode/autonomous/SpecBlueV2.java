@@ -1,35 +1,24 @@
 package opmode.autonomous;
 
-import static com.pedropathing.util.Constants.setConstants;
 import static java.lang.Thread.sleep;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.BezierPoint;
-import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.IMU;
-
-import org.firstinspires.ftc.ftccommon.internal.manualcontrol.commands.ImuCommands;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
 import robot.robots.AutonomousRobot;
 import vision.SigmaPythonDetector;
 
-import static robot.RobotConstants.*;
+import static robot.RobotConstantsAuto.*;
 @Autonomous(name = "7+0 fling better")
 public class SpecBlueV2 extends OpMode {
     // TODO: idea: when grabbing specs, check if robot velocity suddenly decreases and then grab

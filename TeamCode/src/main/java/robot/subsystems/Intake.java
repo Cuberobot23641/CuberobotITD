@@ -1,14 +1,9 @@
 package robot.subsystems;
 
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import static robot.RobotConstants.*;
-
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import static robot.RobotConstantsAuto.*;
 
 public class Intake {
     public double wristPos = INTAKE_WRIST_DEFAULT;

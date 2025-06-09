@@ -1,10 +1,7 @@
 package robot.robots;
 
-import static com.pedropathing.util.Constants.setConstants;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import robot.subsystems.Deposit;
@@ -15,7 +12,7 @@ import util.Drivetrain;
 import util.RobotFunction;
 
 import java.util.List;
-import static robot.RobotConstants.*;
+import static robot.RobotConstantsTeleOp.*;
 
 public class TeleOpRobotV2 {
     List<LynxModule> allHubs;
@@ -434,6 +431,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         }
 
         if (gp2.b && !pgp2.b) {
+            lift.setTwoMotors(false);
             isFinishedHanging = !isFinishedHanging;
         }
 

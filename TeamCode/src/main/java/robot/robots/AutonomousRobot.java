@@ -1,7 +1,6 @@
 package robot.robots;
 
 
-import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import robot.subsystems.Deposit;
@@ -11,7 +10,7 @@ import robot.subsystems.Lift;
 import util.RobotFunction;
 
 import java.util.List;
-import static robot.RobotConstants.*;
+import static robot.RobotConstantsAuto.*;
 
 public class AutonomousRobot {
     List<LynxModule> allHubs;
