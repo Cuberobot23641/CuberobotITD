@@ -457,7 +457,8 @@ public class SpecBlueV8 extends OpMode {
                 }
                 break;
             case 19:
-                if (!follower.isBusy()) {
+                // i added in weird acceleration thing
+                if (!follower.isBusy() || (follower.getAcceleration().getXComponent() < -20 && follower.getCurrentTValue() > 0.8)) {
                     robot.prepareGrabSpecimen.start();
                     setPathState(20);
                 }

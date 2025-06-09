@@ -33,7 +33,7 @@ public class SpecBlueV9 extends OpMode {
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
     private final Pose scorePreloadPose = new Pose(43.5, 66, Math.toRadians(0));
-    private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6;
+    private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6, park;
     private double[] positions1;
     private double[] positions2;
     private double[] positions3;
@@ -276,6 +276,25 @@ public class SpecBlueV9 extends OpMode {
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
+        park = follower.pathBuilder()
+                .addPath(
+                        // Line 5
+                        new BezierCurve(
+                                new Point(44.000, 67.000, Point.CARTESIAN),
+                                new Point(9.000, 34.000, Point.CARTESIAN)
+                        )
+                )
+                .addParametricCallback(0.1, () -> {
+                    robot.lift.setTargetPos(0);
+                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+
+                .setPathEndTValueConstraint(0.92)
+                .setZeroPowerAccelerationMultiplier(2)
+                .setConstantHeadingInterpolation(0)
+                .setPathEndTimeoutConstraint(0)
+                .build();
+
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -361,13 +380,13 @@ public class SpecBlueV9 extends OpMode {
             case 69:
                 double[] distances1 = detector.getDistances();
                 // set to 0.1 to be fast
-                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > .75) {
+                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 1) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
                     setPathState(12);
                 }
-                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                if (pathTimer.getElapsedTimeSeconds() > 2) {
                     setPathState(12);
                 }
                 break;
@@ -480,6 +499,12 @@ public class SpecBlueV9 extends OpMode {
                 break;
             case 28:
                 if (robot.prepareGrabSpecimen.isFinished()) {
+                    follower.followPath(park, false);
+                    setPathState(29);
+                }
+                break;
+            case 29:
+                if (!follower.isBusy()) {
                     totalElapsed = totalTimer.getElapsedTimeSeconds();
                     setPathState(-1);
                 }

@@ -157,6 +157,7 @@ public class AutonomousRobot {
         );
 
         prepareGrabSpecimen = new RobotFunction(
+                // TODO: MAKE THIS SMALLER
                 List.of(
                         () -> deposit.openDepositClaw()
 //                        () -> {
@@ -228,13 +229,13 @@ public class AutonomousRobot {
                         () -> {
                             intake.setWristAngle(wristAngle);
                             intake.setTurretAngle(turretAngle);
-                            intake.setElbowIntakePos(0.4);
+                            intake.setElbowIntakePos(0.3);
                             extension.setTargetInches(extensionInches);
                         },
                         () -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
                         () -> intake.closeIntakeClaw()
                 ),
-                List.of(0.5, 0.15, 0.25)
+                List.of(0.5, 0.15, 0.2)
         );
 
         transferUp = new RobotFunction(
