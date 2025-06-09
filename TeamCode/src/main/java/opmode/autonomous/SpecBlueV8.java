@@ -43,6 +43,8 @@ public class SpecBlueV8 extends OpMode {
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(6)
+                // i added this because funny
+                .setPathEndVelocityConstraint(40)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -64,7 +66,7 @@ public class SpecBlueV8 extends OpMode {
                     robot.extendExtension.start();
                 })
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);;
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .build();
@@ -99,15 +101,18 @@ public class SpecBlueV8 extends OpMode {
 
         scoreSpec1 = follower.pathBuilder()
                 .addPath(
-                // Line 2
-                    new BezierLine(
-                        new Point(9.000, 32.000, Point.CARTESIAN),
-                        new Point(45.000, 73.000, Point.CARTESIAN)
-                    )
+                        // Line 1
+                        new BezierCurve(
+                                new Point(9.000, 32.000, Point.CARTESIAN),
+//                                new Point(31.234, 72.406, Point.CARTESIAN),
+//                                new Point(25.149, 72.608, Point.CARTESIAN),
+                                new Point(45.000, 73.000, Point.CARTESIAN)
+                        )
                 )
+                //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec2 = follower.pathBuilder()
@@ -122,7 +127,7 @@ public class SpecBlueV8 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(0)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);;
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
@@ -132,15 +137,18 @@ public class SpecBlueV8 extends OpMode {
 
         scoreSpec2 = follower.pathBuilder()
                 .addPath(
-                        // Line 2
-                        new BezierLine(
+                        // Line 1
+                        new BezierCurve(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
+//                                new Point(31.234, 71.406, Point.CARTESIAN),
+//                                new Point(25.149, 71.608, Point.CARTESIAN),
                                 new Point(45.000, 72.000, Point.CARTESIAN)
                         )
                 )
+                //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec3 = follower.pathBuilder()
@@ -155,7 +163,7 @@ public class SpecBlueV8 extends OpMode {
                 )
                 .setPathEndTValueConstraint(0.92)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
@@ -173,7 +181,8 @@ public class SpecBlueV8 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(10)
+                .setPathEndVelocityConstraint(40)
                 .build();
 
         grabSpec4 = follower.pathBuilder()
@@ -188,7 +197,7 @@ public class SpecBlueV8 extends OpMode {
                 )
                 .setPathEndTValueConstraint(0.92)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
@@ -206,7 +215,8 @@ public class SpecBlueV8 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(10)
+                .setPathEndVelocityConstraint(40)
                 .build();
 
         grabSpec5 = follower.pathBuilder()
@@ -221,11 +231,12 @@ public class SpecBlueV8 extends OpMode {
                 )
                 .setPathEndTValueConstraint(0.92)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
                 .setConstantHeadingInterpolation(0)
+
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -239,7 +250,8 @@ public class SpecBlueV8 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(10)
+                .setPathEndVelocityConstraint(40)
                 .build();
 
         grabSpec6 = follower.pathBuilder()
@@ -253,7 +265,7 @@ public class SpecBlueV8 extends OpMode {
                         )
                 )
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
 
@@ -272,8 +284,9 @@ public class SpecBlueV8 extends OpMode {
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(10)
                 .setPathEndTimeoutConstraint(0)
+                .setPathEndVelocityConstraint(40)
                 .build();
 
     }
@@ -327,15 +340,15 @@ public class SpecBlueV8 extends OpMode {
             case 7:
                 if (robot.fastRetract.isFinished() && !follower.isBusy()) {
                     robot.setPositions(positions3);
-                    robot.fastGrab.start();
+                    robot.fastGrab2.start();
                     setPathState(8);
                 }
                 break;
             case 8:
-                if (robot.fastGrab.isFinished()) {
+                if (robot.fastGrab2.isFinished()) {
                     robot.thirdSample.start();
                     follower.setMaxPower(1);
-                    follower.followPath(grabSpec1, false);
+                    follower.followPath(grabSpec1, true);
                     setPathState(9);
                 }
                 break;
@@ -355,13 +368,16 @@ public class SpecBlueV8 extends OpMode {
             case 11:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
                     robot.prepareGrabSpecimen.start();
+//                    follower.setMaxPower(0.5);
+//                    follower.holdPoint(new Point(follower.getPose().getX()+2, follower.getPose().getY()), follower.getPose().getHeading());
                     setPathState(69);
                 }
                 break;
             case 69:
                 double[] distances1 = detector.getDistances();
                 // set to 0.1 to be fast
-                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                // TODO: check smaller times now that we have faster loop times
+                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.7) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
@@ -378,6 +394,7 @@ public class SpecBlueV8 extends OpMode {
                     robot.setExtensionInches(0);
                     robot.setTurretAngle(0);
                     robot.setWristAngle(0);
+                    follower.setMaxPower(1);
                     follower.followPath(grabSpec2, true);
                     setPathState(13);
                 }
@@ -398,13 +415,15 @@ public class SpecBlueV8 extends OpMode {
             case 15:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
                     robot.prepareGrabSpecimen.start();
+//                    follower.setMaxPower(0.5);
+//                    follower.holdPoint(new Point(follower.getPose().getX()+2, follower.getPose().getY()), follower.getPose().getHeading());
                     setPathState(440);
                 }
                 break;
             case 440:
                 double[] distances2 = detector.getDistances();
                 // shouldnt be necessary
-                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.7) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
@@ -419,6 +438,7 @@ public class SpecBlueV8 extends OpMode {
                     robot.retractExtension.start();
                     // maybe this will save power?
                     detector.off();
+                    follower.setMaxPower(1);
                     follower.followPath(grabSpec3, true);
                     setPathState(17);
                 }
@@ -549,9 +569,9 @@ public class SpecBlueV8 extends OpMode {
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-5.5, 20.5, 0);
+        positions1 = PositionCalculator.getPositions(-5, 21.5, 0);
         positions2 = PositionCalculator.getPositions(5, 20.5, 0);
-        positions3 = PositionCalculator.getPositions(0.8, 20.5, -25);
+        positions3 = PositionCalculator.getPositions(0.8, 21.5, -25);
         detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         try {
             sleep(3000);

@@ -3,6 +3,7 @@ package opmode.test;
 import static java.lang.Thread.sleep;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -14,6 +15,8 @@ import vision.SigmaPythonDetector;
 @Autonomous(name = "limelight detector python move test")
 public class LimelightMoveTest extends OpMode {
     private SigmaPythonDetector detector;
+    private double loopTime = 0;
+    private Timer loopTimer;
     private AutonomousRobot robot;
     private Gamepad gp1;
     private Gamepad cgp1;
@@ -56,6 +59,8 @@ public class LimelightMoveTest extends OpMode {
 //        telemetry.addData("wrist angle", positions[2]);
         detector.update();
         robot.loop();
+        loopTime = loopTimer.getElapsedTimeSeconds();
+        loopTimer.resetTimer();
         double[] positions1 = detector.getPositions();
         double[] positions2 = detector.getPositions2();
         telemetry.addData("positions1x", positions1[0]);
@@ -65,17 +70,20 @@ public class LimelightMoveTest extends OpMode {
         telemetry.addData("positions2y", positions2[1]);
         telemetry.addData("positions2t", positions2[2]);
 
+        telemetry.addData("loop time", loopTime);
+
         telemetry.update();
     }
 
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
-        detector = new SigmaPythonDetector(hardwareMap, "yellow sample");
+        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         robot = new AutonomousRobot(hardwareMap);
         gp1 = gamepad1;
         cgp1 = new Gamepad();
         pgp1 = new Gamepad();
+        loopTimer = new Timer();
     }
 
     @Override

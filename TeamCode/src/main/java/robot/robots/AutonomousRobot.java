@@ -19,7 +19,7 @@ public class AutonomousRobot {
     public Extension extension;
     public Deposit deposit;
     public Intake intake;
-    public RobotFunction grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample, firstSample;
+    public RobotFunction fastGrab2, grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample, firstSample;
 
     public double extensionInches;
     public double turretAngle;
@@ -137,7 +137,7 @@ public class AutonomousRobot {
         grabSpecimen = new RobotFunction(
                 List.of(
                         () -> {
-                            deposit.closeDepositClaw();
+                            deposit.setClawDepositPos(DEPOSIT_CLAW_LOOSE);
                             intake.openIntakeClaw();
                             // added this here hopefully it helps
                             intake.setTurretPos(0);
@@ -149,7 +149,8 @@ public class AutonomousRobot {
         scoreSpecimen = new RobotFunction(
                 List.of(
                         () -> lift.setTargetPos(LIFT_SPEC_SCORE),
-                        () -> deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE),
+                        () -> {deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
+                            deposit.closeDepositClaw();},
                         () -> deposit.extendLinkage()
                 ),
                 List.of(0.3, 0.2, 0.1)
@@ -212,7 +213,22 @@ public class AutonomousRobot {
                         () -> {
                             intake.setWristAngle(wristAngle);
                             intake.setTurretAngle(turretAngle);
-                            intake.setElbowIntakePos(INTAKE_ELBOW_HOVER);
+                            //intake.setElbowIntakePos(INTAKE_ELBOW_HOVER);
+                            intake.setElbowIntakePos(INTAKE_ELBOW_DOWN);
+                            extension.setTargetInches(extensionInches);
+                        },
+                        //() -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
+                        () -> intake.closeIntakeClaw()
+                ),
+                List.of(0.5, 0.2)
+        );
+
+        fastGrab2 = new RobotFunction(
+                List.of(
+                        () -> {
+                            intake.setWristAngle(wristAngle);
+                            intake.setTurretAngle(turretAngle);
+                            intake.setElbowIntakePos(0.4);
                             extension.setTargetInches(extensionInches);
                         },
                         () -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
@@ -255,16 +271,16 @@ public class AutonomousRobot {
         );
 
 
-//        allHubs = this.hardwareMap.getAll(LynxModule.class);
-//        for (LynxModule hub : allHubs) {
-//            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        }
+        allHubs = this.hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
     }
 
     public void loop() {
-//        for (LynxModule hub : allHubs) {
-//            hub.clearBulkCache();
-//        }
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
 
         grabSample.run();
         retractExtension.run();
@@ -279,6 +295,7 @@ public class AutonomousRobot {
         transferIn.run();
         thirdSample.run();
         firstSample.run();
+        fastGrab2.run();
 
         extension.loop();
         lift.loop();

@@ -54,7 +54,7 @@ public class SpecBlueV1 extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0.3, () -> {
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                 })
                 .setPathEndTimeoutConstraint(0)
                 .setZeroPowerAccelerationMultiplier(4)
@@ -86,7 +86,7 @@ public class SpecBlueV1 extends OpMode {
                 )
                 .addParametricCallback(0.3, () -> {
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                 })
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)

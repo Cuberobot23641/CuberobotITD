@@ -28,6 +28,7 @@ public class FConstants {
         FollowerConstants.forwardZeroPowerAcceleration = -31;
         FollowerConstants.lateralZeroPowerAcceleration = -63.5;
 
+        // was 0.075 and 0.001, 0.05 and 0.001
         FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.075,0,0.001,0.0);
         FollowerConstants.useSecondaryTranslationalPID = false;
         FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.05,0,0.001,0); // Not being used, @see useSecondaryTranslationalPID
@@ -38,7 +39,7 @@ public class FConstants {
         FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(2,0,0.05,0); // Not being used, @see useSecondaryHeadingPID
 
 
-
+        // was 0.015, 0.0001
         FollowerConstants.drivePIDFCoefficients.setCoefficients(0.015,0,0.0001,0.6,0.0);
         FollowerConstants.useSecondaryDrivePID = true;
         // why this high bruh change it back and reyune. its really messing stuff up

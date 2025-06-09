@@ -64,7 +64,7 @@ public class SpecBlueV9 extends OpMode {
                     robot.extendExtension.start();
                 })
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .build();
@@ -122,7 +122,7 @@ public class SpecBlueV9 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(0)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
@@ -155,7 +155,7 @@ public class SpecBlueV9 extends OpMode {
                 )
                 .setPathEndTValueConstraint(0.92)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
@@ -188,7 +188,7 @@ public class SpecBlueV9 extends OpMode {
                 )
                 .setPathEndTValueConstraint(0.92)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
@@ -221,7 +221,7 @@ public class SpecBlueV9 extends OpMode {
                 )
                 .setPathEndTValueConstraint(0.92)
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
@@ -253,7 +253,7 @@ public class SpecBlueV9 extends OpMode {
                         )
                 )
                 .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(0);
+                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
 
@@ -327,12 +327,12 @@ public class SpecBlueV9 extends OpMode {
             case 7:
                 if (robot.fastRetract.isFinished() && !follower.isBusy()) {
                     robot.setPositions(positions3);
-                    robot.fastGrab.start();
+                    robot.fastGrab2.start();
                     setPathState(8);
                 }
                 break;
             case 8:
-                if (robot.fastGrab.isFinished()) {
+                if (robot.fastGrab2.isFinished()) {
                     robot.thirdSample.start();
                     follower.setMaxPower(1);
                     follower.followPath(grabSpec1, false);
@@ -510,9 +510,9 @@ public class SpecBlueV9 extends OpMode {
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-5.5, 20.5, 0);
+        positions1 = PositionCalculator.getPositions(-5, 21.5, 0);
         positions2 = PositionCalculator.getPositions(5, 20.5, 0);
-        positions3 = PositionCalculator.getPositions(0.8, 20.5, -25);
+        positions3 = PositionCalculator.getPositions(0.8, 21.5, -25);
         detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         try {
             sleep(3000);

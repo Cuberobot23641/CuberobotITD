@@ -145,7 +145,7 @@ public class OldPathing extends OpMode {
                         )
                 )
                 .setZeroPowerAccelerationMultiplier(4)
-                .setPathEndVelocityConstraint(20) // in/s?
+                .setPathEndVelocityConstraint(40) // in/s?
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(
                         // Line 10
