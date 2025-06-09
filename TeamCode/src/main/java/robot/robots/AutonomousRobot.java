@@ -168,7 +168,7 @@ public class AutonomousRobot {
                 ),
                 // was 0.2, making small optimization
                 //0.3, 0.1
-                List.of(0.1)
+                List.of(0.01)
         );
 
         // this assumes that you have already grabbed
