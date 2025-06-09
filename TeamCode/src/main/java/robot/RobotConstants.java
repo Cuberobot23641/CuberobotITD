@@ -19,7 +19,7 @@ public final class RobotConstants {
     // deposit
     public static final double DEPOSIT_CLAW_OPEN = 0.0;
     public static final double DEPOSIT_CLAW_CLOSED = 0.32;
-    public static final double DEPOSIT_CLAW_LOOSE = 0.32;
+    public static final double DEPOSIT_CLAW_LOOSE = 0.305;
     public static final double DEPOSIT_ELBOW_TRANSFER = 0.82;//0.91;
     public static final double DEPOSIT_ELBOW_SPEC_GRAB = 0.1;
     public static final double DEPOSIT_ELBOW_SPEC_SCORE = 0.85;//0.79; //was 0.74 SHOULD BE
@@ -32,11 +32,11 @@ public final class RobotConstants {
     public static final double INTAKE_CLAW_CLOSED = 0.6;
     public static final double INTAKE_ELBOW_DEFAULT = 0.25;
     public static final double INTAKE_ELBOW_TRANSFER = 0.85;
-    public static final double INTAKE_ELBOW_DOWN = 0.165;
+    public static final double INTAKE_ELBOW_DOWN = 0.15;
     // good for not getting in the way, use this in the middle of retract
     public static final double INTAKE_ELBOW_IN = 0.25;
     public static final double INTAKE_ELBOW_HOVER = 0.21;
-    public static final double INTAKE_ELBOW_DROP_OFF = 0.27;
+    public static final double INTAKE_ELBOW_DROP_OFF = .29;//0.27;
     // public static final double INTAKE_ELBOW_IN = 0.6;
     public static final double INTAKE_WRIST_DEFAULT = 0.5;
     public static final double INTAKE_TURRET_DEFAULT = 0.52;

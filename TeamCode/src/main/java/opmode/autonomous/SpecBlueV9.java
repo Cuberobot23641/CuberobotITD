@@ -24,8 +24,8 @@ import robot.robots.AutonomousRobot;
 import util.PositionCalculator;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 optimized")
-public class SpecBlueV8 extends OpMode {
+@Autonomous(name = "6+0 consistent")
+public class SpecBlueV9 extends OpMode {
     public AutonomousRobot robot;
     private Follower follower;
     private int pathState;
@@ -35,7 +35,7 @@ public class SpecBlueV8 extends OpMode {
     private SigmaPythonDetector detector;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(42, 66, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(43.5, 66, Math.toRadians(0));
     private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6;
     private double[] positions1;
     private double[] positions2;
@@ -45,7 +45,7 @@ public class SpecBlueV8 extends OpMode {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(4)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -102,15 +102,15 @@ public class SpecBlueV8 extends OpMode {
 
         scoreSpec1 = follower.pathBuilder()
                 .addPath(
-                // Line 2
-                    new BezierLine(
-                        new Point(9.000, 32.000, Point.CARTESIAN),
-                        new Point(45.000, 73.000, Point.CARTESIAN)
-                    )
+                        // Line 2
+                        new BezierLine(
+                                new Point(9.000, 32.000, Point.CARTESIAN),
+                                new Point(45.500, 73.000, Point.CARTESIAN)
+                        )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec2 = follower.pathBuilder()
@@ -138,12 +138,12 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(45.000, 72.000, Point.CARTESIAN)
+                                new Point(44.500, 72.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec3 = follower.pathBuilder()
@@ -171,12 +171,12 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(44.000, 71.000, Point.CARTESIAN)
+                                new Point(44.500, 71.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec4 = follower.pathBuilder()
@@ -204,12 +204,12 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(44.000, 70.000, Point.CARTESIAN)
+                                new Point(44.500, 70.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec5 = follower.pathBuilder()
@@ -237,12 +237,12 @@ public class SpecBlueV8 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(44.000, 69.000, Point.CARTESIAN)
+                                new Point(44.500, 69.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec6 = follower.pathBuilder()
@@ -275,7 +275,7 @@ public class SpecBlueV8 extends OpMode {
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -364,7 +364,7 @@ public class SpecBlueV8 extends OpMode {
             case 69:
                 double[] distances1 = detector.getDistances();
                 // set to 0.1 to be fast
-                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > .75) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
@@ -381,6 +381,8 @@ public class SpecBlueV8 extends OpMode {
                     robot.setExtensionInches(0);
                     robot.setTurretAngle(0);
                     robot.setWristAngle(0);
+                    // maybe this will save power?
+                    detector.off();
                     follower.followPath(grabSpec2, true);
                     setPathState(13);
                 }
@@ -401,27 +403,11 @@ public class SpecBlueV8 extends OpMode {
             case 15:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
                     robot.prepareGrabSpecimen.start();
-                    setPathState(440);
-                }
-                break;
-            case 440:
-                double[] distances2 = detector.getDistances();
-                // shouldnt be necessary
-                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.5) {
-                    double[] positions = detector.getPositions();
-                    robot.setPositions(positions);
-                    robot.fastGrab.start();
-                    setPathState(16);
-                }
-                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
                     setPathState(16);
                 }
                 break;
             case 16:
                 if (robot.fastGrab.isFinished() && robot.prepareGrabSpecimen.isFinished()) {
-                    robot.retractExtension.start();
-                    // maybe this will save power?
-                    detector.off();
                     follower.followPath(grabSpec3, true);
                     setPathState(17);
                 }
@@ -496,31 +482,6 @@ public class SpecBlueV8 extends OpMode {
                 }
                 break;
             case 28:
-                if (robot.prepareGrabSpecimen.isFinished()) {
-                    follower.followPath(grabSpec6, true);
-                    setPathState(29);
-                }
-                break;
-            case 29:
-                if (!follower.isBusy()) {
-                    robot.grabSpecimen.start();
-                    setPathState(30);
-                }
-                break;
-            case 30:
-                if (robot.grabSpecimen.isFinished()) {
-                    robot.scoreSpecimen.start();
-                    follower.followPath(scoreSpec4, false);
-                    setPathState(31);
-                }
-                break;
-            case 31:
-                if (!follower.isBusy()) {
-                    robot.prepareGrabSpecimen.start();
-                    setPathState(32);
-                }
-                break;
-            case 32:
                 if (robot.prepareGrabSpecimen.isFinished()) {
                     totalElapsed = totalTimer.getElapsedTimeSeconds();
                     setPathState(-1);
