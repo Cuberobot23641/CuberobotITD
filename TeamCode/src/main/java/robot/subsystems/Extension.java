@@ -45,7 +45,7 @@ public class Extension {
 
     public void loop() {
         if (hanging) {
-            extension.setPower(0);
+            extension.setPower(-0.3);
         } else if (deadZoneOn && target == 0 && Math.abs(extension.getCurrentPosition()) < 30) {
             extension.setPower(-0.06);
         } else {

@@ -100,9 +100,9 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         intake = new Intake(this.hardwareMap);
         deposit = new Deposit(this.hardwareMap);
         // TODO: for real runs we will put this as false
-        lift = new Lift(this.hardwareMap, true);
+        lift = new Lift(this.hardwareMap, false);
         lift.setTwoMotors(true);
-        extension = new Extension(this.hardwareMap, true);
+        extension = new Extension(this.hardwareMap, false);
         extension.setDeadZone(true);
         intake.setTurretPos(INTAKE_TURRET_DEFAULT);
         intake.setWristPos(INTAKE_WRIST_DEFAULT);
@@ -440,6 +440,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             isHanging = !isHanging;
             lift.setManual(isHanging);
             lift.setTwoMotors(false);
+            extension.setHanging(true);
 
 //            extension.setTargetPos(0);
 //            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);

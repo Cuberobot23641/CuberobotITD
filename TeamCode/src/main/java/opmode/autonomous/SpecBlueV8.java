@@ -595,7 +595,7 @@ public class SpecBlueV8 extends OpMode {
         positions1 = PositionCalculator.getPositions(-4.5, 21.5, 0);
         positions2 = PositionCalculator.getPositions(5, 20.5, 0);
         positions3 = PositionCalculator.getPositions(0.8, 21.5, -25);
-        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
+        detector = new SigmaPythonDetector(hardwareMap, "red sample");
         try {
             sleep(3000);
         } catch (InterruptedException e) {

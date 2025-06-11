@@ -19,7 +19,7 @@ public class SampleRobot {
     public Extension extension;
     public Deposit deposit;
     public Intake intake;
-    public RobotFunction grabSample, extendExtension, retractExtension, transfer, extendLift, retractLift, scoreSample, fastGrab;
+    public RobotFunction grabSample, extendExtension, retractExtension, transfer, extendLift, retractLift, scoreSample, fastGrab, transfer2;
 
     public double extensionInches;
     public double turretAngle;
@@ -86,12 +86,31 @@ public class SampleRobot {
                             intake.setElbowIntakePos(INTAKE_ELBOW_TRANSFER);
                             intake.setTurretPos(INTAKE_TURRET_TRANSFER);
                             intake.setWristPos(INTAKE_WRIST_DEFAULT);
+                            extension.setTargetPos(600);
                         },
                         () -> extension.setTargetPos(EXTENSION_TRANSFER),
                         () -> deposit.closeDepositClaw(),
                         () -> intake.openIntakeClaw()
                 ),
-                List.of(0.5, 0.4, 0.1, 0.1)
+                // was 0.5, 0.4
+                List.of(0.4, 0.4, 0.1, 0.1)
+        );
+
+        transfer2 = new RobotFunction(
+                List.of(
+                        () -> {
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
+                            intake.setElbowIntakePos(INTAKE_ELBOW_TRANSFER);
+                            intake.setTurretPos(INTAKE_TURRET_TRANSFER);
+                            intake.setWristPos(INTAKE_WRIST_DEFAULT);
+                            extension.setTargetPos(600);
+                        },
+                        () -> extension.setTargetPos(EXTENSION_TRANSFER),
+                        () -> deposit.closeDepositClaw(),
+                        () -> intake.openIntakeClaw()
+                ),
+                // was 0.5, 0.4
+                List.of(0.5, 0.2, 0.1, 0.1)
         );
 
         fastGrab = new RobotFunction(
@@ -113,7 +132,7 @@ public class SampleRobot {
                         () -> lift.setTargetPos(LIFT_SAMPLE_HIGH),
                         () -> deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE)
                 ),
-                List.of(0.7, 0.3)
+                List.of(0.85, 0.45)
         );
 
         retractLift = new RobotFunction(
@@ -142,6 +161,7 @@ public class SampleRobot {
         fastGrab.run();
         extendLift.run();
         retractLift.run();
+        transfer2.run();
 
         extension.loop();
         lift.loop();
