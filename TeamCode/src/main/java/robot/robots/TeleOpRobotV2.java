@@ -25,7 +25,7 @@ public class TeleOpRobotV2 {
     // public DcMotorEx fl, bl, fr, br;
     public Gamepad gp1, pgp1, cgp1, gp2, pgp2, cgp2;
     public Drivetrain drivetrain;
-    private RobotFunction separateSamples;
+    private RobotFunction separateSamples, hangLock;
 
     public int sampleCycleState = 1;
     public int specCycleState = 1;
@@ -77,6 +77,17 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 //List.of(0.15, 0.1)
         );
 
+    hangLock = new RobotFunction(
+            List.of(
+                    () -> intake.setTurretPos(INTAKE_TURRET_DROP_OFF),
+                            () -> intake.setWristPos(INTAKE_WRIST_HANG_LOCK),
+            () -> intake.setClawIntakePos(INTAKE_CLAW_HANG_LOCK),
+            () -> intake.setElbowIntakePos(INTAKE_ELBOW_HANG_LOCK),
+            () -> intake.setTurretPos(INTAKE_TURRET_HANG_LOCK)
+                ),
+    List.of(.1,.1,.3,.2,.1)
+        );
+
 
         allHubs = this.hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
@@ -126,6 +137,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         extension.loop();
         separateSamples.run();
+        hangLock.run();
         lift.loop();
         //follower.update();
 //        follower.setTeleOpMovementVectors(-gp1.left_stick_y*speed,
@@ -429,12 +441,12 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             lift.setManual(isHanging);
             lift.setTwoMotors(false);
 
-            extension.setTargetPos(0);
-            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+//            extension.setTargetPos(0);
+//            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+            hangLock.start();
         }
 
         if (gp2.b && !pgp2.b) {
-            lift.setTwoMotors(false);
             isFinishedHanging = !isFinishedHanging;
         }
 
