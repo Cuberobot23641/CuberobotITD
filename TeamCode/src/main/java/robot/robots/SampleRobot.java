@@ -10,7 +10,7 @@ import robot.subsystems.Lift;
 import util.RobotFunction;
 
 import java.util.List;
-import static robot.RobotConstantsTeleOp.*;
+import static robot.RobotConstantsAuto.*;
 
 public class SampleRobot {
     List<LynxModule> allHubs;

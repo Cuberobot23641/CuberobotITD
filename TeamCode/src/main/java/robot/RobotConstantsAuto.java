@@ -6,7 +6,7 @@ public final class RobotConstantsAuto {
     // lift
     public static final int LIFT_SPEC_GRAB = 0;
     public static final int LIFT_SPEC_SCORE = 1780; //980 SHOULD BE 1020 // was 950
-    public static final int LIFT_SAMPLE_HIGH = 2200;
+    public static final int LIFT_SAMPLE_HIGH = 2300;
     public static final int LIFT_SAMPLE_LOW = 1000;
     public static final int LIFT_TRANSFER = 0;
 
@@ -20,10 +20,10 @@ public final class RobotConstantsAuto {
     public static final double DEPOSIT_CLAW_OPEN = 0.0;
     public static final double DEPOSIT_CLAW_CLOSED = 0.32;
     public static final double DEPOSIT_CLAW_LOOSE = 0.29;
-    public static final double DEPOSIT_ELBOW_TRANSFER = 0.82;//0.91;
+    public static final double DEPOSIT_ELBOW_TRANSFER = 0.838;//0.91;
     public static final double DEPOSIT_ELBOW_SPEC_GRAB = 0.1;
     public static final double DEPOSIT_ELBOW_SPEC_SCORE = 0.85;//0.79; //was 0.74 SHOULD BE
-    public static final double DEPOSIT_ELBOW_SAMPLE_SCORE = 0.4;
+    public static final double DEPOSIT_ELBOW_SAMPLE_SCORE = 0.32;
     public static final double DEPOSIT_LINKAGE_EXTEND = 0.15;
     public static final double DEPOSIT_LINKAGE_RETRACT = 0.15;
 
@@ -42,5 +42,5 @@ public final class RobotConstantsAuto {
     public static final double INTAKE_TURRET_DEFAULT = 0.52;
     public static final double INTAKE_TURRET_DROP_OFF = 0.0;
     public static final double INTAKE_WRIST_DROP_OFF = 0.2;
-    public static final double INTAKE_TURRET_TRANSFER = 0.52;
+    public static final double INTAKE_TURRET_TRANSFER = 0.54;
 }

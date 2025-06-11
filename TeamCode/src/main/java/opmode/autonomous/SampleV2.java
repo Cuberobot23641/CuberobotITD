@@ -65,8 +65,8 @@ public class SampleV2 extends OpMode {
                         // Line 4
                         new BezierCurve(
                                 new Point(16.000, 138.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
-                                new Point(64.000, 96.000, Point.CARTESIAN)
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN)
                         )
                 )
                 // add parametric callback: set intake to drop off pos,
@@ -85,8 +85,8 @@ public class SampleV2 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(64.000, 96.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
                                 new Point(14.000, 131.000, Point.CARTESIAN)
                         )
                 )
@@ -98,8 +98,8 @@ public class SampleV2 extends OpMode {
                         // Line 4
                         new BezierCurve(
                                 new Point(14.000, 131.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
-                                new Point(64.000, 96.000, Point.CARTESIAN)
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN)
                         )
                 )
                 .addParametricCallback(0.15, () -> {
@@ -116,8 +116,8 @@ public class SampleV2 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(64.000, 96.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
                                 new Point(14.000, 131.000, Point.CARTESIAN)
                         )
                 )
@@ -129,8 +129,8 @@ public class SampleV2 extends OpMode {
                         // Line 4
                         new BezierCurve(
                                 new Point(14.000, 131.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
-                                new Point(64.000, 96.000, Point.CARTESIAN)
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN)
                         )
                 )
                 .addParametricCallback(0.15, () -> {
@@ -147,8 +147,8 @@ public class SampleV2 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(64.000, 96.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
                                 new Point(14.000, 131.000, Point.CARTESIAN)
                         )
                 )

@@ -3,6 +3,7 @@ package opmode.autonomous;
 import static java.lang.Thread.sleep;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
@@ -30,7 +31,7 @@ public class SampleV3 extends OpMode {
     private SigmaPythonDetector detector;
     private Timer pathTimer;
     private final Pose startPose = new Pose(9, 114, Math.toRadians(0));
-    private PathChain scorePreload, grabSample1, scoreSample1, grabSample2, scoreSample2, grabSample3, scoreSample3, toSubmersible1, fromSubmersible1;
+    private PathChain scorePreload, grabSample1, scoreSample1, grabSample2, scoreSample2, grabSample3, scoreSample3, toSubmersible1, fromSubmersible1, toSubmersible2, fromSubmersible2, toSubmersible3, fromSubmersible3;
     // probably unnecessary
     public void buildPaths() {
         // TODO: set custom zpams
@@ -43,8 +44,8 @@ public class SampleV3 extends OpMode {
                                 new Point(14.000, 130.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
-                .setPathEndTValueConstraint(0.995)
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-15))
+                .setPathEndTValueConstraint(0.99)
                 .build();
 
         grabSample1 = follower.pathBuilder()
@@ -52,21 +53,23 @@ public class SampleV3 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(14.000, 130.000, Point.CARTESIAN),
-                                new Point(23.000, 121.000, Point.CARTESIAN)
+                                new Point(19.000, 128.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(-15))
+                .setPathEndTValueConstraint(0.995)
+                .setPathEndTimeoutConstraint(100)
                 .build();
 
         scoreSample1 = follower.pathBuilder()
                 .addPath(
                         // Line 3
                         new BezierLine(
-                                new Point(23.000, 121.000, Point.CARTESIAN),
+                                new Point(19.000, 128.000, Point.CARTESIAN),
                                 new Point(14.000, 130.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
+                .setConstantHeadingInterpolation(Math.toRadians(-15))
                 .build();
 
         grabSample2 = follower.pathBuilder()
@@ -74,22 +77,23 @@ public class SampleV3 extends OpMode {
                         // Line 4
                         new BezierLine(
                                 new Point(14.000, 130.000, Point.CARTESIAN),
-                                new Point(23.000, 131.000, Point.CARTESIAN)
+                                new Point(19.000, 131.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(-15), Math.toRadians(0))
                 .setPathEndTValueConstraint(0.995)
+                .setPathEndTimeoutConstraint(200)
                 .build();
 
         scoreSample2 = follower.pathBuilder()
                 .addPath(
                         // Line 5
                         new BezierLine(
-                                new Point(23.000, 131.000, Point.CARTESIAN),
+                                new Point(19.000, 131.000, Point.CARTESIAN),
                                 new Point(14.000, 130.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         grabSample3 = follower.pathBuilder()
@@ -97,18 +101,19 @@ public class SampleV3 extends OpMode {
                         // Line 6
                         new BezierLine(
                                 new Point(14.000, 130.000, Point.CARTESIAN),
-                                new Point(23.000, 138.000, Point.CARTESIAN)
+                                new Point(19.000, 138.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTValueConstraint(0.995)
+                .setPathEndTimeoutConstraint(200)
                 .build();
 
         scoreSample3 = follower.pathBuilder()
                 .addPath(
                         // Line 7
                         new BezierLine(
-                                new Point(23.000, 138.000, Point.CARTESIAN),
+                                new Point(19.000, 138.000, Point.CARTESIAN),
                                 new Point(14.000, 130.000, Point.CARTESIAN)
                         )
                 )
@@ -121,8 +126,8 @@ public class SampleV3 extends OpMode {
                         // Line 4
                         new BezierCurve(
                                 new Point(14.000, 130.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
-                                new Point(64.000, 96.000, Point.CARTESIAN)
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN)
                         )
                 )
                 // add parametric callback: set intake to drop off pos,
@@ -141,8 +146,107 @@ public class SampleV3 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(64.000, 96.000, Point.CARTESIAN),
-                                new Point(64.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(14.000, 131.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-45))
+                .build();
+
+        toSubmersible2 = follower.pathBuilder()
+                .addPath(
+                        // Line 4
+                        new BezierCurve(
+                                new Point(14.000, 130.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN)
+                        )
+                )
+                // add parametric callback: set intake to drop off pos,
+                // later parametric callback: retract slides
+                .addParametricCallback(0.1, () -> {
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.3, () -> robot.extension.setTargetPos(0))
+                .addParametricCallback(0.3, () -> robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE))
+                .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
+                .setZeroPowerAccelerationMultiplier(2)
+                .build();
+
+        fromSubmersible2 = follower.pathBuilder()
+                .addPath(
+                        // Line 5
+                        new BezierCurve(
+                                new Point(68.000, 96.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(14.000, 131.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-45))
+                .build();
+
+        toSubmersible3 = follower.pathBuilder()
+                .addPath(
+                        // Line 4
+                        new BezierCurve(
+                                new Point(14.000, 130.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN)
+                        )
+                )
+                // add parametric callback: set intake to drop off pos,
+                // later parametric callback: retract slides
+                .addParametricCallback(0.1, () -> {
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.3, () -> robot.extension.setTargetPos(0))
+                .addParametricCallback(0.3, () -> robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE))
+                .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
+                .setZeroPowerAccelerationMultiplier(2)
+                .build();
+
+        fromSubmersible3 = follower.pathBuilder()
+                .addPath(
+                        // Line 5
+                        new BezierCurve(
+                                new Point(68.000, 96.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(14.000, 131.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-45))
+                .build();
+
+        toSubmersible1 = follower.pathBuilder()
+                .addPath(
+                        // Line 4
+                        new BezierCurve(
+                                new Point(14.000, 130.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(68.000, 96.000, Point.CARTESIAN)
+                        )
+                )
+                // add parametric callback: set intake to drop off pos,
+                // later parametric callback: retract slides
+                .addParametricCallback(0.1, () -> {
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.3, () -> robot.extension.setTargetPos(0))
+                .addParametricCallback(0.3, () -> robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE))
+                .setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90))
+                .setZeroPowerAccelerationMultiplier(2)
+                .build();
+
+        fromSubmersible1 = follower.pathBuilder()
+                .addPath(
+                        // Line 5
+                        new BezierCurve(
+                                new Point(68.000, 96.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
                                 new Point(14.000, 131.000, Point.CARTESIAN)
                         )
                 )
@@ -153,8 +257,11 @@ public class SampleV3 extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                follower.setMaxPower(0.7);
                 follower.followPath(scorePreload, true);
                 robot.extendLift.start();
+                robot.setPositions(positions1);
+                robot.extendExtension.start();
                 setPathState(1);
                 break;
             case 1:
@@ -165,10 +272,14 @@ public class SampleV3 extends OpMode {
                 break;
             case 2:
                 if (robot.scoreSample.isFinished()) {
-                    robot.retractLift.start();
-                    robot.setPositions(positions1);
-                    robot.extendExtension.start();
+                    FollowerConstants.holdPointHeadingScaling = 0.5;
+                    FollowerConstants.holdPointTranslationalScaling = 0.5;
                     follower.followPath(grabSample1, true);
+                    setPathState(69);
+                }
+            case 69:
+                if (pathTimer.getElapsedTimeSeconds() > 0.3) {
+                    robot.retractLift.start();
                     setPathState(3);
                 }
                 break;
@@ -188,6 +299,8 @@ public class SampleV3 extends OpMode {
             case 5:
                 if (robot.transfer.isFinished()) {
                     robot.extendLift.start();
+                    robot.setPositions(positions2);
+                    robot.extendExtension.start();
                     setPathState(6);
                 }
                 break;
@@ -199,10 +312,13 @@ public class SampleV3 extends OpMode {
                 break;
             case 7:
                 if (robot.scoreSample.isFinished()) {
-                    robot.retractLift.start();
-                    robot.setPositions(positions2);
-                    robot.extendExtension.start();
                     follower.followPath(grabSample2, true);
+                    setPathState(691);
+                }
+                break;
+            case 691:
+                if (pathTimer.getElapsedTimeSeconds() > 0.3) {
+                    robot.retractLift.start();
                     setPathState(8);
                 }
                 break;
@@ -222,6 +338,8 @@ public class SampleV3 extends OpMode {
             case 10:
                 if (robot.transfer.isFinished()) {
                     robot.extendLift.start();
+                    robot.setPositions(positions3);
+                    robot.extendExtension.start();
                     setPathState(11);
                 }
                 break;
@@ -233,10 +351,13 @@ public class SampleV3 extends OpMode {
                 break;
             case 12:
                 if (robot.scoreSample.isFinished()) {
-                    robot.retractLift.start();
-                    robot.setPositions(positions3);
-                    robot.extendExtension.start();
                     follower.followPath(grabSample3, true);
+                    setPathState(692);
+                }
+                break;
+            case 692:
+                if (pathTimer.getElapsedTimeSeconds() > 0.3) {
+                    robot.retractLift.start();
                     setPathState(13);
                 }
                 break;
@@ -269,6 +390,7 @@ public class SampleV3 extends OpMode {
             case 17:
                 if (robot.scoreSample.isFinished()) {
                     robot.retractLift.start();
+                    follower.setMaxPower(1);
                     follower.followPath(toSubmersible1, true);
                     setPathState(18);
                 }
@@ -323,7 +445,7 @@ public class SampleV3 extends OpMode {
             case 24:
                 if (robot.scoreSample.isFinished()) {
                     robot.retractLift.start();
-                    follower.followPath(toSubmersible1, true);
+                    follower.followPath(toSubmersible2, true);
                     setPathState(25);
                 }
                 break;
@@ -350,7 +472,7 @@ public class SampleV3 extends OpMode {
                     robot.extension.setTargetPos(500);
                     robot.intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
-                    follower.followPath(fromSubmersible1, true);
+                    follower.followPath(fromSubmersible2, true);
                     setPathState(28);
                 }
                 break;
@@ -377,7 +499,7 @@ public class SampleV3 extends OpMode {
             case 31:
                 if (robot.scoreSample.isFinished()) {
                     robot.retractLift.start();
-                    follower.followPath(toSubmersible1, true);
+                    follower.followPath(toSubmersible3, true);
                     setPathState(32);
                 }
                 break;
@@ -404,7 +526,7 @@ public class SampleV3 extends OpMode {
                     robot.extension.setTargetPos(500);
                     robot.intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
-                    follower.followPath(fromSubmersible1, true);
+                    follower.followPath(fromSubmersible3, true);
                     setPathState(35);
                 }
                 break;
@@ -456,9 +578,9 @@ public class SampleV3 extends OpMode {
         follower.setStartingPose(startPose);
         detector = new SigmaPythonDetector(hardwareMap, "yellow sample");
 
-        positions1 = PositionCalculator.getPositions(0, 17, 0);
-        positions2 = PositionCalculator.getPositions(0, 17, 0);
-        positions3 = PositionCalculator.getPositions(-3, 17, 0);
+        positions1 = PositionCalculator.getPositions(-0.5, 20, -15);
+        positions2 = PositionCalculator.getPositions(0, 20, 0);
+        positions3 = PositionCalculator.getPositions(-3, 20.5, 0);
 
         try {
             sleep(2000);
@@ -472,7 +594,7 @@ public class SampleV3 extends OpMode {
     @Override
     public void init_loop() {
         robot.deposit.setElbowDepositPos(0.7);
-        robot.lift.setTargetPos(800);
+        robot.lift.setTargetPos(500);
         robot.loop();
     }
 
