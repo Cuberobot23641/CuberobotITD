@@ -15,6 +15,7 @@ public class Extension {
 
 
     public static final int minPos = 0;
+    private boolean deadZoneOn;
 
     public static final int midPos = 350;
 
@@ -36,10 +37,17 @@ public class Extension {
         extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public void setDeadZone(boolean x) {
+        deadZoneOn = x;
+    }
+
+
 
     public void loop() {
         if (hanging) {
-            extension.setPower(-0.34);
+            extension.setPower(-0.30);
+        } else if (deadZoneOn && target == 0 && Math.abs(extension.getCurrentPosition()) < 30) {
+            extension.setPower(-0.06);
         } else {
             int currentPos = extension.getCurrentPosition();
             double pwr = controller.calculate(currentPos, target);
@@ -49,6 +57,7 @@ public class Extension {
             }
             extension.setPower(pwr);
         }
+
         System.out.println(extension.getCurrentPosition());
     }
 

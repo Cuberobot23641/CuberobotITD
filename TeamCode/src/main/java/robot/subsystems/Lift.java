@@ -83,19 +83,19 @@ public class Lift {
 //                leftMotorPower.setHomed(false);
 //            }
 
-//            if (twoMotors) {
-//                liftLeft.setPower(pwr);
-//                liftRight.setPower(pwr);
-//            } else {
-//                liftExtra.setPower(pwr);
-//                liftRight.setPower(pwr);
-//                liftLeft.setPower(pwr);
-//            }
+            if (twoMotors) {
+                liftLeft.setPower(pwr);
+                liftRight.setPower(pwr);
+            } else {
+                liftExtra.setPower(pwr);
+                liftRight.setPower(pwr);
+                liftLeft.setPower(pwr);
+            }
         }
         else {
-//            liftLeft.setPower(power);
-//            liftRight.setPower(power);
-//            liftExtra.setPower(power);
+            liftLeft.setPower(power);
+            liftRight.setPower(power);
+            liftExtra.setPower(power);
         }
     }
     public void setManual(boolean x) {

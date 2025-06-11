@@ -92,6 +92,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         lift = new Lift(this.hardwareMap, true);
         lift.setTwoMotors(true);
         extension = new Extension(this.hardwareMap, true);
+        extension.setDeadZone(true);
         intake.setTurretPos(INTAKE_TURRET_DEFAULT);
         intake.setWristPos(INTAKE_WRIST_DEFAULT);
         intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
@@ -220,6 +221,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         switch (specState1) {
             case 1:
                 deposit.openDepositClaw();
+                intake.setTurretPos(0.7);
                 setSpecState1(2);
                 break;
             case 2:
@@ -255,7 +257,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             case 2:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.1) {
                     // TODO: TUNE
-                    lift.setTargetPos(1180+liftOffset);
+                    lift.setTargetPos(LIFT_SPEC_SCORE+liftOffset);
                     setSpecState2(3);
                 }
                 break;
@@ -263,7 +265,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 if (spec2Timer.getElapsedTimeSeconds() > 0.3) {
                     deposit.closeDepositClaw();
                     // TODO: TUNE
-                    deposit.setElbowDepositPos(0.78);
+                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
                     setSpecState2(4);
                 }
                 break;
@@ -394,7 +396,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         pgp2.copy(cgp2);
         cgp2.copy(gp2);
 
-        if (Math.abs(gp1.right_stick_x) > 0) {
+        if (Math.abs(gp1.right_stick_x) > 0 || isHanging || isFinishedHanging) {
             drivetrain.setMovementVectors(gp1.left_stick_y*speed,
                     gp1.left_stick_x*strafeSpeed,
                     gp1.right_stick_x*turnSpeed);
@@ -425,6 +427,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         if (gp2.a && !pgp2.a){
             isHanging = !isHanging;
             lift.setManual(isHanging);
+            lift.setTwoMotors(false);
 
             extension.setTargetPos(0);
             intake.setTurretPos(INTAKE_TURRET_DROP_OFF);

@@ -5,9 +5,11 @@ import static com.pedropathing.util.Constants.setConstants;
 import static java.lang.Thread.sleep;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.BezierPoint;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
@@ -32,7 +34,7 @@ public class SpecBlueV8 extends OpMode {
     private SigmaPythonDetector detector;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(42, 66, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(44, 66, Math.toRadians(0));
     private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6;
     private double[] positions1;
     private double[] positions2;
@@ -42,9 +44,9 @@ public class SpecBlueV8 extends OpMode {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(4)
                 // i added this because funny
-                .setPathEndVelocityConstraint(40)
+                //.setPathEndVelocityConstraint(40)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -52,7 +54,7 @@ public class SpecBlueV8 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(42.000, 66.000, Point.CARTESIAN),
+                                new Point(44.000, 66.000, Point.CARTESIAN),
                                 new Point(28.394, 65.713, Point.CARTESIAN),
                                 new Point(20.000, 18.000, Point.CARTESIAN)
                         )
@@ -112,7 +114,11 @@ public class SpecBlueV8 extends OpMode {
                 //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(4)
+//                .addPath(
+//                        new BezierPoint(new Point(45, 73, Point.CARTESIAN))
+//                )
+//                .setPathEndTimeoutConstraint(0)
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         grabSpec2 = follower.pathBuilder()
@@ -148,7 +154,11 @@ public class SpecBlueV8 extends OpMode {
                 //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(4)
+//                .addPath(
+//                        new BezierPoint(new Point(45, 72, Point.CARTESIAN))
+//                )
+//                .setPathEndTimeoutConstraint(0)
+//                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         grabSpec3 = follower.pathBuilder()
@@ -360,6 +370,8 @@ public class SpecBlueV8 extends OpMode {
                 break;
             case 10:
                 if (robot.grabSpecimen.isFinished()) {
+                    FollowerConstants.holdPointHeadingScaling = 0.8;
+                    FollowerConstants.holdPointTranslationalScaling = 0.8;
                     follower.followPath(scoreSpec1, true);
                     robot.scoreSpecimen.start();
                     setPathState(11);
@@ -395,6 +407,8 @@ public class SpecBlueV8 extends OpMode {
                     robot.setTurretAngle(0);
                     robot.setWristAngle(0);
                     follower.setMaxPower(1);
+                    FollowerConstants.holdPointHeadingScaling = 0.35;
+                    FollowerConstants.holdPointTranslationalScaling = 0.35;
                     follower.followPath(grabSpec2, true);
                     setPathState(13);
                 }
@@ -408,6 +422,8 @@ public class SpecBlueV8 extends OpMode {
             case 14:
                 if (robot.grabSpecimen.isFinished()) {
                     robot.scoreSpecimen.start();
+                    FollowerConstants.holdPointHeadingScaling = 0.8;
+                    FollowerConstants.holdPointTranslationalScaling = 0.8;
                     follower.followPath(scoreSpec2, true);
                     setPathState(15);
                 }
@@ -439,6 +455,8 @@ public class SpecBlueV8 extends OpMode {
                     // maybe this will save power?
                     detector.off();
                     follower.setMaxPower(1);
+                    FollowerConstants.holdPointHeadingScaling = 0.35;
+                    FollowerConstants.holdPointTranslationalScaling = 0.35;
                     follower.followPath(grabSpec3, true);
                     setPathState(17);
                 }
@@ -458,7 +476,8 @@ public class SpecBlueV8 extends OpMode {
                 break;
             case 19:
                 // i added in weird acceleration thing
-                if (!follower.isBusy() || (follower.getAcceleration().getXComponent() < -20 && follower.getCurrentTValue() > 0.8)) {
+                // || (follower.getAcceleration().getXComponent() < -20 && follower.getCurrentTValue() > 0.8)
+                if (!follower.isBusy()) {
                     robot.prepareGrabSpecimen.start();
                     setPathState(20);
                 }
@@ -466,6 +485,8 @@ public class SpecBlueV8 extends OpMode {
             case 20:
                 if (robot.prepareGrabSpecimen.isFinished()) {
                     follower.followPath(grabSpec4, true);
+                    // FollowerConstants.holdPointHeadingScaling = 0.2;
+//                    follower.followPath(new BezierPoint(new Point(follower.getPose().getX(), follower.getPose().getY()));
                     setPathState(21);
                 }
                 break;
@@ -561,6 +582,7 @@ public class SpecBlueV8 extends OpMode {
 
         telemetry.addData("total elapsed time", totalTimer.getElapsedTimeSeconds());
         telemetry.addData("final elapsed time", totalElapsed);
+        telemetry.addData("acceleration x", follower.getAcceleration().getXComponent());
     }
 
     @Override
@@ -570,7 +592,7 @@ public class SpecBlueV8 extends OpMode {
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-5, 21.5, 0);
+        positions1 = PositionCalculator.getPositions(-4.5, 21.5, 0);
         positions2 = PositionCalculator.getPositions(5, 20.5, 0);
         positions3 = PositionCalculator.getPositions(0.8, 21.5, -25);
         detector = new SigmaPythonDetector(hardwareMap, "blue sample");
@@ -587,6 +609,8 @@ public class SpecBlueV8 extends OpMode {
     @Override
     public void init_loop() {
         robot.deposit.setElbowDepositPos(0.7);
+        robot.lift.setTargetPos(400);
+        robot.loop();
     }
 
     @Override

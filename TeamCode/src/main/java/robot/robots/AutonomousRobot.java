@@ -215,13 +215,13 @@ public class AutonomousRobot {
                             intake.setWristAngle(wristAngle);
                             intake.setTurretAngle(turretAngle);
                             //intake.setElbowIntakePos(INTAKE_ELBOW_HOVER);
-                            intake.setElbowIntakePos(INTAKE_ELBOW_DOWN);
                             extension.setTargetInches(extensionInches);
                         },
-                        //() -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
+                        () -> intake.setElbowIntakePos(INTAKE_ELBOW_HOVER),
+                        () -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
                         () -> intake.closeIntakeClaw()
                 ),
-                List.of(0.5, 0.2)
+                List.of(0.15, 0.35, 0.15, 0.15)
         );
 
         fastGrab2 = new RobotFunction(

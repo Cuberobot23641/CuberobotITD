@@ -54,6 +54,9 @@ public class FConstants {
         FollowerConstants.pathEndTranslationalConstraint = 0.1;
         FollowerConstants.pathEndHeadingConstraint = 0.007;
 
+//        FollowerConstants.holdPointHeadingScaling = 0.8;
+//        FollowerConstants.holdPointTranslationalScaling = 0.8;
+
         // does this do anything lol? retune pids
         FollowerConstants.maxPower = 1;
 
