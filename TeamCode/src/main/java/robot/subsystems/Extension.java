@@ -46,17 +46,18 @@ public class Extension {
         return extension.getPower();
     }
 
-    public void setIsFinishedHanging(double x) {
-
+    public void setIsFinishedHanging(boolean x) {
+        isFinishedHanging = x;
     }
 
 
 
     public void loop() {
-        if (isFinishedHanging) {
-            extension.setPower(-0.3);
-        } else if (deadZoneOn && target == 0 && Math.abs(extension.getCurrentPosition()) < 30) {
-            extension.setPower(-0.05);
+//        if (isFinishedHanging) {
+//            extension.setPower(-0.3);
+//        } else
+        if (deadZoneOn && target == 0 && Math.abs(extension.getCurrentPosition()) < 30) {
+            extension.setPower(-0.1);
         } else {
             int currentPos = extension.getCurrentPosition();
             double pwr = controller.calculate(currentPos, target);

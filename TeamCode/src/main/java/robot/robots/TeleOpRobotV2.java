@@ -36,6 +36,7 @@ public class TeleOpRobotV2 {
     public boolean isHanging = false;
 
     public boolean isFinishedHanging = false;
+    private boolean initedDeposit = false;
 
 
     public Timer sample1Timer, sample2Timer, sample3Timer, spec1Timer, spec2Timer, sampleMode1Timer, sampleMode2Timer, sampleMode3Timer;
@@ -110,8 +111,6 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         intake.openIntakeClaw();
 
         deposit.openDepositClaw();
-        deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-        deposit.retractLinkage();
 
         lift.setTargetPos(LIFT_SPEC_GRAB);
         extension.setTargetPos(EXTENSION_MIN);
@@ -444,6 +443,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         if (gp2.b && !pgp2.b) {
             isFinishedHanging = !isFinishedHanging;
+            extension.setIsFinishedHanging(isFinishedHanging);
         }
 
 //        if (gp1.b && !pgp1.b) {
@@ -461,7 +461,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         if (isHanging) {
             if (isFinishedHanging) {
-                lift.setPower(-0.2);
+                lift.setPower(-0.24);
             } else {
                 lift.setPower(-gp2.left_stick_y);
             }
@@ -476,6 +476,10 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         if (!sampleMode) {
             if (gp1.right_bumper && !pgp1.right_bumper) {
+                if (!initedDeposit) {
+                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                    initedDeposit = true;
+                }
                 if (sampleCycleState == 1) {
                     // extend into sub
                     speed = .2;
