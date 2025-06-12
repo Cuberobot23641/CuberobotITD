@@ -45,6 +45,7 @@ public class TeleOpRobotV2 {
     // public Follower follower;
     public double speed = .6;
     public int liftOffset = 0;
+    public int grabOffset = 0;
     public double strafeSpeed = .6;
     public double turnSpeed = .2;
 
@@ -244,7 +245,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 3:
                 if (spec1Timer.getElapsedTimeSeconds() > 0.3) {
-                    lift.setTargetPos(LIFT_SPEC_GRAB);
+                    lift.setTargetPos(LIFT_SPEC_GRAB + grabOffset);
                     setSpecState1(-1);
                 }
                 break;
@@ -428,6 +429,14 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         if (gp1.dpad_down && !pgp1.dpad_down) {
             liftOffset -= 20;
+        }
+
+        if (gp1.dpad_left && !pgp1.dpad_left) {
+            grabOffset += 20;
+        }
+
+        if (gp1.dpad_right && !pgp1.dpad_right) {
+            grabOffset -= 20;
         }
 
         if (gp2.a && !pgp2.a){
