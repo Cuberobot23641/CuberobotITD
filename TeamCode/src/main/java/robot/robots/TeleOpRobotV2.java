@@ -25,7 +25,7 @@ public class TeleOpRobotV2 {
     // public DcMotorEx fl, bl, fr, br;
     public Gamepad gp1, pgp1, cgp1, gp2, pgp2, cgp2;
     public Drivetrain drivetrain;
-    private RobotFunction separateSamples, hangLock;
+    private RobotFunction separateSamples, hangLock, reset;
 
     public int sampleCycleState = 1;
     public int specCycleState = 2;
@@ -90,6 +90,14 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     List.of(.1,.1,.3,.2,.1)
         );
 
+        reset = new RobotFunction(
+                List.of(
+                        () -> deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB),
+                        () -> lift.setTargetPos(LIFT_SPEC_GRAB)
+                ),
+                List.of(0.6, 0.1)
+        );
+
 
         allHubs = this.hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
@@ -112,8 +120,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         intake.openIntakeClaw();
 
         deposit.openDepositClaw();
-
-        lift.setTargetPos(LIFT_SPEC_GRAB);
+        lift.setTargetPos(LIFT_SPEC_SCORE);
         extension.setTargetPos(EXTENSION_MIN);
     }
 
@@ -139,6 +146,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         separateSamples.run();
         hangLock.run();
         lift.loop();
+        reset.run();
         //follower.update();
 //        follower.setTeleOpMovementVectors(-gp1.left_stick_y*speed,
 //                -gp1.left_stick_x*strafeSpeed,
@@ -486,7 +494,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         if (!sampleMode) {
             if (gp1.right_bumper && !pgp1.right_bumper) {
                 if (!initedDeposit) {
-                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                    reset.start();
                     initedDeposit = true;
                 }
                 if (sampleCycleState == 1) {
