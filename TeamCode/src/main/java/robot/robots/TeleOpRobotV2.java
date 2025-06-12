@@ -28,7 +28,7 @@ public class TeleOpRobotV2 {
     private RobotFunction separateSamples, hangLock;
 
     public int sampleCycleState = 1;
-    public int specCycleState = 1;
+    public int specCycleState = 2;
     public int sampleModeCycleState = 1;
     public boolean sampleMode = false;
     public boolean highBasket = true;
@@ -278,14 +278,9 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     deposit.closeDepositClaw();
                     // TODO: TUNE
                     deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
-                    setSpecState2(4);
-                }
-                break;
-            case 4:
-                if(spec2Timer.getElapsedTimeSeconds() > 0.4) {
-                    deposit.extendLinkage();
                     setSpecState2(-1);
                 }
+                break;
         }
     }
     public void setSpecState2(int x) {
@@ -428,12 +423,12 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             sampleState3 = -1;
         }
 
-        if (gp2.dpad_up && !pgp2.dpad_up) {
-            liftOffset += 10;
+        if (gp1.dpad_up && !pgp1.dpad_up) {
+            liftOffset += 20;
         }
 
-        if (gp2.dpad_down && !pgp2.dpad_down) {
-            liftOffset -= 10;
+        if (gp1.dpad_down && !pgp1.dpad_down) {
+            liftOffset -= 20;
         }
 
         if (gp2.a && !pgp2.a){

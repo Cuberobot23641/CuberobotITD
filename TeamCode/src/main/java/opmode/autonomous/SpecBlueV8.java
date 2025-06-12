@@ -555,16 +555,11 @@ public class SpecBlueV8 extends OpMode {
                 break;
             case 31:
                 if (!follower.isBusy()) {
-                    robot.prepareGrabSpecimen.start();
-                    setPathState(32);
-                }
-                break;
-            case 32:
-                if (robot.prepareGrabSpecimen.isFinished()) {
                     totalElapsed = totalTimer.getElapsedTimeSeconds();
                     setPathState(-1);
                 }
                 break;
+
         }
     }
 

@@ -35,6 +35,7 @@ public class DriveLocked extends OpMode {
         telemetry.addData("current heading", robot.drivetrain.getCurrentHeading());
         telemetry.addData("target heading", robot.drivetrain.getTargetHeading());
         telemetry.addData("power", -1.0 * gamepad2.left_stick_y);
+        telemetry.addData("extension power", robot.extension.getPower());
         telemetry.update();
     }
 }

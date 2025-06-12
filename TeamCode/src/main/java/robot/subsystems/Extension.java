@@ -12,6 +12,7 @@ public class Extension {
     public HardwareMap hardwareMap;
 
     public boolean hanging = false;
+    public boolean isFinishedHanging = false;
 
 
     public static final int minPos = 0;
@@ -33,7 +34,7 @@ public class Extension {
         this.resetEncoder = resetEncoder;
         extension = this.hardwareMap.get(DcMotorEx.class, "extension");
         extension.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -41,13 +42,21 @@ public class Extension {
         deadZoneOn = x;
     }
 
+    public double getPower() {
+        return extension.getPower();
+    }
+
+    public void setIsFinishedHanging(double x) {
+
+    }
+
 
 
     public void loop() {
-        if (hanging) {
+        if (isFinishedHanging) {
             extension.setPower(-0.3);
         } else if (deadZoneOn && target == 0 && Math.abs(extension.getCurrentPosition()) < 30) {
-            extension.setPower(-0.06);
+            extension.setPower(-0.05);
         } else {
             int currentPos = extension.getCurrentPosition();
             double pwr = controller.calculate(currentPos, target);
