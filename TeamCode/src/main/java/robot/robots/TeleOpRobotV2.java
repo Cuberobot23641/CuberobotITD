@@ -283,6 +283,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 break;
             case 3:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.3) {
+
                     deposit.closeDepositClaw();
                     // TODO: TUNE
                     deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
@@ -317,58 +318,67 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     }
 
     public void sampleModeCycle2() {
-        switch (sampleModeState2) {
-            case 1:
-                intake.closeIntakeClaw();
-                // the next are just in case
-                deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
-                deposit.openDepositClaw();
-                lift.setTargetPos(LIFT_TRANSFER);
-                setSampleModeState2(2);
-                break;
-            case 2:
-                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
-                    intake.setWristPos(INTAKE_WRIST_DEFAULT);
-                    intake.setElbowIntakePos(INTAKE_ELBOW_TRANSFER);
-                    intake.setTurretPos(INTAKE_TURRET_TRANSFER);
-                    setSampleModeState2(69);
-                }
-                break;
-            case 69:
-                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.9) {
-                    extension.setTargetPos(EXTENSION_TRANSFER);
-                    setSampleModeState2(3);
-                }
-                break;
-            case 3:
-                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.4) {
-                    deposit.closeDepositClaw();
-                    setSampleModeState2(4);
-                }
-                break;
-            case 4:
-                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.1) {
-                    intake.openIntakeClaw();
-                    setSampleModeState2(5);
-                }
-                break;
-            case 5:
-                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
-                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE); // score
-                    if (highBasket) {
-                        lift.setTargetPos(LIFT_SAMPLE_HIGH);
-                    } else {
-                        lift.setTargetPos(LIFT_SAMPLE_LOW);
-                    }
-                    setSampleModeState2(6);
-                }
-                break;
-            case 6:
-                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.5) {
-                    intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
-                    setSampleModeState2(-1);
-                }
+            switch (sampleModeState2) {
+                case 1:
+                    intake.closeIntakeClaw();
+                    // the next are just in case
+                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
+                    deposit.openDepositClaw();
+                    lift.setTargetPos(LIFT_TRANSFER);
+                    setSampleModeState2(2);
+                    break;
+                case 2:
+                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
+                            intake.setWristPos(INTAKE_WRIST_DEFAULT);
+                            intake.setElbowIntakePos(INTAKE_ELBOW_TRANSFER);
+                            intake.setTurretPos(INTAKE_TURRET_TRANSFER);
+                            setSampleModeState2(69);
+                        }
+
+                    break;
+                case 69:
+                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.9) {
+                            extension.setTargetPos(EXTENSION_TRANSFER);
+                            setSampleModeState2(3);
+                        }
+
+                    break;
+                case 3:
+
+                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.4) {
+                            deposit.closeDepositClaw();
+                            setSampleModeState2(4);
+                        }
+
+                    break;
+                case 4:
+                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.1) {
+                            intake.openIntakeClaw();
+                            setSampleModeState2(5);
+                        }
+
+                    break;
+                case 5:
+                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE); // score
+                            if (highBasket) {
+                                lift.setTargetPos(LIFT_SAMPLE_HIGH);
+                            } else {
+                                lift.setTargetPos(LIFT_SAMPLE_LOW);
+                            }
+                            setSampleModeState2(6);
+                        }
+
+                    break;
+                case 6:
+                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.5) {
+                            intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
+                            setSampleModeState2(-1);
+                        }
+
+
         }
+
     }
     public void setSampleModeState2(int x) {
         sampleModeState2 = x;
@@ -421,15 +431,28 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                     gp1.right_stick_x*turnSpeed);
         }
 
-        if (gp1.b && !pgp1.b) {
-            speed = .2;
-            strafeSpeed = .2;
-            turnSpeed = .15;
-            startSampleCycle1();
-            sampleCycleState = 2;
-            sampleState2 = -1;
-            sampleState3 = -1;
+        if (!sampleMode) {
+            if (gp1.b && !pgp1.b) {
+                speed = .2;
+                strafeSpeed = .2;
+                turnSpeed = .15;
+                startSampleCycle1();
+                sampleCycleState = 2;
+                sampleState2 = -1;
+                sampleState3 = -1;
+            }
+        } else {
+            // samp
+            if (gp1.b && !pgp1.b) {
+                speed = .15;
+                strafeSpeed = .225;
+                turnSpeed = .14;
+                startSampleModeCycle1();
+                sampleModeCycleState = 2;
+                setSampleModeState2(-1);
+            }
         }
+
 
         if (gp1.dpad_up && !pgp1.dpad_up) {
             liftOffset += 20;
@@ -540,6 +563,10 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             }
         } else {
             if (gp1.right_bumper && !pgp1.right_bumper) {
+                if (!initedDeposit) {
+                    reset.start();
+                    initedDeposit = true;
+                }
                 if (sampleModeCycleState == 1) {
                     // extend into sub
                     speed = .15;

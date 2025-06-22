@@ -12,9 +12,13 @@ import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.BezierPoint;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.CustomFilteredPIDFCoefficients;
+import com.pedropathing.util.CustomPIDFCoefficients;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 import static robot.RobotConstantsAuto.*;
@@ -23,8 +27,11 @@ import robot.robots.AutonomousRobot;
 import util.PositionCalculator;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 optimized")
+@Autonomous(name = "7+0 BLUE COMP")
 public class SpecBlueV8 extends OpMode {
+    private double yPos1 = 1;
+    private double yPos2 = 0;
+    private Gamepad gp1, cgp1, pgp1;
     public AutonomousRobot robot;
     private Follower follower;
     private int pathState;
@@ -97,6 +104,9 @@ public class SpecBlueV8 extends OpMode {
                         )
                 )
                 .setPathEndTValueConstraint(0.93)
+                .addParametricCallback(0.9, () -> {
+                    robot.intake.openIntakeClaw();
+                })
                 .setLinearHeadingInterpolation(Math.toRadians(-25), Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
                 .build();
@@ -108,7 +118,7 @@ public class SpecBlueV8 extends OpMode {
                                 new Point(9.000, 32.000, Point.CARTESIAN),
 //                                new Point(31.234, 72.406, Point.CARTESIAN),
 //                                new Point(25.149, 72.608, Point.CARTESIAN),
-                                new Point(45.000, 73.000, Point.CARTESIAN)
+                                new Point(45.000, 72.000+yPos1, Point.CARTESIAN)
                         )
                 )
                 //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
@@ -125,7 +135,7 @@ public class SpecBlueV8 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(44.000, 73.000, Point.CARTESIAN),
+                                new Point(45.000, 72.000+yPos1, Point.CARTESIAN),
                                 new Point(20.890, 34.479, Point.CARTESIAN),
                                 new Point(25.758, 34.479, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -135,6 +145,14 @@ public class SpecBlueV8 extends OpMode {
                 .addParametricCallback(0.1, () -> {
                     robot.lift.setTargetPos(LIFT_SPEC_GRAB);;
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+                .addParametricCallback(0.55, () -> {
+                    robot.intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.9, () -> {
+                    robot.intake.openIntakeClaw();
                 })
                 .setZeroPowerAccelerationMultiplier(2)
                 .setPathEndTValueConstraint(0.92)
@@ -148,7 +166,7 @@ public class SpecBlueV8 extends OpMode {
                                 new Point(9.000, 32.000, Point.CARTESIAN),
 //                                new Point(31.234, 71.406, Point.CARTESIAN),
 //                                new Point(25.149, 71.608, Point.CARTESIAN),
-                                new Point(45.000, 72.000, Point.CARTESIAN)
+                                new Point(45.000, 72.000+yPos2, Point.CARTESIAN)
                         )
                 )
                 //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
@@ -165,7 +183,7 @@ public class SpecBlueV8 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(44.000, 72.000, Point.CARTESIAN),
+                                new Point(45.000, 72.000+yPos2, Point.CARTESIAN),
                                 new Point(20.890, 34.479, Point.CARTESIAN),
                                 new Point(25.758, 34.479, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -175,6 +193,14 @@ public class SpecBlueV8 extends OpMode {
                 .addParametricCallback(0.1, () -> {
                     robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                })
+                .addParametricCallback(0.55, () -> {
+                    robot.intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                })
+                .addParametricCallback(0.9, () -> {
+                    robot.intake.openIntakeClaw();
                 })
                 .setZeroPowerAccelerationMultiplier(2)
                 .setConstantHeadingInterpolation(0)
@@ -358,6 +384,9 @@ public class SpecBlueV8 extends OpMode {
                 if (robot.fastGrab2.isFinished()) {
                     robot.thirdSample.start();
                     follower.setMaxPower(1);
+                    // TOOD: doesn't seem to do anything
+                    follower.setHeadingPIDF(new CustomPIDFCoefficients(0.5, 0, 0.005, 0));
+                    follower.setDrivePIDF(new CustomFilteredPIDFCoefficients(0.03, 0, 0.0001, 0.6, 0.0));
                     follower.followPath(grabSpec1, true);
                     setPathState(9);
                 }
@@ -587,10 +616,13 @@ public class SpecBlueV8 extends OpMode {
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-4.5, 21.5, 0);
+        positions1 = PositionCalculator.getPositions(-4.5, 22, 0);
         positions2 = PositionCalculator.getPositions(5, 20.5, 0);
         positions3 = PositionCalculator.getPositions(0.8, 21.5, -25);
-        detector = new SigmaPythonDetector(hardwareMap, "red sample");
+        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
+        gp1 = gamepad1;
+        pgp1 = new Gamepad();
+        cgp1 = new Gamepad();
         try {
             sleep(3000);
         } catch (InterruptedException e) {
@@ -603,9 +635,33 @@ public class SpecBlueV8 extends OpMode {
 
     @Override
     public void init_loop() {
-        robot.deposit.setElbowDepositPos(0.7);
-        robot.lift.setTargetPos(400);
+        pgp1.copy(cgp1);
+        cgp1.copy(gp1);
+
+        if (gp1.dpad_up && !pgp1.dpad_up) {
+            yPos1++;
+        }
+
+        if (gp1.dpad_down && !pgp1.dpad_down) {
+            yPos1--;
+        }
+
+        if (gp1.dpad_left && !pgp1.dpad_left) {
+            yPos2++;
+        }
+
+        if (gp1.dpad_right && !pgp1.dpad_right) {
+            yPos2--;
+        }
+
+
+        robot.deposit.setElbowDepositPos(0.8);
+        robot.lift.setTargetPos(300);
+
         robot.loop();
+        telemetry.addData("yPos1", yPos1);
+        telemetry.addData("yPos2", yPos2);
+        telemetry.update();
     }
 
     @Override

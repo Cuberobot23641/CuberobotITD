@@ -12,8 +12,8 @@ import robot.robots.AutonomousRobot;
 import vision.SigmaPythonDetector;
 
 
-@Autonomous(name = "limelight detector red move test")
-public class LimelightMoveTest extends OpMode {
+@Autonomous(name = "limelight detector blue move test")
+public class LimelightBlueTest extends OpMode {
     private SigmaPythonDetector detector;
     private double loopTime = 0;
     private Timer loopTimer;
@@ -29,9 +29,9 @@ public class LimelightMoveTest extends OpMode {
         cgp1.copy(gp1);
 
         if (gamepad1.a && !pgp1.a) {
-            robot.intake.openIntakeClaw();
             double[] distances1 = detector.getDistances();
             // set to 0.1 to be fast
+            robot.intake.openIntakeClaw();
             // TODO: check smaller times now that we have faster loop times
             if (distances1[0] != 0 && distances1[1] != 0) {
                 double[] positions = detector.getPositions();
@@ -73,7 +73,7 @@ public class LimelightMoveTest extends OpMode {
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
-        detector = new SigmaPythonDetector(hardwareMap, "red sample");
+        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         robot = new AutonomousRobot(hardwareMap);
         gp1 = gamepad1;
         cgp1 = new Gamepad();
