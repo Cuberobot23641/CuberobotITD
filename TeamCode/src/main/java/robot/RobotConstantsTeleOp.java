@@ -4,7 +4,7 @@ public final class RobotConstantsTeleOp {
     private RobotConstantsTeleOp() {}
 
     // lift
-    public static final int LIFT_SPEC_GRAB = 100;
+    public static final int LIFT_SPEC_GRAB = 90;
     public static final int LIFT_SPEC_SCORE = 1500; //980 SHOULD BE 1020 // was 950
     public static final int LIFT_SAMPLE_HIGH = 2600;
     public static final int LIFT_SAMPLE_LOW = 1000;

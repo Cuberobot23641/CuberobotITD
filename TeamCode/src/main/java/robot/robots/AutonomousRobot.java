@@ -19,7 +19,7 @@ public class AutonomousRobot {
     public Extension extension;
     public Deposit deposit;
     public Intake intake;
-    public RobotFunction fastGrab2, grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample, firstSample, subGrab;
+    public RobotFunction fastGrab2, grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample, firstSample, subGrab, retractSub;
 
     public double extensionInches;
     public double turretAngle;
@@ -71,6 +71,25 @@ public class AutonomousRobot {
                 List.of(
                         () -> {
                             intake.setElbowIntakePos(INTAKE_ELBOW_IN);
+                            intake.setWristPos(INTAKE_WRIST_DEFAULT);
+                            // changed this from default
+                            intake.setTurretPos(.83);
+                            extension.setTargetPos(EXTENSION_MIN);
+                        }
+                        // TODO: was here and was 0.1s
+//                        () -> {
+//                            intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+//                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+//                            intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+//                        }
+                ),
+                List.of(1.0)
+        );
+
+        retractSub = new RobotFunction(
+                List.of(
+                        () -> {
+                            intake.setElbowIntakePos(INTAKE_ELBOW_IN+0.04);
                             intake.setWristPos(INTAKE_WRIST_DEFAULT);
                             // changed this from default
                             intake.setTurretPos(.83);
@@ -285,7 +304,7 @@ public class AutonomousRobot {
                         },
                         () -> intake.setElbowIntakePos(INTAKE_ELBOW_HOVER),
                         () -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
-                        () -> intake.closeIntakeClaw()
+                        () -> intake.setClawIntakePos(0.63)
                 ),
                 List.of(0.15, 0.5, 0.25, 0.34)
         );
@@ -317,6 +336,7 @@ public class AutonomousRobot {
         firstSample.run();
         fastGrab2.run();
         subGrab.run();
+        retractSub.run();
 
         extension.loop();
         lift.loop();

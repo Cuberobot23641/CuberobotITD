@@ -56,7 +56,7 @@ public class Extension {
         if (hanging) {
             extension.setPower(-0.5);
         } else if (deadZoneOn && target == 0 && Math.abs(extension.getCurrentPosition()) < 30) {
-            extension.setPower(-0.15);
+            extension.setPower(-0.25);
         } else {
             int currentPos = extension.getCurrentPosition();
             double pwr = controller.calculate(currentPos, target);

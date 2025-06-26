@@ -454,20 +454,20 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         }
 
 
-        if (gp1.dpad_up && !pgp1.dpad_up) {
+        if (gp2.dpad_up && !pgp2.dpad_up) {
             liftOffset += 20;
         }
 
-        if (gp1.dpad_down && !pgp1.dpad_down) {
+        if (gp2.dpad_down && !pgp2.dpad_down) {
             liftOffset -= 20;
         }
 
-        if (gp1.dpad_left && !pgp1.dpad_left) {
-            grabOffset += 20;
+        if (gp2.dpad_left && !pgp2.dpad_left) {
+            grabOffset += 10;
         }
 
-        if (gp1.dpad_right && !pgp1.dpad_right) {
-            grabOffset -= 20;
+        if (gp2.dpad_right && !pgp2.dpad_right) {
+            grabOffset -= 10;
         }
 
         if (gp2.a && !pgp2.a){

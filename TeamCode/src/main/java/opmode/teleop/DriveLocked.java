@@ -16,7 +16,7 @@ public class DriveLocked extends OpMode {
     public void init() {
         robot = new TeleOpRobotV2(hardwareMap, gamepad1, gamepad2);
         try {
-            sleep(2000);
+            sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

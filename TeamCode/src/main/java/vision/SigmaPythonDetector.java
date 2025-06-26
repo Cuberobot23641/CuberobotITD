@@ -157,15 +157,11 @@ public class SigmaPythonDetector {
     public boolean isTwoSampleThere() {
         return isValid;
     }
-    // use this to change the pipeline to the blue pipeline that selects the farthest right one
+
     public void switchPipeline(int pipeline) {
         limelight.pipelineSwitch(pipeline);
     }
 
-    public void idk() {
-        limelight.setPollRateHz(30);
-        //limelight.
-    }
     public double lastUpdate() {
         return limelight.getTimeSinceLastUpdate();
     }

@@ -1,5 +1,6 @@
 package pedroPathing.constants;
 
+import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Localizers;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.util.CustomFilteredPIDFCoefficients;
@@ -61,5 +62,10 @@ public class FConstants {
         FollowerConstants.maxPower = 1;
 
         FollowerConstants.useBrakeModeInTeleOp = true;
+
+        // i added this back
+        FollowerConstants.useVoltageCompensationInAuto = true;
+        FollowerConstants.nominalVoltage = 12.7;
+        FollowerConstants.cacheInvalidateSeconds = 0.05;
     }
 }
