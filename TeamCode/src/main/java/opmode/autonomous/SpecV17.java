@@ -34,9 +34,9 @@ public class SpecV17 extends OpMode {
     private Timer totalTimer;
     private double totalElapsed = 0;
     private SigmaPythonDetector detector;
-    private final Pose startPose = new Pose(9, 78, Math.toRadians(0));
+    private final Pose startPose = new Pose(9, 79, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(44, 78, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(44, 79, Math.toRadians(0));
     private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6;
     private double[] positions1;
     private double[] positions2;
@@ -58,29 +58,19 @@ public class SpecV17 extends OpMode {
 
         grabSpec1 = follower.pathBuilder()
                 .addPath(
-                        // Line 5
+                        // Line 7
                         new BezierCurve(
-                                new Point(44.000, 78.000, Point.CARTESIAN),
-                                new Point(20.890, 34.479, Point.CARTESIAN),
-                                new Point(25.758, 34.479, Point.CARTESIAN),
+                                new Point(22.000, 16.000, Point.CARTESIAN),
+                                new Point(23.324, 34.073, Point.CARTESIAN),
+                                new Point(18.659, 33.262, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
                         )
                 )
-                .setConstantHeadingInterpolation(0)
-                .addParametricCallback(0.1, () -> {
-                    robot.lift.setTargetPos(LIFT_SPEC_GRAB);;
-                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-                })
-                .addParametricCallback(0.55, () -> {
-                    robot.intake.setWristPos(INTAKE_WRIST_DROP_OFF);
-                    robot.intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
-                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
-                })
+                .setPathEndTValueConstraint(0.93)
                 .addParametricCallback(0.9, () -> {
                     robot.intake.openIntakeClaw();
                 })
-                .setZeroPowerAccelerationMultiplier(2)
-                .setPathEndTValueConstraint(0.92)
+                .setLinearHeadingInterpolation(Math.toRadians(-25), Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -134,7 +124,7 @@ public class SpecV17 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .setPathEndVelocityConstraint(40)
                 .build();
 
@@ -194,13 +184,19 @@ public class SpecV17 extends OpMode {
                         // Line 1
                         new BezierCurve(
                                 new Point(9.000, 34.000, Point.CARTESIAN),
-                                new Point(44.000, 74.000, Point.CARTESIAN)
+                                new Point(42.000, 74.000, Point.CARTESIAN)
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                //.setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
-                .setPathEndVelocityConstraint(40)
+                .setTangentHeadingInterpolation()
+                .setZeroPowerAccelerationMultiplier(2)
+                .addParametricCallback(0.7, () -> follower.setMaxPower(0.65))
+                //.setPathEndVelocityConstraint(40)
+                .addPath(
+                        new BezierPoint(new Point(42, 74, Point.CARTESIAN))
+                )
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         grabSpec4 = follower.pathBuilder()
@@ -208,12 +204,13 @@ public class SpecV17 extends OpMode {
                         // Line 5
                         new BezierCurve(
                                 new Point(44.000, 74.000, Point.CARTESIAN),
-                                new Point(20.890, 34.479, Point.CARTESIAN),
-                                new Point(25.758, 34.479, Point.CARTESIAN),
+//                                new Point(20.890, 34.479, Point.CARTESIAN),
+//                                new Point(25.758, 34.479, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
                         )
                 )
-                .setConstantHeadingInterpolation(0)
+                .setTangentHeadingInterpolation()
+                //.setConstantHeadingInterpolation(0)
                 .addParametricCallback(0.1, () -> {
                     robot.lift.setTargetPos(LIFT_SPEC_GRAB);
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
@@ -221,6 +218,11 @@ public class SpecV17 extends OpMode {
                 .setZeroPowerAccelerationMultiplier(2)
                 .setPathEndTValueConstraint(0.92)
                 .setPathEndTimeoutConstraint(0)
+                .setReversed(true)
+                .addPath(
+                        new BezierPoint(new Point(9, 34, Point.CARTESIAN))
+                )
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         scoreSpec4 = follower.pathBuilder()
@@ -233,8 +235,7 @@ public class SpecV17 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
-                .setPathEndVelocityConstraint(40)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec5 = follower.pathBuilder()
@@ -267,7 +268,7 @@ public class SpecV17 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .setPathEndVelocityConstraint(40)
                 .build();
 
@@ -301,7 +302,7 @@ public class SpecV17 extends OpMode {
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(8)
+                .setZeroPowerAccelerationMultiplier(4)
                 .setPathEndVelocityConstraint(40)
                 .build();
 
@@ -309,7 +310,7 @@ public class SpecV17 extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(scorePreload, true);
+                follower.followPath(scorePreload, false);
                 robot.scoreSpecimen.start();
                 setPathState(1);
                 break;
@@ -359,7 +360,7 @@ public class SpecV17 extends OpMode {
                     robot.scoreSpecimen.start();
                     FollowerConstants.holdPointHeadingScaling = 0.8;
                     FollowerConstants.holdPointTranslationalScaling = 0.8;
-                    follower.followPath(scoreSpec1, true);
+                    follower.followPath(scoreSpec1, false);
                     setPathState(6);
                 }
                 break;
@@ -468,10 +469,14 @@ public class SpecV17 extends OpMode {
                 }
                 break;
             case 20:
-                if (!follower.isBusy()) {
+                if (follower.atPose(new Pose(42, 74, Math.toRadians(0)), 3, 3, 0.02)) {
                     robot.prepareGrabSpecimen.start();
                     setPathState(21);
                 }
+//                if (!follower.isBusy()) {
+//                    robot.prepareGrabSpecimen.start();
+//                    setPathState(21);
+//                }
                 break;
             case 21:
                 if (robot.prepareGrabSpecimen.isFinished()) {
@@ -567,6 +572,8 @@ public class SpecV17 extends OpMode {
         telemetry.addData("total elapsed time", totalTimer.getElapsedTimeSeconds());
         telemetry.addData("final elapsed time", totalElapsed);
         telemetry.addData("acceleration x", follower.getAcceleration().getXComponent());
+        System.out.println("x pos: " + follower.getPose().getX());
+        System.out.println("y pos: " + follower.getPose().getY());
     }
 
     @Override

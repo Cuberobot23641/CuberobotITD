@@ -129,25 +129,29 @@ public class SampleRobot {
 
         extendLift = new RobotFunction(
                 List.of(
-                        () -> lift.setTargetPos(LIFT_SAMPLE_HIGH),
-                        () -> deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE)
+                        () -> {
+                            lift.setTargetPos(LIFT_SAMPLE_HIGH);
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE);
+                        }
                 ),
-                List.of(0.85, 0.45)
+                List.of(1.0)
         );
 
         retractLift = new RobotFunction(
                 List.of(
-                        () -> lift.setTargetPos(LIFT_TRANSFER),
-                        () -> deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER)
+                        () -> {
+                            lift.setTargetPos(LIFT_TRANSFER);
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
+                        }
                 ),
-                List.of(0.3, 0.5)
+                List.of(0.8)
         );
 
         scoreSample = new RobotFunction(
                 List.of(
                         () -> deposit.openDepositClaw()
                 ),
-                List.of(0.15)
+                List.of(0.1)
         );
     }
 

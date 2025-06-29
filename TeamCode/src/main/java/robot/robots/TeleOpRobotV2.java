@@ -1,5 +1,11 @@
 package robot.robots;
 
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.PathBuilder;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -37,10 +43,12 @@ public class TeleOpRobotV2 {
 
     public boolean isFinishedHanging = false;
     private boolean initedDeposit = false;
+    private boolean isAutoScoring = false;
+    private int timesScored = 0;
 
 
-    public Timer sample1Timer, sample2Timer, sample3Timer, spec1Timer, spec2Timer, sampleMode1Timer, sampleMode2Timer, sampleMode3Timer;
-    public int sampleState1, sampleState2, sampleState3, specState1, specState2, sampleModeState1, sampleModeState2, sampleModeState3;
+    public Timer sample1Timer, sample2Timer, sample3Timer, spec1Timer, spec2Timer, sampleMode1Timer, sampleMode2Timer, sampleMode3Timer, autoScoreTimer;
+    public int sampleState1, sampleState2, sampleState3, specState1, specState2, sampleModeState1, sampleModeState2, sampleModeState3, autoScoreState;
 
     // public Follower follower;
     public double speed = .6;
@@ -69,6 +77,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         sampleMode1Timer = new Timer();
         sampleMode2Timer = new Timer();
         sampleMode3Timer = new Timer();
+        autoScoreTimer = new Timer();
 
         separateSamples = new RobotFunction(
                 List.of(
@@ -141,6 +150,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         sampleModeCycle1();
         sampleModeCycle2();
         sampleModeCycle3();
+        autoScore();
 
         extension.loop();
         separateSamples.run();
@@ -415,20 +425,114 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     public void startSampleModeCycle3() {
         setSampleModeState3(1);
     }
+
+    public void autoScore() {
+        switch (autoScoreState) {
+            case 1:
+                deposit.closeDepositClaw();
+                intake.openIntakeClaw();
+                setAutoScoreState(2);
+                break;
+            case 2:
+                if (autoScoreTimer.getElapsedTimeSeconds() > 0.05) {
+                    System.out.println("following path scorepath");
+                    PathChain scorePath = new PathBuilder()
+                            .addPath(
+                                    new BezierLine(
+                                            new Point(9, 32, Point.CARTESIAN),
+                                            new Point(44,78-timesScored, Point.CARTESIAN)
+                                    )
+                            )
+                            .setPathEndTimeoutConstraint(0)
+                            .setPathEndVelocityConstraint(40)
+                            .addParametricCallback(0.1, () -> {
+                                // TODO: these are auto numbers
+                                deposit.setElbowDepositPos(0.85);
+                                lift.setTargetPos(1600);
+                            })
+                            .setConstantHeadingInterpolation(Math.toRadians(0))
+                            .build();
+                    drivetrain.follower.followPath(scorePath);
+                    setAutoScoreState(3);
+                }
+                break;
+            case 3:
+                if (!drivetrain.follower.isBusy()) {
+                    deposit.openDepositClaw();
+                    setAutoScoreState(4);
+                }
+                break;
+            case 4:
+                if (autoScoreTimer.getElapsedTimeSeconds() > 0.05) {
+                    PathChain grabPath = new PathBuilder()
+                            .addPath(
+                                    new BezierCurve(
+                                            new Point(44,78-timesScored, Point.CARTESIAN),
+                                            new Point(20.890, 32.479, Point.CARTESIAN),
+                                            new Point(25.758, 32.479, Point.CARTESIAN),
+                                            new Point(9, 32, Point.CARTESIAN)
+                                    )
+                            )
+                            .setPathEndTimeoutConstraint(0)
+                            .addParametricCallback(0.1, () -> {
+                                deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                                lift.setTargetPos(LIFT_SPEC_GRAB);
+                            })
+                            .setConstantHeadingInterpolation(Math.toRadians(0))
+                            .setPathEndTValueConstraint(0.92)
+                            .setZeroPowerAccelerationMultiplier(2)
+                            .build();
+                    drivetrain.follower.followPath(grabPath, true);
+                    timesScored++;
+                    setAutoScoreState(5);
+                }
+                break;
+            case 5:
+                if (!drivetrain.follower.isBusy()) {
+                    setAutoScoreState(1);
+                }
+                break;
+
+        }
+    }
+    public void setAutoScoreState(int x) {
+        autoScoreState = x;
+        autoScoreTimer.resetTimer();
+    }
+    public void startAutoScore() {
+        setAutoScoreState(1);
+    }
     public void updateControls() {
         pgp1.copy(cgp1);
         cgp1.copy(gp1);
         pgp2.copy(cgp2);
         cgp2.copy(gp2);
 
-        if (Math.abs(gp1.right_stick_x) > 0 || isHanging || isFinishedHanging) {
-            drivetrain.setMovementVectors(gp1.left_stick_y*speed,
-                    gp1.left_stick_x*strafeSpeed,
-                    gp1.right_stick_x*turnSpeed);
+        if (isAutoScoring) {
+            drivetrain.follower.update();
         } else {
-            drivetrain.setHeadingLockMovementVectors(gp1.left_stick_y*speed,
-                    gp1.left_stick_x*strafeSpeed,
-                    gp1.right_stick_x*turnSpeed);
+            if (Math.abs(gp1.right_stick_x) > 0 || isHanging || isFinishedHanging) {
+                drivetrain.setMovementVectors(gp1.left_stick_y*speed,
+                        gp1.left_stick_x*strafeSpeed,
+                        gp1.right_stick_x*turnSpeed);
+            } else {
+                drivetrain.setHeadingLockMovementVectors(gp1.left_stick_y*speed,
+                        gp1.left_stick_x*strafeSpeed,
+                        gp1.right_stick_x*turnSpeed);
+            }
+        }
+
+        if (gp2.left_bumper) {
+            drivetrain.follower.breakFollowing();
+            drivetrain.follower.setPose(new Pose(9, 32, Math.toRadians(0)));
+            isAutoScoring = true;
+            startAutoScore();
+        }
+
+        if (gp2.right_bumper) {
+            drivetrain.follower.breakFollowing();
+            setAutoScoreState(-1);
+            isAutoScoring = false;
         }
 
         if (!sampleMode) {

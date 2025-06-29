@@ -13,7 +13,7 @@ public class Drivetrain {
     private DcMotorEx fl, bl, fr, br;
     private PIDFController headingController;
     private HardwareMap hardwareMap;
-    private Follower follower;
+    public Follower follower;
     private double targetHeading = 0;
     public Drivetrain(HardwareMap hardwareMap) {
         this.headingController = new PIDFController(1, 0, 0.01, 0); // same as pedro

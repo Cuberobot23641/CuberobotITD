@@ -52,8 +52,7 @@ public class SpecV16 extends OpMode {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadPose)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(3.5)
-                .setPathEndTValueConstraint(0.94)
+                .setZeroPowerAccelerationMultiplier(4)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 

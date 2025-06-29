@@ -252,14 +252,9 @@ public class TeleOpRobot {
             case 3:
                 if (spec2Timer.getElapsedTimeSeconds() > 0.3) {
                     deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_SCORE);
-                    setSpecState2(4);
-                }
-                break;
-            case 4:
-                if(spec2Timer.getElapsedTimeSeconds() > 0.4) {
-                    deposit.extendLinkage();
                     setSpecState2(-1);
                 }
+                break;
         }
     }
     public void setSpecState2(int x) {

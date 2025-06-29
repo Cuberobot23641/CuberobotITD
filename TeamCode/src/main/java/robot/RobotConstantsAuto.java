@@ -5,7 +5,7 @@ public final class RobotConstantsAuto {
 
     // lift
     public static final int LIFT_SPEC_GRAB = 90;
-    public static final int LIFT_SPEC_SCORE = 1600; //980 SHOULD BE 1020 // was 950
+    public static final int LIFT_SPEC_SCORE = 1700; //980 SHOULD BE 1020 // was 950
     public static final int LIFT_SAMPLE_HIGH = 2450;
     public static final int LIFT_SAMPLE_LOW = 1000;
     public static final int LIFT_TRANSFER = 0;

@@ -12,6 +12,7 @@ import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.BezierPoint;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.CustomPIDFCoefficients;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -19,6 +20,7 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 import static robot.RobotConstantsAuto.*;
 
+import robot.RobotConstantsTeleOp;
 import robot.robots.AutonomousRobot;
 import util.PositionCalculator;
 import vision.SigmaPythonDetector;
@@ -34,7 +36,7 @@ public class SpecBlueV12 extends OpMode {
     private SigmaPythonDetector detector;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
     private final Pose grabPose = new Pose(9, 34, Math.toRadians(0));
-    private final Pose scorePreloadPose = new Pose(44, 66, Math.toRadians(0));
+    private final Pose scorePreloadPose = new Pose(42, 66, Math.toRadians(0));
     private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6;
     private double[] positions1;
     private double[] positions2;
@@ -54,19 +56,19 @@ public class SpecBlueV12 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(44.000, 66.000, Point.CARTESIAN),
+                                new Point(42.000, 66.000, Point.CARTESIAN),
                                 new Point(28.394, 65.713, Point.CARTESIAN),
-                                new Point(20.000, 18.000, Point.CARTESIAN)
+                                new Point(20.000, 18.00, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTValueConstraint(0.995)
                 // optimizing on time
                 // .setPathEndTimeoutConstraint(100)
-                .addParametricCallback(0.5, () -> {
-                    robot.setPositions(positions1);
-                    robot.extendExtension.start();
-                })
+//                .addParametricCallback(0.5, () -> {
+//                    robot.setPositions(positions1);
+//                    robot.extendExtension.start();
+//                })
                 .addParametricCallback(0.1, () -> {
                     robot.lift.setTargetPos(LIFT_SPEC_GRAB);;
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
@@ -82,7 +84,6 @@ public class SpecBlueV12 extends OpMode {
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-25))
-                //.setPathEndTimeoutConstraint(200)
                 .setPathEndTValueConstraint(0.995)
                 .build();
 
@@ -111,7 +112,7 @@ public class SpecBlueV12 extends OpMode {
                                 new Point(9.000, 32.000, Point.CARTESIAN),
 //                                new Point(31.234, 72.406, Point.CARTESIAN),
 //                                new Point(25.149, 72.608, Point.CARTESIAN),
-                                new Point(45.000, 73.000, Point.CARTESIAN)
+                                new Point(44.000, 76.000, Point.CARTESIAN)
                         )
                 )
                 //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
@@ -128,7 +129,7 @@ public class SpecBlueV12 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(44.000, 73.000, Point.CARTESIAN),
+                                new Point(44.000, 76.000, Point.CARTESIAN),
                                 new Point(20.890, 34.479, Point.CARTESIAN),
                                 new Point(25.758, 34.479, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -159,7 +160,7 @@ public class SpecBlueV12 extends OpMode {
                                 new Point(9.000, 32.000, Point.CARTESIAN),
 //                                new Point(31.234, 71.406, Point.CARTESIAN),
 //                                new Point(25.149, 71.608, Point.CARTESIAN),
-                                new Point(45.000, 72.000, Point.CARTESIAN)
+                                new Point(44.000, 72.00, Point.CARTESIAN)
                         )
                 )
                 //.addParametricCallback(0.8, () -> follower.setMaxPower(0.7))
@@ -323,11 +324,13 @@ public class SpecBlueV12 extends OpMode {
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload, false);
-                robot.scoreSpecimen.start();
+                robot.lift.setTargetPos(RobotConstantsTeleOp.LIFT_SPEC_SCORE);
+                robot.deposit.setElbowDepositPos(RobotConstantsTeleOp.DEPOSIT_ELBOW_SPEC_SCORE);
+                // robot.scoreSpecimen.start();
                 setPathState(1);
                 break;
             case 1:
-                if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
+                if (!follower.isBusy()) {
                     robot.prepareGrabSpecimen.start();
                     setPathState(2);
                 }
@@ -336,18 +339,21 @@ public class SpecBlueV12 extends OpMode {
                 if (robot.prepareGrabSpecimen.isFinished()) {
                     // was 0.8, but we wanna be fast
                     follower.setMaxPower(1);
+                    FollowerConstants.headingPIDFCoefficients = new CustomPIDFCoefficients(2, 0, 0.05, 0);
+                    FollowerConstants.secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(2, 0, 0.05, 0);
                     follower.followPath(grabSample12, true);
                     setPathState(3);
                 }
                 break;
             case 3:
                 if (!follower.isBusy()) {
-                    robot.grabSample.start();
+                    robot.setPositions(positions1);
+                    robot.fastGrab.start();
                     setPathState(4);
                 }
                 break;
             case 4:
-                if (robot.grabSample.isFinished()) {
+                if (robot.fastGrab.isFinished()) {
                     robot.firstSample.start();
                     setPathState(5);
                 }
@@ -377,6 +383,8 @@ public class SpecBlueV12 extends OpMode {
                 if (robot.fastGrab2.isFinished()) {
                     robot.thirdSample.start();
                     follower.setMaxPower(1);
+                    FollowerConstants.headingPIDFCoefficients = new CustomPIDFCoefficients(1, 0, 0.01, 0);
+                    FollowerConstants.secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(1, 0, 0.01, 0);
                     follower.followPath(grabSpec1, true);
                     setPathState(9);
                 }
@@ -606,9 +614,9 @@ public class SpecBlueV12 extends OpMode {
         setConstants(LConstants.class, FConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-4.5, 22, 0);
-        positions2 = PositionCalculator.getPositions(5, 20.5, 0);
-        positions3 = PositionCalculator.getPositions(0.8, 21.5, -25);
+        positions1 = PositionCalculator.getPositions(-5, 23, 0);
+        positions2 = PositionCalculator.getPositions(5, 21.5, 0);
+        positions3 = PositionCalculator.getPositions(0, 22, -25);
         detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         try {
             sleep(3000);
