@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -29,13 +30,14 @@ public class BlueContourEasyOpenCVOpMode extends LinearOpMode {
         // Set pipeline
         BlueContourPipeline pipeline = new BlueContourPipeline();
         webcam.setPipeline(pipeline);
+        FtcDashboard.getInstance().startCameraStream(webcam, 30); // 30 = FPS
         // FtcDashboard.getInstance().startCameraStream(webcam);
 
         // Open camera
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam.startStreaming(640, 480);
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
                 FtcDashboard.getInstance().startCameraStream(webcam, 0);
             }
 

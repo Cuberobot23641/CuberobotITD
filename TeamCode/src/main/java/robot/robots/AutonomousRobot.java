@@ -2,6 +2,8 @@ package robot.robots;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import robot.RobotConstantsTeleOp;
 import robot.subsystems.Deposit;
 import robot.subsystems.Extension;
 import robot.subsystems.Intake;
@@ -18,7 +20,7 @@ public class AutonomousRobot {
     public Extension extension;
     public Deposit deposit;
     public Intake intake;
-    public RobotFunction fastGrab2, grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample, firstSample, subGrab, retractSub;
+    public RobotFunction fastGrab2, grabSample, retractExtension, extendExtension, grabSpecimen, scoreSpecimen, prepareGrabSpecimen, transfer, fastRetract, clickbaitGrab, fastGrab, transferUp, transferDown, transferIn, thirdSample, firstSample, subGrab, retractSub, newScoreSpecimen;
 
     public double extensionInches;
     public double turretAngle;
@@ -176,6 +178,15 @@ public class AutonomousRobot {
                         () -> deposit.extendLinkage()
                 ),
                 List.of(0.3, 0.2, 0.1)
+        );
+
+        newScoreSpecimen = new RobotFunction(
+                List.of(
+                        () -> lift.setTargetPos(RobotConstantsTeleOp.LIFT_SPEC_SCORE),
+                        () -> {deposit.setElbowDepositPos(RobotConstantsTeleOp.DEPOSIT_ELBOW_SPEC_SCORE);
+                            deposit.closeDepositClaw();}
+                ),
+                List.of(0.3, 0.2)
         );
 
         prepareGrabSpecimen = new RobotFunction(
@@ -336,6 +347,7 @@ public class AutonomousRobot {
         fastGrab2.run();
         subGrab.run();
         retractSub.run();
+        newScoreSpecimen.run();
 
         extension.loop();
         lift.loop();

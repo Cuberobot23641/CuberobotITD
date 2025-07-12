@@ -9,7 +9,6 @@ import java.util.List;
 
 public class BlueContourPipeline extends OpenCvPipeline {
 
-    // Stores distances and angles of detected targets
     public static class TargetInfo {
         public final double distance;
         public final double angle;
@@ -22,18 +21,20 @@ public class BlueContourPipeline extends OpenCvPipeline {
 
     private final Mat hsv = new Mat();
     private final Mat mask = new Mat();
+    private final Mat mask1 = new Mat();
+    private final Mat mask2 = new Mat();
     private final Mat hierarchy = new Mat();
     private final List<MatOfPoint> contours = new ArrayList<>();
-
-    private final Mat homographyMatrix = new Mat();
     private final List<TargetInfo> targets = new ArrayList<>();
 
+    private final Mat homographyMatrix = new Mat();
+
     public BlueContourPipeline() {
-        // Replace with your real homography matrix
+        // Replace with your calibrated matrix: pixel -> millimeters
         homographyMatrix.put(0, 0,
-                0.05, 0.0, -10.0,  // H11, H12, H13
-                0.0, 0.05, -10.0,  // H21, H22, H23
-                0.0, 0.0, 1.0      // H31, H32, H33
+                1.62253078, -1.43247958, -516.481613,
+                -0.03842739, -1.43247958, 571.965417,
+                -0.000070355535, 0.00172971875, 1.0
         );
     }
 
@@ -42,12 +43,20 @@ public class BlueContourPipeline extends OpenCvPipeline {
         contours.clear();
         targets.clear();
 
+        // Convert to HSV
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        Scalar lowerBlue = new Scalar(100, 150, 50);
-        Scalar upperBlue = new Scalar(140, 255, 255);
-        Core.inRange(hsv, lowerBlue, upperBlue, mask);
+        // Red in HSV = two ranges
+        Scalar lowerRed1 = new Scalar(0, 120, 70);
+        Scalar upperRed1 = new Scalar(10, 255, 255);
+        Scalar lowerRed2 = new Scalar(170, 120, 70);
+        Scalar upperRed2 = new Scalar(180, 255, 255);
 
+        Core.inRange(hsv, lowerRed1, upperRed1, mask1);
+        Core.inRange(hsv, lowerRed2, upperRed2, mask2);
+        Core.add(mask1, mask2, mask);
+
+        // Find contours in the red mask
         Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         for (MatOfPoint contour : contours) {
@@ -55,11 +64,10 @@ public class BlueContourPipeline extends OpenCvPipeline {
                 RotatedRect rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
                 Point center = rect.center;
 
-                // Convert center to homogeneous coordinates
+                // Convert pixel point to real-world mm using homography
                 Mat src = new Mat(3, 1, CvType.CV_64F);
                 src.put(0, 0, center.x, center.y, 1.0);
 
-                // Apply homography
                 Mat dst = new Mat();
                 Core.gemm(homographyMatrix, src, 1.0, new Mat(), 0.0, dst);
 
@@ -70,22 +78,27 @@ public class BlueContourPipeline extends OpenCvPipeline {
                 double realX = x / w;
                 double realY = y / w;
 
-                double distance = Math.hypot(realX, realY);
+                double distance = Math.hypot(realX, realY); // in mm
                 double angleDeg = Math.toDegrees(Math.atan2(realY, realX));
 
                 targets.add(new TargetInfo(distance, angleDeg));
+
+                // Draw bounding box on original input for display
+                Point[] boxPoints = new Point[4];
+                rect.points(boxPoints);
+                for (int i = 0; i < 4; i++) {
+                    Imgproc.line(input, boxPoints[i], boxPoints[(i + 1) % 4], new Scalar(0, 255, 0), 2);
+                }
             }
         }
 
         return input;
     }
 
-    // Returns list of all detected targets with their distance and angle
     public List<TargetInfo> getTargets() {
-        return new ArrayList<>(targets); // return a copy for safety
+        return new ArrayList<>(targets);
     }
 
-    // Returns the closest target, or null if none
     public TargetInfo getClosestTarget() {
         if (targets.isEmpty()) return null;
         TargetInfo closest = targets.get(0);
@@ -95,11 +108,12 @@ public class BlueContourPipeline extends OpenCvPipeline {
         return closest;
     }
 
-    // Returns the number of valid targets
     public int getTargetCount() {
         return targets.size();
     }
 }
+
+
 
 
 

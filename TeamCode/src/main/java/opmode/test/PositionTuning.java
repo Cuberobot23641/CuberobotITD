@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import robot.robots.AutonomousRobot;
+import robot.subsystems.Light;
 
 import static robot.RobotConstantsAuto.*;
 
@@ -15,6 +16,7 @@ import static robot.RobotConstantsAuto.*;
 public class PositionTuning extends OpMode {
 
     public AutonomousRobot robot;
+    public Light light;
     public static double clawIntakePos = INTAKE_CLAW_OPEN;
     public static double clawDepositPos = DEPOSIT_CLAW_OPEN;
     public static double wristPos = INTAKE_WRIST_DEFAULT;
@@ -30,11 +32,13 @@ public class PositionTuning extends OpMode {
     public static boolean depositOn = false;
     public static boolean extensionOn = false;
     public static boolean liftOn = false;
+    public static boolean lightOn = false;
 
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new AutonomousRobot(hardwareMap);
+        // light = new Light(hardwareMap);
     }
 
     @Override
@@ -62,6 +66,12 @@ public class PositionTuning extends OpMode {
         if (extensionOn) {
             robot.extension.setTargetPos(extensionTargetPos);
         }
+
+//        if (lightOn) {
+//            light.on();
+//        } else {
+//            light.off();
+//        }
 
         telemetry.update();
     }

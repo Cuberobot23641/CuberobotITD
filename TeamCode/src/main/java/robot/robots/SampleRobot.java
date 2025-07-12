@@ -7,13 +7,18 @@ import robot.subsystems.Deposit;
 import robot.subsystems.Extension;
 import robot.subsystems.Intake;
 import robot.subsystems.Lift;
+import util.Condition;
+import util.FiniteStateMachine;
 import util.RobotFunction;
+import util.State;
+import util.WaitCondition;
 
 import java.util.List;
 import static robot.RobotConstantsAuto.*;
 
 public class SampleRobot {
     List<LynxModule> allHubs;
+    private FiniteStateMachine finiteStateMachine;
     private HardwareMap hardwareMap;
     public Lift lift;
     public Extension extension;
@@ -45,6 +50,15 @@ public class SampleRobot {
         lift.setTargetPos(LIFT_TRANSFER);
         extension.setTargetPos(EXTENSION_MIN);
 
+        finiteStateMachine = new FiniteStateMachine(
+                new State()
+                        .addCondition(new Condition(() -> lift.getLiftPos() > 300))
+                        .then(() -> deposit.closeDepositClaw()),
+                new State()
+                        .addCondition(new WaitCondition(1000))
+                        .then(() -> extension.setTargetPos(600))
+        );
+
         grabSample = new RobotFunction(
                 List.of(
                         () -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
@@ -75,7 +89,7 @@ public class SampleRobot {
                             extension.setTargetInches(extensionInches);
                         }
                 ),
-                List.of(0.5)
+                List.of(0.6)
         );
 
         // this assumes that you have already grabbed
@@ -93,7 +107,7 @@ public class SampleRobot {
                         () -> intake.openIntakeClaw()
                 ),
                 // was 0.5, 0.4
-                List.of(0.4, 0.4, 0.1, 0.1)
+                List.of(1.0, 0.6, 0.1, 0.1)
         );
 
         transfer2 = new RobotFunction(
@@ -131,10 +145,10 @@ public class SampleRobot {
                 List.of(
                         () -> {
                             lift.setTargetPos(LIFT_SAMPLE_HIGH);
-                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE);
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE+0.2);
                         }
                 ),
-                List.of(1.0)
+                List.of(1.5)
         );
 
         retractLift = new RobotFunction(
@@ -144,14 +158,15 @@ public class SampleRobot {
                             deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
                         }
                 ),
-                List.of(0.8)
+                List.of(1.0)
         );
 
         scoreSample = new RobotFunction(
                 List.of(
+                        () -> deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE),
                         () -> deposit.openDepositClaw()
                 ),
-                List.of(0.1)
+                List.of(0.1, 0.15)
         );
     }
 
