@@ -20,9 +20,13 @@ import util.Drivetrain;
 import util.RobotFunction;
 
 import java.util.List;
+
+import static robot.RobotConstantsAuto.INTAKE_ELBOW_DROP_OFF;
+import static robot.RobotConstantsAuto.INTAKE_TURRET_DROP_OFF;
+import static robot.RobotConstantsAuto.INTAKE_WRIST_DROP_OFF;
 import static robot.RobotConstantsTeleOp.*;
 
-public class TeleOpRobotV2 {
+public class TeleOpRobotV3 {
     List<LynxModule> allHubs;
     private double currentHeadingTarget = 0;
     private HardwareMap hardwareMap;
@@ -59,7 +63,7 @@ public class TeleOpRobotV2 {
     public double strafeSpeed = .6;
     public double turnSpeed = .2;
 
-public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
+    public TeleOpRobotV3(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         this.hardwareMap = hardwareMap;
         drivetrain = new Drivetrain(this.hardwareMap);
 
@@ -90,15 +94,15 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 //List.of(0.15, 0.1)
         );
 
-    hangLock = new RobotFunction(
-            List.of(
-                    () -> intake.setTurretPos(INTAKE_TURRET_DROP_OFF),
-                            () -> intake.setWristPos(INTAKE_WRIST_HANG_LOCK),
-            () -> intake.setClawIntakePos(INTAKE_CLAW_HANG_LOCK),
-            () -> intake.setElbowIntakePos(INTAKE_ELBOW_HANG_LOCK),
-            () -> intake.setTurretPos(INTAKE_TURRET_HANG_LOCK)
+        hangLock = new RobotFunction(
+                List.of(
+                        () -> intake.setTurretPos(INTAKE_TURRET_DROP_OFF),
+                        () -> intake.setWristPos(INTAKE_WRIST_HANG_LOCK),
+                        () -> intake.setClawIntakePos(INTAKE_CLAW_HANG_LOCK),
+                        () -> intake.setElbowIntakePos(INTAKE_ELBOW_HANG_LOCK),
+                        () -> intake.setTurretPos(INTAKE_TURRET_HANG_LOCK)
                 ),
-    List.of(.1,.1,.3,.2,.1)
+                List.of(.1,.1,.3,.2,.1)
         );
 
         reset = new RobotFunction(
@@ -327,63 +331,63 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     }
 
     public void sampleModeCycle2() {
-            switch (sampleModeState2) {
-                case 1:
-                    intake.closeIntakeClaw();
-                    // the next are just in case
-                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
-                    deposit.openDepositClaw();
-                    lift.setTargetPos(LIFT_TRANSFER);
-                    setSampleModeState2(2);
-                    break;
-                case 2:
-                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
-                            intake.setWristPos(INTAKE_WRIST_DEFAULT);
-                            intake.setElbowIntakePos(INTAKE_ELBOW_TRANSFER);
-                            intake.setTurretPos(INTAKE_TURRET_TRANSFER);
-                            setSampleModeState2(69);
-                        }
+        switch (sampleModeState2) {
+            case 1:
+                intake.closeIntakeClaw();
+                // the next are just in case
+                deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
+                deposit.openDepositClaw();
+                lift.setTargetPos(LIFT_TRANSFER);
+                setSampleModeState2(2);
+                break;
+            case 2:
+                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
+                    intake.setWristPos(INTAKE_WRIST_DEFAULT);
+                    intake.setElbowIntakePos(INTAKE_ELBOW_TRANSFER);
+                    intake.setTurretPos(INTAKE_TURRET_TRANSFER);
+                    setSampleModeState2(69);
+                }
 
-                    break;
-                case 69:
-                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.9) {
-                            extension.setTargetPos(EXTENSION_TRANSFER);
-                            setSampleModeState2(3);
-                        }
+                break;
+            case 69:
+                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.9) {
+                    extension.setTargetPos(EXTENSION_TRANSFER);
+                    setSampleModeState2(3);
+                }
 
-                    break;
-                case 3:
+                break;
+            case 3:
 
-                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.4) {
-                            deposit.closeDepositClaw();
-                            setSampleModeState2(4);
-                        }
+                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.4) {
+                    deposit.closeDepositClaw();
+                    setSampleModeState2(4);
+                }
 
-                    break;
-                case 4:
-                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.1) {
-                            intake.openIntakeClaw();
-                            setSampleModeState2(5);
-                        }
+                break;
+            case 4:
+                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.1) {
+                    intake.openIntakeClaw();
+                    setSampleModeState2(5);
+                }
 
-                    break;
-                case 5:
-                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
-                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE); // score
-                            if (highBasket) {
-                                lift.setTargetPos(LIFT_SAMPLE_HIGH);
-                            } else {
-                                lift.setTargetPos(LIFT_SAMPLE_LOW);
-                            }
-                            setSampleModeState2(6);
-                        }
+                break;
+            case 5:
+                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.3) {
+                    deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE); // score
+                    if (highBasket) {
+                        lift.setTargetPos(LIFT_SAMPLE_HIGH);
+                    } else {
+                        lift.setTargetPos(LIFT_SAMPLE_LOW);
+                    }
+                    setSampleModeState2(6);
+                }
 
-                    break;
-                case 6:
-                        if (sampleMode2Timer.getElapsedTimeSeconds() > 0.5) {
-                            intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
-                            setSampleModeState2(-1);
-                        }
+                break;
+            case 6:
+                if (sampleMode2Timer.getElapsedTimeSeconds() > 0.5) {
+                    intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
+                    setSampleModeState2(-1);
+                }
 
 
         }
@@ -426,69 +430,73 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
     }
 
     public void autoScore() {
+        // new autoScore: (reset pos when score button is pressed for the first time)
+        // drive back, lift goes back down
+        // grab new spec, drop off new sample (take time while doing this!)
+        // drive back to sub, score, release specimen
         switch (autoScoreState) {
             case 1:
-                deposit.closeDepositClaw();
-                intake.openIntakeClaw();
+                PathChain backwardPath = new PathBuilder()
+                        .addPath(
+                                new BezierCurve(
+                                        // add control points here
+                                        new Point(drivetrain.follower.getPose()),
+                                        new Point(15, 34, Point.CARTESIAN),
+                                        new Point(21, 34, Point.CARTESIAN),
+                                        new Point(9,34, Point.CARTESIAN)
+                                )
+                        )
+                        .setPathEndTimeoutConstraint(0)
+                        .addParametricCallback(0.1, () -> {
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
+                            lift.setTargetPos(LIFT_SPEC_GRAB + grabOffset);
+                        })
+                        .addParametricCallback(0.55, () -> {
+                            intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+                            intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                            intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                        })
+                        .addParametricCallback(0.9, () -> {
+                            intake.openIntakeClaw();
+                        })
+                        .setLinearHeadingInterpolation(drivetrain.follower.getPose().getHeading(), Math.toRadians(0))
+                        .build();
+                drivetrain.follower.followPath(backwardPath);
                 setAutoScoreState(2);
                 break;
             case 2:
-                if (autoScoreTimer.getElapsedTimeSeconds() > 0.05) {
-                    System.out.println("following path scorepath");
-                    PathChain scorePath = new PathBuilder()
-                            .addPath(
-                                    new BezierLine(
-                                            new Point(9, 32, Point.CARTESIAN),
-                                            new Point(43,78-timesScored, Point.CARTESIAN)
-                                    )
-                            )
-                            .setPathEndTimeoutConstraint(0)
-                            .setPathEndVelocityConstraint(40)
-                            .addParametricCallback(0.1, () -> {
-                                // TODO: these are auto numbers
-                                deposit.setElbowDepositPos(RobotConstantsAuto.DEPOSIT_ELBOW_SPEC_SCORE);
-                                lift.setTargetPos(RobotConstantsAuto.LIFT_SPEC_SCORE);
-                            })
-                            .setConstantHeadingInterpolation(Math.toRadians(0))
-                            .build();
-                    drivetrain.follower.followPath(scorePath);
+                if (!drivetrain.follower.isBusy()) {
+                    intake.closeIntakeClaw();
                     setAutoScoreState(3);
                 }
                 break;
             case 3:
-                if (!drivetrain.follower.isBusy()) {
-                    deposit.openDepositClaw();
-                    setAutoScoreState(4);
-                }
-                break;
-            case 4:
-                if (autoScoreTimer.getElapsedTimeSeconds() > 0.05) {
-                    PathChain grabPath = new PathBuilder()
+                if (autoScoreTimer.getElapsedTimeSeconds() > 0.1) {
+                    PathChain forwardPath = new PathBuilder()
                             .addPath(
                                     new BezierCurve(
-                                            new Point(43,78-timesScored, Point.CARTESIAN),
-                                            new Point(20.890, 32, Point.CARTESIAN),
-                                            new Point(25.758, 32, Point.CARTESIAN),
-                                            new Point(9, 32, Point.CARTESIAN)
+                                            new Point(9, 34, Point.CARTESIAN),
+                                            new Point(42,79-timesScored, Point.CARTESIAN)
                                     )
                             )
                             .setPathEndTimeoutConstraint(0)
                             .addParametricCallback(0.1, () -> {
-                                deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-                                lift.setTargetPos(LIFT_SPEC_GRAB);
+                                deposit.setElbowDepositPos(RobotConstantsAuto.DEPOSIT_ELBOW_SPEC_SCORE);
+                                lift.setTargetPos(LIFT_SPEC_SCORE + liftOffset);
                             })
                             .setConstantHeadingInterpolation(Math.toRadians(0))
-                            .setPathEndTValueConstraint(0.93)
-                            .setZeroPowerAccelerationMultiplier(2)
                             .build();
-                    drivetrain.follower.followPath(grabPath, true);
-                    timesScored++;
-                    setAutoScoreState(5);
+                    drivetrain.follower.followPath(forwardPath);
+                    setAutoScoreState(4);
                 }
                 break;
-            case 5:
+            case 4:
                 if (!drivetrain.follower.isBusy()) {
-                    setAutoScoreState(1);
+                    deposit.openDepositClaw();
+                    timesScored++;
+                    drivetrain.follower.breakFollowing();
+                    isAutoScoring = false;
+                    setAutoScoreState(-1);
                 }
                 break;
         }
@@ -520,17 +528,13 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             }
         }
 
-        if (gp2.left_bumper) {
-            drivetrain.follower.breakFollowing();
-            drivetrain.follower.setPose(new Pose(9, 32, Math.toRadians(0)));
-            isAutoScoring = true;
-            startAutoScore();
+        if (gp1.x) {
+            drivetrain.follower.setPose(new Pose(9, 34, Math.toRadians(0)));
         }
 
-        if (gp2.right_bumper) {
-            drivetrain.follower.breakFollowing();
-            setAutoScoreState(-1);
-            isAutoScoring = false;
+        if (gp1.y) {
+            isAutoScoring = true;
+            startAutoScore();
         }
 
         if (!sampleMode) {
@@ -558,18 +562,22 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         if (gp2.dpad_up && !pgp2.dpad_up) {
             liftOffset += 20;
+            lift.setTargetPos(LIFT_SPEC_SCORE + liftOffset);
         }
 
         if (gp2.dpad_down && !pgp2.dpad_down) {
             liftOffset -= 20;
+            lift.setTargetPos(LIFT_SPEC_SCORE + liftOffset);
         }
 
         if (gp2.dpad_left && !pgp2.dpad_left) {
             grabOffset += 10;
+            lift.setTargetPos(LIFT_SPEC_GRAB+ grabOffset);
         }
 
         if (gp2.dpad_right && !pgp2.dpad_right) {
             grabOffset -= 10;
+            lift.setTargetPos(LIFT_SPEC_GRAB + grabOffset);
         }
 
         if (gp2.a && !pgp2.a){

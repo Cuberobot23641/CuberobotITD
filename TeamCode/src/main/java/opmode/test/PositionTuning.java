@@ -38,7 +38,7 @@ public class PositionTuning extends OpMode {
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot = new AutonomousRobot(hardwareMap);
-        // light = new Light(hardwareMap);
+        light = new Light(hardwareMap);
     }
 
     @Override
@@ -67,11 +67,11 @@ public class PositionTuning extends OpMode {
             robot.extension.setTargetPos(extensionTargetPos);
         }
 
-//        if (lightOn) {
-//            light.on();
-//        } else {
-//            light.off();
-//        }
+        if (lightOn) {
+            light.on();
+        } else {
+            light.off();
+        }
 
         telemetry.update();
     }

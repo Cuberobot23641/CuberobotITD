@@ -1,0 +1,42 @@
+package opmode.teleop;
+
+
+import static java.lang.Thread.sleep;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import robot.robots.TeleOpRobot;
+import robot.robots.TeleOpRobotV2;
+import robot.robots.TeleOpRobotV3;
+
+@TeleOp(name="drive with auto score")
+public class DriveAutoScore extends OpMode {
+    TeleOpRobotV3 robot;
+
+    @Override
+    public void init() {
+        robot = new TeleOpRobotV3(hardwareMap, gamepad1, gamepad2);
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        robot.initSubsystems();
+    }
+
+    @Override
+    public void start() {
+        robot.start();
+    }
+
+    @Override
+    public void loop() {
+        robot.loop();
+        robot.updateControls();
+//        telemetry.addData("current heading", robot.drivetrain.getCurrentHeading());
+//        telemetry.addData("target heading", robot.drivetrain.getTargetHeading());
+//        telemetry.addData("power", -1.0 * gamepad2.left_stick_y);
+//        telemetry.addData("extension power", robot.extension.getPower());
+//        telemetry.update();
+    }
+}
