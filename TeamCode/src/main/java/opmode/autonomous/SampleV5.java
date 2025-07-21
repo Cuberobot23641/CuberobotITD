@@ -51,7 +51,7 @@ import vision.SigmaPythonDetector;
 
 import static robot.RobotConstantsAuto.*;
 
-@Autonomous(name = "0+7 sample COMP test")
+@Autonomous(name = "0+7 sample COMP WORKS")
 public class SampleV5 extends OpMode {
     // going up: set depo to 0.5, lift up slides. (all same time)
     // scoring: set depo to 0.32, then release
@@ -249,7 +249,7 @@ public class SampleV5 extends OpMode {
                 }
                 break;
             case 67:
-                if (follower.atPose(new Pose(20, 134, Math.toRadians(-25)), 0.25, 0.25, Math.toRadians(3))) {
+                if (follower.atPose(new Pose(20, 134, Math.toRadians(-25)), 0.5, 0.5, Math.toRadians(3)) || pathTimer.getElapsedTimeSeconds() > 1) {
                     robot.grabSample.start();
                     setPathState(2);
                 }

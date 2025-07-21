@@ -520,14 +520,14 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
             }
         }
 
-        if (gp2.left_bumper) {
+        if (gp1.x && !pgp1.x) {
             drivetrain.follower.breakFollowing();
-            drivetrain.follower.setPose(new Pose(9, 32, Math.toRadians(0)));
+            drivetrain.follower.setStartingPose(new Pose(9, 34, Math.toRadians(0)));
             isAutoScoring = true;
             startAutoScore();
         }
 
-        if (gp2.right_bumper) {
+        if (gp1.y && !pgp1.y) {
             drivetrain.follower.breakFollowing();
             setAutoScoreState(-1);
             isAutoScoring = false;
@@ -558,18 +558,22 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
 
         if (gp2.dpad_up && !pgp2.dpad_up) {
             liftOffset += 20;
+            lift.setTargetPos(LIFT_SPEC_SCORE + liftOffset);
         }
 
         if (gp2.dpad_down && !pgp2.dpad_down) {
             liftOffset -= 20;
+            lift.setTargetPos(LIFT_SPEC_SCORE + liftOffset);
         }
 
         if (gp2.dpad_left && !pgp2.dpad_left) {
             grabOffset += 10;
+            lift.setTargetPos(LIFT_SPEC_GRAB+ grabOffset);
         }
 
         if (gp2.dpad_right && !pgp2.dpad_right) {
             grabOffset -= 10;
+            lift.setTargetPos(LIFT_SPEC_GRAB + grabOffset);
         }
 
         if (gp2.a && !pgp2.a){
@@ -624,25 +628,25 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 }
                 if (sampleCycleState == 1) {
                     // extend into sub
-                    speed = .2;
-                    strafeSpeed = .2;
-                    turnSpeed = .15;
+                    speed = .3;
+                    strafeSpeed = .3;
+                    turnSpeed = .175;
                     startSampleCycle1();
                     sampleCycleState = 2;
                 } else if (sampleCycleState == 2) {
                     // grab and retract
-                    speed = .6;
-                    strafeSpeed = 0.6;
-                    turnSpeed = 0.2;
+                    speed = .8;
+                    strafeSpeed = 0.8;
+                    turnSpeed = 0.3;
                     startSampleCycle2();
                     sampleCycleState = 3;
                 } else if (sampleCycleState == 3) {
                     // extend, release sample, retract
                     startSampleCycle3();
                     sampleCycleState = 1;
-                    speed = .6;
-                    strafeSpeed = 0.6;
-                    turnSpeed = 0.2;
+                    speed = .8;
+                    strafeSpeed = 0.8;
+                    turnSpeed = 0.3;
                 }
             }
 

@@ -74,10 +74,10 @@ public class SampleV6 extends OpMode {
                         new BezierCurve(
                                 new Point(9.000, 114.000, Point.CARTESIAN),
                                 new Point(18.456, 119.662, Point.CARTESIAN),
-                                new Point(17.000, 131.000, Point.CARTESIAN)
+                                new Point(19.000, 133.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-20))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-30))
                 .setPathEndTValueConstraint(0.995)
                 .build();
 
@@ -85,11 +85,11 @@ public class SampleV6 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierLine(
-                                new Point(17.000, 131.000, Point.CARTESIAN),
+                                new Point(19.000, 133.000, Point.CARTESIAN),
                                 new Point(19.000, 136.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-20), Math.toRadians(-15))
+                .setLinearHeadingInterpolation(Math.toRadians(-30), Math.toRadians(-15))
                 .setPathEndTValueConstraint(0.995)
                 .build();
 
@@ -236,7 +236,7 @@ public class SampleV6 extends OpMode {
                 if (!follower.isBusy() && robot.extendLift.isFinished() && robot.extendExtension.isFinished()) {
                     robot.scoreSample.start();
                     robot.grabSample.start();
-                    setPathState(67);
+                    setPathState(2);
                 }
                 break;
             case 2:
@@ -446,7 +446,7 @@ public class SampleV6 extends OpMode {
         follower.setStartingPose(startPose);
         detector = new SigmaPythonDetector(hardwareMap, "yellow sample");
 
-        positions1 = PositionCalculator.getPositions(-0.5, 25, -20);
+        positions1 = PositionCalculator.getPositions(-0.5, 27, -20);
         positions2 = PositionCalculator.getPositions(-0.5, 21.5, -15);
         positions3 = PositionCalculator.getPositions(-3.2, 21, 0);
 

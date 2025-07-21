@@ -54,12 +54,12 @@ public class SigmaPythonDetector {
 //            System.out.println(pythonOutput[0]);
 //            System.out.println(pythonOutput[1]);
 //            System.out.println(pythonOutput[2]);
-            distX = pythonOutput[0]+1;
-            distY = pythonOutput[1]+1.3;
+            distX = pythonOutput[0];
+            distY = pythonOutput[1];
             angle = pythonOutput[2];
 
-            distX2 = pythonOutput[3]+1;
-            distY2 = pythonOutput[4]+1.3;
+            distX2 = pythonOutput[3];
+            distY2 = pythonOutput[4];
             angle2 = pythonOutput[5];
 //            if (pythonOutput[0] != 0.0 && pythonOutput[1] != 0.0 && pythonOutput) {
 //                System.out.println("new result");

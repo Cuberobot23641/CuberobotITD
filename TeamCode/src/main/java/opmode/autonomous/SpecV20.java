@@ -25,14 +25,15 @@ import static robot.RobotConstantsAuto.*;
 import robot.RobotConstantsTeleOp;
 import robot.robots.AutonomousRobot;
 import util.PositionCalculator;
+import util.VoltageCompFollower;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 BLUE + DPAD + OPTIMIZED SCORING")
-public class SpecV19 extends OpMode {
+@Autonomous(name = "7+0 RED + DPAD + VOLTAGE COMP?")
+public class SpecV20 extends OpMode {
 
     public AutonomousRobot robot;
     private Light light;
-    private Follower follower;
+    private VoltageCompFollower follower;
     private int pathState;
     private Timer pathTimer;
     private Timer totalTimer;
@@ -581,12 +582,12 @@ public class SpecV19 extends OpMode {
     public void init() {
         pathTimer = new Timer();
         totalTimer = new Timer();
-        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        follower = new VoltageCompFollower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         positions1 = PositionCalculator.getPositions(-5, 22, 0);
         positions2 = PositionCalculator.getPositions(5, 20.5, 0);
         positions3 = PositionCalculator.getPositions(0, 22, -25);
-        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
+        detector = new SigmaPythonDetector(hardwareMap, "red sample");
         gp1 = gamepad1;
         pgp1 = new Gamepad();
         cgp1 = new Gamepad();

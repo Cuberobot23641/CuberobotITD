@@ -528,11 +528,13 @@ public class TeleOpRobotV3 {
             }
         }
 
-        if (gp1.x) {
-            drivetrain.follower.setPose(new Pose(9, 34, Math.toRadians(0)));
+        if (gp1.x && !pgp1.x) {
+            drivetrain.follower.breakFollowing();
+            drivetrain.follower.setStartingPose(new Pose(9, 34, Math.toRadians(0)));
         }
 
-        if (gp1.y) {
+        if (gp1.y && !pgp1.y) {
+            drivetrain.follower.breakFollowing();
             isAutoScoring = true;
             startAutoScore();
         }
