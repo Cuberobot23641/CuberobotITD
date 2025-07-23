@@ -192,7 +192,9 @@ public class AutonomousRobot {
         prepareGrabSpecimen = new RobotFunction(
                 // TODO: MAKE THIS SMALLER
                 List.of(
-                        () -> deposit.openDepositClaw()
+                        () ->{ deposit.openDepositClaw();
+                            deposit.setElbowDepositPos(0.73);
+                        }
 //                        () -> {
 //                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
 //                            deposit.retractLinkage();

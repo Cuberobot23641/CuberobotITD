@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import robot.robots.AutonomousRobot;
 import robot.robots.AutonomousRobot;
+import robot.subsystems.Light;
 import vision.SigmaPythonDetector;
 
 
@@ -21,6 +22,7 @@ public class LimelightMoveTest extends OpMode {
     private Gamepad gp1;
     private Gamepad cgp1;
     private Gamepad pgp1;
+    private Light light;
 
     /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
     @Override
@@ -79,6 +81,8 @@ public class LimelightMoveTest extends OpMode {
         cgp1 = new Gamepad();
         pgp1 = new Gamepad();
         loopTimer = new Timer();
+        light = new Light(hardwareMap);
+        light.on();
     }
 
     @Override

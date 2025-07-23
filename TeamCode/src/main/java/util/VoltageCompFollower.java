@@ -9,6 +9,10 @@ public class VoltageCompFollower extends Follower {
         super(hardwareMap, FConstants, LConstants);
     }
 
+    // YO I SHOULD MAKE MY OWN FOLLOWER
+    // GVF, tangential component is error?
+
+
     @Override
     public double getVoltageNormalized() {
         double frictionConstant = 0.15;

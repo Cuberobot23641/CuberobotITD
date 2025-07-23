@@ -22,14 +22,25 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 import static robot.RobotConstantsAuto.*;
 
+import java.util.ArrayList;
+
 import robot.RobotConstantsTeleOp;
 import robot.robots.AutonomousRobot;
 import util.PositionCalculator;
 import util.VoltageCompFollower;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 RED + DPAD + VOLTAGE COMP?")
-public class SpecV20 extends OpMode {
+@Autonomous(name = "7+0 RED DPAD SELECT")
+public class SpecV21 extends OpMode {
+    // here, the user can select which one to pickup on. light will be on the entire time.
+    // this helps us be more consistent with our positions, making sure we don't score on top of each other
+    // 1 is fixed at 66, but the rest go:
+    // 2: 78
+    // 3: 76
+    // 4: 74
+    // 5: 72
+    // 6: 70
+    // 7: 68 (also fixed)
 
     public AutonomousRobot robot;
     private Light light;
@@ -45,15 +56,17 @@ public class SpecV20 extends OpMode {
     private double[] positions2;
     private double[] positions3;
     private Gamepad gp1, cgp1, pgp1, gp2, cgp2, pgp2;
-    private int x1 = -4;
-    private int x2 = -2;
-
+    private int x1 = 0;
+    private int x2 = 1;
+    private ArrayList<Integer> intakingPositions = new ArrayList<>();
+    private int[] originalPositions = {78, 76, 74, 72, 70};
+    private int[] indices = {0, 1, 2, 3, 4};
 
     public void buildPaths() {
         scorePreload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(42, 66, Point.CARTESIAN)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(4)
+                .setZeroPowerAccelerationMultiplier(4.5)
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -63,7 +76,7 @@ public class SpecV20 extends OpMode {
                         new BezierCurve(
                                 new Point(42.000, 66.000, Point.CARTESIAN),
                                 new Point(28.394, 65.713, Point.CARTESIAN),
-                                new Point(20.000, 18.00, Point.CARTESIAN)
+                                new Point(19.000, 18.00, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -78,7 +91,7 @@ public class SpecV20 extends OpMode {
                 .addPath(
                         // Line 3
                         new BezierLine(
-                                new Point(20.000, 18.00, Point.CARTESIAN),
+                                new Point(19.000, 18.00, Point.CARTESIAN),
                                 new Point(22.000, 16.000, Point.CARTESIAN)
                         )
                 )
@@ -109,19 +122,19 @@ public class SpecV20 extends OpMode {
                         // Line 1
                         new BezierCurve(
                                 new Point(9.000, 34.000, Point.CARTESIAN),
-                                new Point(42.000, 72.000-x1, Point.CARTESIAN)
+                                new Point(43.000, intakingPositions.get(0), Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec2 = follower.pathBuilder()
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(42.000, 72.000-x1, Point.CARTESIAN),
+                                new Point(42.000, intakingPositions.get(0), Point.CARTESIAN),
                                 new Point(20.890, 34, Point.CARTESIAN),
                                 new Point(25.758, 34, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -150,19 +163,19 @@ public class SpecV20 extends OpMode {
                         // Line 1
                         new BezierCurve(
                                 new Point(9.000, 34.000, Point.CARTESIAN),
-                                new Point(42.000, 72.000-x2, Point.CARTESIAN)
+                                new Point(43.000, intakingPositions.get(1), Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
-                .setZeroPowerAccelerationMultiplier(6)
+                .setZeroPowerAccelerationMultiplier(4)
                 .build();
 
         grabSpec3 = follower.pathBuilder()
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(42.000, 72.000-x2, Point.CARTESIAN),
+                                new Point(42.000, intakingPositions.get(1), Point.CARTESIAN),
                                 new Point(20.890, 34, Point.CARTESIAN),
                                 new Point(25.758, 34, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -193,7 +206,7 @@ public class SpecV20 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 34.000, Point.CARTESIAN),
-                                new Point(42.000, 70.000, Point.CARTESIAN)
+                                new Point(42.000, intakingPositions.get(2), Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -206,7 +219,7 @@ public class SpecV20 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(42.000, 70.000, Point.CARTESIAN),
+                                new Point(42.000, intakingPositions.get(2), Point.CARTESIAN),
                                 new Point(20.890, 34, Point.CARTESIAN),
                                 new Point(25.758, 34, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -227,7 +240,7 @@ public class SpecV20 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 34.000, Point.CARTESIAN),
-                                new Point(42.000, 70.00, Point.CARTESIAN)
+                                new Point(42.000, intakingPositions.get(3), Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -240,7 +253,7 @@ public class SpecV20 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(42.000, 70.00, Point.CARTESIAN),
+                                new Point(42.000, intakingPositions.get(3), Point.CARTESIAN),
                                 new Point(20.890, 34, Point.CARTESIAN),
                                 new Point(25.758, 34, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -261,7 +274,7 @@ public class SpecV20 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 34.000, Point.CARTESIAN),
-                                new Point(42.000, 69.000, Point.CARTESIAN)
+                                new Point(42.000, intakingPositions.get(4), Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -274,7 +287,7 @@ public class SpecV20 extends OpMode {
                 .addPath(
                         // Line 5
                         new BezierCurve(
-                                new Point(42.000, 69.000, Point.CARTESIAN),
+                                new Point(42.000, intakingPositions.get(4), Point.CARTESIAN),
                                 new Point(20.890, 34, Point.CARTESIAN),
                                 new Point(25.758, 34, Point.CARTESIAN),
                                 new Point(9.000, 34.000, Point.CARTESIAN)
@@ -296,7 +309,7 @@ public class SpecV20 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(42.000, 68.00, Point.CARTESIAN)
+                                new Point(42.000, 68.000, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -390,7 +403,8 @@ public class SpecV20 extends OpMode {
                 break;
             case 11:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
-                    robot.prepareGrabSpecimen.start();
+                    // robot.prepareGrabSpecimen.start();
+                    robot.intake.setTurretAngle(90);
                     setPathState(69);
                 }
                 break;
@@ -399,10 +413,12 @@ public class SpecV20 extends OpMode {
                 if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.7) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
+                    robot.prepareGrabSpecimen.start();
                     robot.fastGrab.start();
                     setPathState(12);
                 }
                 if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                    robot.prepareGrabSpecimen.start();
                     setPathState(12);
                 }
                 break;
@@ -436,7 +452,8 @@ public class SpecV20 extends OpMode {
                 break;
             case 15:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
-                    robot.prepareGrabSpecimen.start();
+                    // robot.prepareGrabSpecimen.start();
+                    robot.intake.setTurretAngle(90);
                     setPathState(440);
                 }
                 break;
@@ -446,9 +463,11 @@ public class SpecV20 extends OpMode {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
+                    robot.prepareGrabSpecimen.start();
                     setPathState(16);
                 }
                 if (pathTimer.getElapsedTimeSeconds() > 1.5) {
+                    robot.prepareGrabSpecimen.start();
                     setPathState(16);
                 }
                 break;
@@ -584,8 +603,8 @@ public class SpecV20 extends OpMode {
         totalTimer = new Timer();
         follower = new VoltageCompFollower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        positions1 = PositionCalculator.getPositions(-5, 22, 0);
-        positions2 = PositionCalculator.getPositions(5, 20.5, 0);
+        positions1 = PositionCalculator.getPositions(-5, 23, 0);
+        positions2 = PositionCalculator.getPositions(5, 21.5, 0);
         positions3 = PositionCalculator.getPositions(0, 22, -25);
         detector = new SigmaPythonDetector(hardwareMap, "red sample");
         gp1 = gamepad1;
@@ -626,9 +645,24 @@ public class SpecV20 extends OpMode {
             x2++;
         }
 
+        // ArrayList<Integer> intakingPositions2 = new ArrayList<>();
+
+        intakingPositions.clear();
+        intakingPositions.add(originalPositions[x1]);
+        intakingPositions.add(originalPositions[x2]);
+        for (int i: indices) {
+            if (i != x1 && i != x2) {
+                intakingPositions.add(originalPositions[i]);
+            }
+        }
+
+        // intakingPositions = intakingPositions2;
+
         robot.deposit.setElbowDepositPos(0.85);
         robot.lift.setTargetPos(300);
         robot.loop();
+        telemetry.addLine("Original Values: 78, 76, 74, 72, 70");
+        telemetry.addLine("Choose two indices to intake from without repeats:");
         telemetry.addData("x1", x1);
         telemetry.addData("x2", x2);
         telemetry.update();

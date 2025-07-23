@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 import robot.robots.SampleRobot;
+import robot.subsystems.Light;
 import util.Condition;
 import util.FiniteStateMachine;
 import util.PositionCalculator;
@@ -62,6 +63,7 @@ public class SampleV5 extends OpMode {
     private double[] positions3;
     private Follower follower;
     private int pathState;
+    private Light light;
     private SigmaPythonDetector detector;
     private Timer pathTimer;
     private final Pose startPose = new Pose(9, 114, Math.toRadians(0));
@@ -403,6 +405,7 @@ public class SampleV5 extends OpMode {
 //                    robot.intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
 //                    robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_TRANSFER);
                     robot.transfer.start();
+                    light.off();
                     follower.followPath(fromSubmersible2, true);
                     setPathState(29);
                 }
@@ -485,6 +488,8 @@ public class SampleV5 extends OpMode {
             throw new RuntimeException(e);
         }
         robot = new SampleRobot(hardwareMap);
+        light = new Light(hardwareMap);
+        light.on();
     }
 
     @Override
