@@ -145,7 +145,7 @@ public class SampleRobot {
                 List.of(
                         () -> {
                             lift.setTargetPos(LIFT_SAMPLE_HIGH);
-                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE+0.2);
+                            deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE+0.15);
                         }
                 ),
                 List.of(1.5)
@@ -166,7 +166,7 @@ public class SampleRobot {
                         () -> deposit.setElbowDepositPos(DEPOSIT_ELBOW_SAMPLE_SCORE),
                         () -> deposit.openDepositClaw()
                 ),
-                List.of(0.1, 0.15)
+                List.of(0.05, 0.15)
         );
     }
 
