@@ -18,6 +18,10 @@ public class SafePathGenerator {
     private List<TargetPose> points;
     public SafePathGenerator(TargetPose...points) {
         pathFinder = new PathFinder(120, 120, 8);
+        // as an example
+        pathFinder.addObstacleRect(10, 10, 30, 30);
+        pathFinder.inflateObstacles();
+
         pathBuilder = new PathBuilder();
         paths = new ArrayList<>();
         this.points = new ArrayList<>();

@@ -24,6 +24,7 @@ import util.fsm.StateMachine;
 import util.fsm.Transition;
 import util.pathgenerator.ControlPoint;
 import util.pathgenerator.PathGenerator;
+import util.pathgenerator.SafePathGenerator;
 import util.pathgenerator.TargetPose;
 import vision.SigmaPythonDetector;
 
@@ -31,6 +32,7 @@ import vision.SigmaPythonDetector;
 public class PathTesting extends OpMode {
     private Follower follower;
     private PathGenerator pathGenerator;
+    private SafePathGenerator safePathGenerator;
     private StateMachine stateMachine;
     private int i = 0;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
@@ -59,6 +61,13 @@ public class PathTesting extends OpMode {
                 new TargetPose(20.0, 18.0, Math.toRadians(0.0))
         );
         pathGenerator.generatePaths();
+
+        safePathGenerator = new SafePathGenerator(
+                new TargetPose(9.0, 66.0, Math.toRadians(0.0)),
+                new TargetPose(40.0, 66.0, Math.toRadians(0.0)),
+                new TargetPose(20.0, 18.0, Math.toRadians(0.0))
+        );
+        safePathGenerator.generatePaths();
         // state stuff
         stateMachine = new StateMachine(
                 new State()

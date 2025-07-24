@@ -60,7 +60,7 @@ public class PathFinder {
         return pathList;
     }
 
-    private void inflateObstacles() {
+    public void inflateObstacles() {
         int[][] inflated = new int[ROW][COL];
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COL; j++) {
@@ -86,7 +86,7 @@ public class PathFinder {
         grid = inflated.clone();
     }
 
-    private PathFinder addObstacleRect(int startRow, int startCol, int endRow, int endCol) {
+    public PathFinder addObstacleRect(int startRow, int startCol, int endRow, int endCol) {
         for (int i = Math.max(0, startRow); i <= Math.min(ROW - 1, endRow); i++) {
             for (int j = Math.max(0, startCol); j <= Math.min(COL - 1, endCol); j++) {
                 grid[i][j] = 0;
