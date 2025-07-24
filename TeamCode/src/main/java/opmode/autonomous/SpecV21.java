@@ -58,8 +58,8 @@ public class SpecV21 extends OpMode {
     private Gamepad gp1, cgp1, pgp1, gp2, cgp2, pgp2;
     private int x1 = 0;
     private int x2 = 1;
-    private ArrayList<Integer> intakingPositions = new ArrayList<>();
-    private int[] originalPositions = {78, 76, 74, 72, 70};
+    private ArrayList<Double> intakingPositions = new ArrayList<>();
+    private double[] originalPositions = {78, 76.5, 75, 73.5, 72};
     private int[] indices = {0, 1, 2, 3, 4};
 
     public void buildPaths() {
@@ -309,7 +309,7 @@ public class SpecV21 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(9.000, 32.000, Point.CARTESIAN),
-                                new Point(42.000, 68.000, Point.CARTESIAN)
+                                new Point(42.000, 70.500, Point.CARTESIAN)
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(0))
