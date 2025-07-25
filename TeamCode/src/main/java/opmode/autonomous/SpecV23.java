@@ -209,7 +209,7 @@ public class SpecV23 extends OpMode {
                                 new Point(42.000, intakingPositions.get(2), Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(20))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(15))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -229,7 +229,7 @@ public class SpecV23 extends OpMode {
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
-                .setLinearHeadingInterpolation(Math.toRadians(20), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(15), Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -241,7 +241,7 @@ public class SpecV23 extends OpMode {
                                 new Point(42.000, intakingPositions.get(3), Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(20))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(15))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -261,7 +261,7 @@ public class SpecV23 extends OpMode {
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
                 })
                 .setZeroPowerAccelerationMultiplier(2)
-                .setLinearHeadingInterpolation(Math.toRadians(20), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(15), Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -273,7 +273,7 @@ public class SpecV23 extends OpMode {
                                 new Point(42.000, intakingPositions.get(4), Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(20))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(15))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -294,7 +294,7 @@ public class SpecV23 extends OpMode {
 
                 .setPathEndTValueConstraint(0.92)
                 .setZeroPowerAccelerationMultiplier(2)
-                .setLinearHeadingInterpolation(Math.toRadians(20), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(15), Math.toRadians(0))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -306,7 +306,7 @@ public class SpecV23 extends OpMode {
                                 new Point(42.000, 68.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(20))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(15))
                 .setPathEndTimeoutConstraint(0)
                 .build();
 
@@ -395,22 +395,28 @@ public class SpecV23 extends OpMode {
                 break;
             case 11:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
-                    // robot.prepareGrabSpecimen.start();
+                    robot.prepareGrabSpecimen.start();
                     robot.intake.setTurretAngle(90);
+                    setPathState(69420);
+                }
+                break;
+            case 69420:
+                if (pathTimer.getElapsedTimeSeconds() > 0.7) {
+                    follower.breakFollowing();
                     setPathState(69);
                 }
                 break;
             case 69:
                 double[] distances1 = detector.getDistances();
-                if (distances1[0] != 0 && distances1[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.7) {
+                if (distances1[0] != 0 && distances1[1] != 0) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
-                    robot.prepareGrabSpecimen.start();
+                    // robot.prepareGrabSpecimen.start();
                     robot.fastGrab.start();
                     setPathState(12);
                 }
-                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
-                    robot.prepareGrabSpecimen.start();
+                if (pathTimer.getElapsedTimeSeconds() > 0.8) {
+                    // robot.prepareGrabSpecimen.start();
                     setPathState(12);
                 }
                 break;
@@ -444,22 +450,26 @@ public class SpecV23 extends OpMode {
                 break;
             case 15:
                 if (!follower.isBusy() && robot.scoreSpecimen.isFinished()) {
-                    // robot.prepareGrabSpecimen.start();
+                    robot.prepareGrabSpecimen.start();
                     robot.intake.setTurretAngle(90);
+                    setPathState(42069);
+                }
+                break;
+            case 42069:
+                if (pathTimer.getElapsedTimeSeconds() > 0.7) {
+                    follower.breakFollowing();
                     setPathState(440);
                 }
                 break;
             case 440:
                 double[] distances2 = detector.getDistances();
-                if (distances2[0] != 0 && distances2[1] != 0 && pathTimer.getElapsedTimeSeconds() > 0.7) {
+                if (distances2[0] != 0 && distances2[1] != 0) {
                     double[] positions = detector.getPositions();
                     robot.setPositions(positions);
                     robot.fastGrab.start();
-                    robot.prepareGrabSpecimen.start();
                     setPathState(16);
                 }
-                if (pathTimer.getElapsedTimeSeconds() > 1.5) {
-                    robot.prepareGrabSpecimen.start();
+                if (pathTimer.getElapsedTimeSeconds() > 0.8) {
                     setPathState(16);
                 }
                 break;
