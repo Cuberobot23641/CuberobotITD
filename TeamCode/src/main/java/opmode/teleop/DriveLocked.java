@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import robot.robots.TeleOpRobot;
 import robot.robots.TeleOpRobotV2;
 
-@TeleOp(name="drive with heading lock???")
+@TeleOp(name="Drive Red")
 public class DriveLocked extends OpMode {
     TeleOpRobotV2 robot;
 
     @Override
     public void init() {
-        robot = new TeleOpRobotV2(hardwareMap, gamepad1, gamepad2);
+        robot = new TeleOpRobotV2(hardwareMap, gamepad1, gamepad2, "red sample");
         try {
             sleep(1000);
         } catch (InterruptedException e) {

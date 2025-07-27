@@ -74,7 +74,7 @@ public class AutonomousRobot {
                             intake.setElbowIntakePos(INTAKE_ELBOW_IN);
                             intake.setWristPos(INTAKE_WRIST_DEFAULT);
                             // changed this from default
-                            intake.setTurretPos(.83);
+                            intake.setTurretPos(.65);
                             extension.setTargetPos(EXTENSION_MIN);
                         }
                         // TODO: was here and was 0.1s

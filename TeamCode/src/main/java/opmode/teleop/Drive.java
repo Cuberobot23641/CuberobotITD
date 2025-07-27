@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import robot.robots.TeleOpRobot;
 
-@TeleOp(name="drive")
+@TeleOp(name="drive no heading lock")
 public class Drive extends OpMode {
     TeleOpRobot robot;
 

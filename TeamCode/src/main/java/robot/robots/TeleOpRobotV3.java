@@ -134,9 +134,9 @@ public class TeleOpRobotV3 {
         intake.setElbowIntakePos(INTAKE_ELBOW_DEFAULT);
         intake.openIntakeClaw();
 
-        deposit.openDepositClaw();
-        lift.setTargetPos(LIFT_SPEC_SCORE);
+        deposit.openDepositClaw();lift.setTargetPos(LIFT_SPEC_SCORE+50);
         extension.setTargetPos(EXTENSION_MIN);
+        deposit.setElbowDepositPos(0.73);
     }
 
     public void start() {

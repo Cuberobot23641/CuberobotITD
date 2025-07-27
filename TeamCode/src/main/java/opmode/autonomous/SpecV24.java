@@ -30,8 +30,8 @@ import util.PositionCalculator;
 import util.VoltageCompFollower;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 RED LOBSTER", group="comp")
-public class SpecV23 extends OpMode {
+@Autonomous(name = "7+0 BLUE LOBSTER", group="comp")
+public class SpecV24 extends OpMode {
     // here, the user can select which one to pickup on. light will be on the entire time.
     // this helps us be more consistent with our positions, making sure we don't score on top of each other
     // 1 is fixed at 66, but the rest go:

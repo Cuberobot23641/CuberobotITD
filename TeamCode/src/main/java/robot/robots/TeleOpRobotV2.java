@@ -16,10 +16,19 @@ import robot.subsystems.Deposit;
 import robot.subsystems.Extension;
 import robot.subsystems.Intake;
 import robot.subsystems.Lift;
+import robot.subsystems.Light;
 import util.Drivetrain;
 import util.RobotFunction;
+import vision.SigmaPythonDetector;
 
 import java.util.List;
+
+import static robot.RobotConstantsAuto.EXTENSION_MIN;
+import static robot.RobotConstantsAuto.INTAKE_ELBOW_DOWN;
+import static robot.RobotConstantsAuto.INTAKE_ELBOW_DROP_OFF;
+import static robot.RobotConstantsAuto.INTAKE_ELBOW_HOVER;
+import static robot.RobotConstantsAuto.INTAKE_TURRET_DROP_OFF;
+import static robot.RobotConstantsAuto.INTAKE_WRIST_DROP_OFF;
 import static robot.RobotConstantsTeleOp.*;
 
 public class TeleOpRobotV2 {
@@ -32,8 +41,10 @@ public class TeleOpRobotV2 {
     public Intake intake;
     // public DcMotorEx fl, bl, fr, br;
     public Gamepad gp1, pgp1, cgp1, gp2, pgp2, cgp2;
+    public SigmaPythonDetector detector;
     public Drivetrain drivetrain;
-    private RobotFunction separateSamples, hangLock, reset;
+    private RobotFunction separateSamples, hangLock, reset, fastGrab;
+    private Light light;
 
     public int sampleCycleState = 1;
     public int specCycleState = 2;
@@ -45,12 +56,11 @@ public class TeleOpRobotV2 {
 
     public boolean isFinishedHanging = false;
     private boolean initedDeposit = false;
-    private boolean isAutoScoring = false;
     private int timesScored = 0;
 
 
-    public Timer sample1Timer, sample2Timer, sample3Timer, spec1Timer, spec2Timer, sampleMode1Timer, sampleMode2Timer, sampleMode3Timer, autoScoreTimer;
-    public int sampleState1, sampleState2, sampleState3, specState1, specState2, sampleModeState1, sampleModeState2, sampleModeState3, autoScoreState;
+    public Timer sample1Timer, sample2Timer, sample3Timer, spec1Timer, spec2Timer, sampleMode1Timer, sampleMode2Timer, sampleMode3Timer, autoGrabTimer;
+    public int sampleState1, sampleState2, sampleState3, specState1, specState2, sampleModeState1, sampleModeState2, sampleModeState3, autoGrabState;
 
     // public Follower follower;
     public double speed = .6;
@@ -58,10 +68,14 @@ public class TeleOpRobotV2 {
     public int grabOffset = 0;
     public double strafeSpeed = .6;
     public double turnSpeed = .2;
+    public double extensionInches;
+    public double turretAngle;
+    public double wristAngle;
 
-public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
+public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2, String alliance) {
         this.hardwareMap = hardwareMap;
         drivetrain = new Drivetrain(this.hardwareMap);
+        detector = new SigmaPythonDetector(hardwareMap, alliance);
 
         this.gp1 = gp1;
         this.pgp1 = new Gamepad();
@@ -79,7 +93,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         sampleMode1Timer = new Timer();
         sampleMode2Timer = new Timer();
         sampleMode3Timer = new Timer();
-        autoScoreTimer = new Timer();
+        autoGrabTimer = new Timer();
 
         separateSamples = new RobotFunction(
                 List.of(
@@ -109,6 +123,20 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 List.of(0.6, 0.1)
         );
 
+    fastGrab = new RobotFunction(
+            List.of(
+                    () -> {
+                        intake.setWristAngle(wristAngle);
+                        intake.setTurretAngle(turretAngle);
+                        extension.setTargetInches(extensionInches);
+                    },
+                    () -> intake.setElbowIntakePos(INTAKE_ELBOW_HOVER),
+                    () -> intake.setElbowIntakePos(INTAKE_ELBOW_DOWN),
+                    () -> intake.closeIntakeClaw()
+            ),
+            List.of(0.15, 0.35, 0.15, 0.25)
+    );
+
 
         allHubs = this.hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
@@ -131,8 +159,12 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         intake.openIntakeClaw();
 
         deposit.openDepositClaw();
-        lift.setTargetPos(LIFT_SPEC_SCORE);
+        lift.setTargetPos(LIFT_SPEC_SCORE+50);
         extension.setTargetPos(EXTENSION_MIN);
+        deposit.setElbowDepositPos(0.73);
+        detector.on();
+        light = new Light(hardwareMap);
+        light.on();
     }
 
     public void start() {
@@ -152,22 +184,22 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         sampleModeCycle1();
         sampleModeCycle2();
         sampleModeCycle3();
-        autoScore();
+        autoGrab();
+        fastGrab.run();
 
         extension.loop();
         separateSamples.run();
         hangLock.run();
         lift.loop();
         reset.run();
-        //follower.update();
-//        follower.setTeleOpMovementVectors(-gp1.left_stick_y*speed,
-//                -gp1.left_stick_x*strafeSpeed,
-//                -gp1.right_stick_x*turnSpeed);
-//        System.out.println(fl.getCurrent(CurrentUnit.AMPS));
-//        System.out.println(bl.getCurrent(CurrentUnit.AMPS));
-//        System.out.println(br.getCurrent(CurrentUnit.AMPS));
-//        System.out.println(fr.getCurrent(CurrentUnit.AMPS));
 
+        detector.update();
+    }
+
+    public void setPositions(double[] positions) {
+        extensionInches = positions[0];
+        turretAngle = positions[1];
+        wristAngle = positions[2];
     }
 
     public void sampleCycle1() {
@@ -176,7 +208,6 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                 intake.openIntakeClaw();
                 intake.setTurretPos(INTAKE_TURRET_DEFAULT);
                 extension.setTargetPos(EXTENSION_MAX);
-                // intake.setElbowIntakePos(INTAKE_ELBOW_DOWN);
                 setSampleState1(2);
                 break;
             case 2:
@@ -425,80 +456,46 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         setSampleModeState3(1);
     }
 
-    public void autoScore() {
-        switch (autoScoreState) {
+    public void autoGrab() {
+        switch (autoGrabState) {
             case 1:
-                deposit.closeDepositClaw();
+                intake.setTurretAngle(90);
                 intake.openIntakeClaw();
-                setAutoScoreState(2);
+                if (autoGrabTimer.getElapsedTimeSeconds() > 0.5) {
+                    setAutoGrabState(2);
+                }
                 break;
             case 2:
-                if (autoScoreTimer.getElapsedTimeSeconds() > 0.05) {
-                    System.out.println("following path scorepath");
-                    PathChain scorePath = new PathBuilder()
-                            .addPath(
-                                    new BezierLine(
-                                            new Point(9, 32, Point.CARTESIAN),
-                                            new Point(43,78-timesScored, Point.CARTESIAN)
-                                    )
-                            )
-                            .setPathEndTimeoutConstraint(0)
-                            .setPathEndVelocityConstraint(40)
-                            .addParametricCallback(0.1, () -> {
-                                // TODO: these are auto numbers
-                                deposit.setElbowDepositPos(RobotConstantsAuto.DEPOSIT_ELBOW_SPEC_SCORE);
-                                lift.setTargetPos(RobotConstantsAuto.LIFT_SPEC_SCORE);
-                            })
-                            .setConstantHeadingInterpolation(Math.toRadians(0))
-                            .build();
-                    drivetrain.follower.followPath(scorePath);
-                    setAutoScoreState(3);
+                double[] distances1 = detector.getDistances();
+                if (distances1[0] != 0 && distances1[1] != 0) {
+                    double[] positions = detector.getPositions();
+                    setPositions(positions);
+                    fastGrab.start();
+                    setAutoGrabState(3);
+                }
+                if (autoGrabTimer.getElapsedTimeSeconds() > 1) {
+                    setAutoGrabState(-1);
                 }
                 break;
             case 3:
-                if (!drivetrain.follower.isBusy()) {
-                    deposit.openDepositClaw();
-                    setAutoScoreState(4);
-                }
-                break;
-            case 4:
-                if (autoScoreTimer.getElapsedTimeSeconds() > 0.05) {
-                    PathChain grabPath = new PathBuilder()
-                            .addPath(
-                                    new BezierCurve(
-                                            new Point(43,78-timesScored, Point.CARTESIAN),
-                                            new Point(20.890, 32, Point.CARTESIAN),
-                                            new Point(25.758, 32, Point.CARTESIAN),
-                                            new Point(9, 32, Point.CARTESIAN)
-                                    )
-                            )
-                            .setPathEndTimeoutConstraint(0)
-                            .addParametricCallback(0.1, () -> {
-                                deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
-                                lift.setTargetPos(LIFT_SPEC_GRAB);
-                            })
-                            .setConstantHeadingInterpolation(Math.toRadians(0))
-                            .setPathEndTValueConstraint(0.93)
-                            .setZeroPowerAccelerationMultiplier(2)
-                            .build();
-                    drivetrain.follower.followPath(grabPath, true);
-                    timesScored++;
-                    setAutoScoreState(5);
-                }
-                break;
-            case 5:
-                if (!drivetrain.follower.isBusy()) {
-                    setAutoScoreState(1);
+                if (fastGrab.isFinished()) {
+                    extension.setTargetPos(EXTENSION_MIN);
+                    intake.setElbowIntakePos(INTAKE_ELBOW_DROP_OFF);
+                    intake.setTurretPos(INTAKE_TURRET_DROP_OFF);
+                    intake.setWristPos(INTAKE_WRIST_DROP_OFF);
+                    sampleCycleState = 3;
+                    setAutoGrabState(-1);
                 }
                 break;
         }
     }
-    public void setAutoScoreState(int x) {
-        autoScoreState = x;
-        autoScoreTimer.resetTimer();
+
+    public void setAutoGrabState(int x) {
+        autoGrabState = x;
+        autoGrabTimer.resetTimer();
     }
-    public void startAutoScore() {
-        setAutoScoreState(1);
+    public void startAutoGrab() {
+        setAutoGrabState(1);
     }
     public void updateControls() {
         pgp1.copy(cgp1);
@@ -506,9 +503,7 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
         pgp2.copy(cgp2);
         cgp2.copy(gp2);
 
-        if (isAutoScoring) {
-            drivetrain.follower.update();
-        } else {
+
             if (Math.abs(gp1.right_stick_x) > 0 || isHanging || isFinishedHanging) {
                 drivetrain.setMovementVectors(gp1.left_stick_y*speed,
                         gp1.left_stick_x*strafeSpeed,
@@ -518,20 +513,12 @@ public TeleOpRobotV2(HardwareMap hardwareMap, Gamepad gp1, Gamepad gp2) {
                         gp1.left_stick_x*strafeSpeed,
                         gp1.right_stick_x*turnSpeed);
             }
-        }
+
 
         if (gp1.x && !pgp1.x) {
-            drivetrain.follower.breakFollowing();
-            drivetrain.follower.setStartingPose(new Pose(9, 34, Math.toRadians(0)));
-            isAutoScoring = true;
-            startAutoScore();
+            startAutoGrab();
         }
 
-        if (gp1.y && !pgp1.y) {
-            drivetrain.follower.breakFollowing();
-            setAutoScoreState(-1);
-            isAutoScoring = false;
-        }
 
         if (!sampleMode) {
             if (gp1.b && !pgp1.b) {

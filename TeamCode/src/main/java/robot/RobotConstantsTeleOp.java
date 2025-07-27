@@ -6,7 +6,7 @@ public final class RobotConstantsTeleOp {
     private RobotConstantsTeleOp() {}
 
     // lift
-    public static final int LIFT_SPEC_GRAB = 90;
+    public static final int LIFT_SPEC_GRAB = 0;
     public static final int LIFT_SPEC_SCORE = 1430; //980 SHOULD BE 1020 // was 950
     public static final int LIFT_SAMPLE_HIGH = 2600;
     public static final int LIFT_SAMPLE_LOW = 1000;
@@ -31,11 +31,11 @@ public final class RobotConstantsTeleOp {
 
     // intake
     public static final double INTAKE_CLAW_OPEN = 0.24;//Add commentMore actions
-    public static final double INTAKE_CLAW_CLOSED = 0.6;
+    public static final double INTAKE_CLAW_CLOSED = 0.62;
     public static final double INTAKE_CLAW_HANG_LOCK = .5;
     public static final double INTAKE_ELBOW_DEFAULT = 0.25;
     public static final double INTAKE_ELBOW_TRANSFER = 0.85;
-    public static final double INTAKE_ELBOW_DOWN = 0.15;
+    public static final double INTAKE_ELBOW_DOWN = 0.17; // was 0.15
     public static final double INTAKE_ELBOW_HANG_LOCK = 0.13;
     // good for not getting in the way, use this in the middle of retract
     public static final double INTAKE_ELBOW_IN = 0.25;
