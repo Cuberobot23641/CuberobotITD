@@ -6,8 +6,8 @@ public final class RobotConstantsTeleOp {
     private RobotConstantsTeleOp() {}
 
     // lift
-    public static final int LIFT_SPEC_GRAB = 0;
-    public static final int LIFT_SPEC_SCORE = 1430; //980 SHOULD BE 1020 // was 950
+    public static final int LIFT_SPEC_GRAB = 80;
+    public static final int LIFT_SPEC_SCORE = 1480; //980 SHOULD BE 1020 // was 950
     public static final int LIFT_SAMPLE_HIGH = 2600;
     public static final int LIFT_SAMPLE_LOW = 1000;
     public static final int LIFT_TRANSFER = 0;
@@ -22,7 +22,7 @@ public final class RobotConstantsTeleOp {
     public static final double DEPOSIT_CLAW_OPEN = 0.0;
     public static final double DEPOSIT_CLAW_CLOSED = 0.32;
     public static final double DEPOSIT_CLAW_LOOSE = 0.32;
-    public static final double DEPOSIT_ELBOW_TRANSFER = 0.825;//0.91;
+    public static final double DEPOSIT_ELBOW_TRANSFER = 0.84;//0.91;
     public static final double DEPOSIT_ELBOW_SPEC_GRAB = 0.1;
     public static final double DEPOSIT_ELBOW_SPEC_SCORE = 0.79;//0.79; //was 0.74 SHOULD BE
     public static final double DEPOSIT_ELBOW_SAMPLE_SCORE = 0.32;
@@ -35,7 +35,7 @@ public final class RobotConstantsTeleOp {
     public static final double INTAKE_CLAW_HANG_LOCK = .5;
     public static final double INTAKE_ELBOW_DEFAULT = 0.25;
     public static final double INTAKE_ELBOW_TRANSFER = 0.85;
-    public static final double INTAKE_ELBOW_DOWN = 0.17; // was 0.15
+    public static final double INTAKE_ELBOW_DOWN = 0.155; // was 0.15
     public static final double INTAKE_ELBOW_HANG_LOCK = 0.13;
     // good for not getting in the way, use this in the middle of retract
     public static final double INTAKE_ELBOW_IN = 0.25;

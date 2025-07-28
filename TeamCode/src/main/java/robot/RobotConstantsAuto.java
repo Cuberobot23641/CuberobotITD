@@ -4,9 +4,9 @@ public final class RobotConstantsAuto {
     private RobotConstantsAuto() {}
 
     // lift
-    public static final int LIFT_SPEC_GRAB = 0; // was 90
-    public static final int LIFT_SPEC_SCORE = 1430; // was 1690, should be lower
-    public static final int LIFT_SAMPLE_HIGH = 2350;
+    public static final int LIFT_SPEC_GRAB = 50; // was 90
+    public static final int LIFT_SPEC_SCORE = 1480; // was 1690, should be lower
+    public static final int LIFT_SAMPLE_HIGH = 2500;
     public static final int LIFT_SAMPLE_LOW = 1000;
     public static final int LIFT_TRANSFER = 0;
 
@@ -31,8 +31,8 @@ public final class RobotConstantsAuto {
     public static final double INTAKE_CLAW_OPEN = 0.24;
     public static final double INTAKE_CLAW_CLOSED = 0.64;
     public static final double INTAKE_ELBOW_DEFAULT = 0.25;
-    public static final double INTAKE_ELBOW_TRANSFER = 0.84;
-    public static final double INTAKE_ELBOW_DOWN = 0.15; // was 0.138
+    public static final double INTAKE_ELBOW_TRANSFER = 0.85;
+    public static final double INTAKE_ELBOW_DOWN = 0.138; // was 0.138
     // good for not getting in the way, use this in the middle of retract
     public static final double INTAKE_ELBOW_IN = 0.25;
     public static final double INTAKE_ELBOW_HOVER = 0.21;

@@ -30,7 +30,7 @@ import util.PositionCalculator;
 import util.VoltageCompFollower;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 RED LOBSTER", group="comp")
+@Autonomous(name = "7+0 RED LOBSTER VERY BAD")
 public class SpecV23 extends OpMode {
     // here, the user can select which one to pickup on. light will be on the entire time.
     // this helps us be more consistent with our positions, making sure we don't score on top of each other
@@ -51,7 +51,7 @@ public class SpecV23 extends OpMode {
     private double totalElapsed = 0;
     private SigmaPythonDetector detector;
     private final Pose startPose = new Pose(9, 66, Math.toRadians(0));
-    private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6;
+    private PathChain scorePreload, grabSample12, grabSample3, grabSpec1, scoreSpec1, grabSpec2, scoreSpec2, grabSpec3, scoreSpec3, grabSpec4, scoreSpec4, grabSpec5, scoreSpec5, grabSpec6, scoreSpec6, scorePreloadReal;
     private double[] positions1;
     private double[] positions2;
     private double[] positions3;
@@ -64,10 +64,18 @@ public class SpecV23 extends OpMode {
 
     public void buildPaths() {
         scorePreload = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(startPose), new Point(42, 66, Point.CARTESIAN)))
+                .addPath(new BezierLine(new Point(startPose), new Point(20, 66, Point.CARTESIAN)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(4)
                 .setPathEndTimeoutConstraint(0)
+                .build();
+
+        scorePreloadReal = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(20, 66), new Point(42, 66, Point.CARTESIAN)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setZeroPowerAccelerationMultiplier(4)
+                .setPathEndTimeoutConstraint(0)
+                .setPathEndTValueConstraint(0.7)
                 .build();
 
         grabSample12 = follower.pathBuilder()
@@ -318,13 +326,20 @@ public class SpecV23 extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(scorePreload, false);
+                follower.followPath(scorePreload, true);
                 robot.lift.setTargetPos(RobotConstantsTeleOp.LIFT_SPEC_SCORE);
                 robot.deposit.setElbowDepositPos(RobotConstantsTeleOp.DEPOSIT_ELBOW_SPEC_SCORE);
                 setPathState(1);
                 break;
             case 1:
                 if (!follower.isBusy()) {
+                    follower.followPath(scorePreloadReal, false);
+                    //robot.prepareGrabSpecimen.start();
+                    setPathState(23123);
+                }
+                break;
+            case 23123:
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() > 0.5) {
                     robot.prepareGrabSpecimen.start();
                     setPathState(2);
                 }
@@ -612,7 +627,7 @@ public class SpecV23 extends OpMode {
         positions1 = PositionCalculator.getPositions(-5, 22, 0);
         positions2 = PositionCalculator.getPositions(5, 21, 0);
         positions3 = PositionCalculator.getPositions(0, 22, -25);
-        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
+        detector = new SigmaPythonDetector(hardwareMap, "red sample");
         gp1 = gamepad1;
         pgp1 = new Gamepad();
         cgp1 = new Gamepad();

@@ -122,7 +122,7 @@ public class AutonomousRobot {
 //                        () -> extension.setTargetPos(EXTENSION_MIN),
                         () -> intake.openIntakeClaw()
                 ),
-                List.of(0.165, 0.15)
+                List.of(0.19, 0.15)
         );
 
         firstSample = new RobotFunction(

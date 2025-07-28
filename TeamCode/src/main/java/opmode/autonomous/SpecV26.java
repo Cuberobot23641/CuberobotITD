@@ -30,8 +30,8 @@ import util.PositionCalculator;
 import util.VoltageCompFollower;
 import vision.SigmaPythonDetector;
 
-@Autonomous(name = "7+0 RED REAL TRUST LOBSTER", group="comp")
-public class SpecV24 extends OpMode {
+@Autonomous(name = "7+0 BLUE REAL MOST RECENT WORKING", group="comp")
+public class SpecV26 extends OpMode {
     // here, the user can select which one to pickup on. light will be on the entire time.
     // this helps us be more consistent with our positions, making sure we don't score on top of each other
     // 1 is fixed at 66, but the rest go:
@@ -74,7 +74,7 @@ public class SpecV24 extends OpMode {
                 .addPath(
                         // Line 2
                         new BezierCurve(
-                                new Point(20.000, 66.000, Point.CARTESIAN),
+                                new Point(9.000, 66.000, Point.CARTESIAN),
                                 // new Point(28.394, 65.713, Point.CARTESIAN),
                                 new Point(20.000, 18.500, Point.CARTESIAN)
                         )
@@ -82,6 +82,7 @@ public class SpecV24 extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTValueConstraint(0.99)
                 .setZeroPowerAccelerationMultiplier(2)
+                .setPathEndTimeoutConstraint(200)
                 .addParametricCallback(0.1, () -> {
                     robot.lift.setTargetPos(LIFT_SPEC_GRAB);;
                     robot.deposit.setElbowDepositPos(DEPOSIT_ELBOW_SPEC_GRAB);
@@ -108,7 +109,7 @@ public class SpecV24 extends OpMode {
                                 new Point(22.000, 15.000, Point.CARTESIAN),
                                 new Point(23.324, 34.073, Point.CARTESIAN),
                                 new Point(18.659, 33.262, Point.CARTESIAN),
-                                new Point(11.000, 34.000, Point.CARTESIAN)
+                                new Point(9.000, 34.000, Point.CARTESIAN)
                         )
                 )
                 .setPathEndTValueConstraint(0.92)
@@ -321,22 +322,24 @@ public class SpecV24 extends OpMode {
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
-            case 0:
-                follower.setMaxPower(0.7);
-                follower.followPath(scorePreload, true);
-                // robot.lift.setTargetPos(RobotConstantsTeleOp.LIFT_SPEC_SCORE);
-                // robot.deposit.setElbowDepositPos(RobotConstantsTeleOp.DEPOSIT_ELBOW_SPEC_SCORE);
-                setPathState(1);
-                break;
-            case 1:
-                if (!follower.isBusy()) {
-                    // robot.prepareGrabSpecimen.start();
-                    setPathState(2);
-                }
-                break;
+//            case 0:
+//                follower.setMaxPower(0.7);
+//                follower.followPath(grabSample12, true);
+//                FollowerConstants.headingPIDFCoefficients = new CustomPIDFCoefficients(2, 0, 0.05, 0);
+//                FollowerConstants.secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(2, 0, 0.05, 0);
+//                // robot.lift.setTargetPos(RobotConstantsTeleOp.LIFT_SPEC_SCORE);
+//                // robot.deposit.setElbowDepositPos(RobotConstantsTeleOp.DEPOSIT_ELBOW_SPEC_SCORE);
+//                setPathState(1);
+//                break;
+//            case 1:
+//                if (!follower.isBusy()) {
+//                    // robot.prepareGrabSpecimen.start();
+//                    setPathState(2);
+//                }
+//                break;
             case 2:
                 if (robot.prepareGrabSpecimen.isFinished()) {
-                    follower.setMaxPower(1);
+                    follower.setMaxPower(0.7);
                     FollowerConstants.headingPIDFCoefficients = new CustomPIDFCoefficients(2, 0, 0.05, 0);
                     FollowerConstants.secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(2, 0, 0.05, 0);
                     follower.followPath(grabSample12, true);
@@ -618,7 +621,7 @@ public class SpecV24 extends OpMode {
         positions1 = PositionCalculator.getPositions(-5, 22, 0);
         positions2 = PositionCalculator.getPositions(5, 21, 0);
         positions3 = PositionCalculator.getPositions(0, 22, -25); // 21?
-        detector = new SigmaPythonDetector(hardwareMap, "red sample");
+        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
         gp1 = gamepad1;
         pgp1 = new Gamepad();
         cgp1 = new Gamepad();
@@ -685,6 +688,6 @@ public class SpecV24 extends OpMode {
         totalTimer.resetTimer();
         detector.on();
         buildPaths();
-        setPathState(0);
+        setPathState(2);
     }
 }

@@ -52,8 +52,8 @@ import vision.SigmaPythonDetector;
 
 import static robot.RobotConstantsAuto.*;
 
-@Autonomous(name = "0+6 LOBSTER RED", group="comp")
-public class SampleV5 extends OpMode {
+@Autonomous(name = "0+6 LOBSTER BLUE", group="comp")
+public class SampleV7 extends OpMode {
     // going up: set depo to 0.5, lift up slides. (all same time)
     // scoring: set depo to 0.32, then release
     // going down: set depo to 0.85, list down slides. (all same time)
@@ -76,7 +76,7 @@ public class SampleV5 extends OpMode {
                         new BezierCurve(
                                 new Point(9.000, 114.000, Point.CARTESIAN),
                                 new Point(18.456, 119.662, Point.CARTESIAN),
-                                new Point(17.000, 132.000, Point.CARTESIAN)
+                                new Point(18.000, 132.000, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-25))
@@ -88,10 +88,10 @@ public class SampleV5 extends OpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(20.000, 134.000, Point.CARTESIAN),
-                                new Point(18.000, 134.000, Point.CARTESIAN)
+                                new Point(19.000, 136.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-25), Math.toRadians(-13))
+                .setLinearHeadingInterpolation(Math.toRadians(-25), Math.toRadians(-15))
                 .setPathEndTValueConstraint(0.995)
                 .build();
 
@@ -100,11 +100,11 @@ public class SampleV5 extends OpMode {
                 .addPath(
                         // Line 3
                         new BezierLine(
-                                new Point(18.000, 136.000, Point.CARTESIAN),
-                                new Point(21.000, 138.000, Point.CARTESIAN)
+                                new Point(19.000, 136.000, Point.CARTESIAN),
+                                new Point(19.000, 138.000, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-13), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(-15), Math.toRadians(0))
                 .setPathEndTValueConstraint(0.995)
                 .build();
 
@@ -112,8 +112,8 @@ public class SampleV5 extends OpMode {
                 .addPath(
                         // Line 4
                         new BezierLine(
-                                new Point(18.000, 138.000, Point.CARTESIAN),
-                                new Point(18.000, 132.000, Point.CARTESIAN)
+                                new Point(19.000, 138.000, Point.CARTESIAN),
+                                new Point(18.000, 134.000, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-25))
@@ -125,7 +125,7 @@ public class SampleV5 extends OpMode {
                 .addPath(
                         // Line 4
                         new BezierCurve(
-                                new Point(18.000, 132.000, Point.CARTESIAN),
+                                new Point(18.000, 134.000, Point.CARTESIAN),
                                 new Point(68.000, 122.000, Point.CARTESIAN),
                                 new Point(68.000, 96.000, Point.CARTESIAN)
                         )
@@ -154,8 +154,8 @@ public class SampleV5 extends OpMode {
                         // Line 5
                         new BezierCurve(
                                 new Point(68.000, 96.000, Point.CARTESIAN),
-                                new Point(50.000, 122.000, Point.CARTESIAN),
-                                new Point(18.000, 130.000, Point.CARTESIAN)
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(13.000, 131.000, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-45))
@@ -167,7 +167,7 @@ public class SampleV5 extends OpMode {
                 .addPath(
                         // Line 4
                         new BezierCurve(
-                                new Point(18.000, 132.000, Point.CARTESIAN),
+                                new Point(13.000, 131.000, Point.CARTESIAN),
                                 new Point(68.000, 122.000, Point.CARTESIAN),
                                 new Point(68.000, 96.000, Point.CARTESIAN)
                         )
@@ -190,8 +190,8 @@ public class SampleV5 extends OpMode {
                         // Line 5
                         new BezierCurve(
                                 new Point(68.000, 96.000, Point.CARTESIAN),
-                                new Point(68.000, 120.000, Point.CARTESIAN),
-                                new Point(18.000, 130.000, Point.CARTESIAN)
+                                new Point(68.000, 122.000, Point.CARTESIAN),
+                                new Point(13.000, 131.000, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-45))
@@ -203,8 +203,8 @@ public class SampleV5 extends OpMode {
                 .addPath(
                         // Line 4
                         new BezierCurve(
-                                new Point(19.000, 133.000, Point.CARTESIAN),
-                                new Point(68.000, 120.000, Point.CARTESIAN),
+                                new Point(13.000, 131.000, Point.CARTESIAN),
+                                new Point(68.000, 122.000, Point.CARTESIAN),
                                 new Point(68.000, 96.000, Point.CARTESIAN)
                         )
                 )
@@ -241,7 +241,7 @@ public class SampleV5 extends OpMode {
                             .addPath(
                                     // Line 4
                                     new BezierPoint(
-                                            new Point(20, 135.5, Point.CARTESIAN)
+                                            new Point(20, 134, Point.CARTESIAN)
                                     )
                             )
                             .setConstantHeadingInterpolation(Math.toRadians(-25))
@@ -462,11 +462,11 @@ public class SampleV5 extends OpMode {
         pathTimer = new Timer();
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
-        detector = new SigmaPythonDetector(hardwareMap, "red sample");
+        detector = new SigmaPythonDetector(hardwareMap, "blue sample");
 
-        positions1 = PositionCalculator.getPositions(1, 24, -25);
-        positions2 = PositionCalculator.getPositions(-1, 21.5, -15);
-        positions3 = PositionCalculator.getPositions(-3.2, 20, 0);
+        positions1 = PositionCalculator.getPositions(1, 28, -25);
+        positions2 = PositionCalculator.getPositions(-0.5, 21.5, -15);
+        positions3 = PositionCalculator.getPositions(-3.2, 21, 0);
 
         buildPaths();
 
